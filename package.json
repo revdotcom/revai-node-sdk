@@ -14,10 +14,7 @@
     "rev_ai"
   ],
   "author": "Kyle Bridburg",
-  "license": {
-    "type": "MIT",
-    "url": "https://opensource.org/licenses/mit-license.php"
-  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/revdotcom/revai-node-sdk/issues"
   },
