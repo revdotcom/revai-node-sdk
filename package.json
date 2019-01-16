@@ -1,0 +1,22 @@
+{
+  "name": "@rev_ai/revai-node-sdk",
+  "version": "1.0.0",
+  "description": "Rev.ai makes speech applications easy to build!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revdotcom/revai-node-sdk.git"
+  },
+  "keywords": [
+    "rev_ai"
+  ],
+  "author": "Kyle Bridburg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/revdotcom/revai-node-sdk/issues"
+  },
+  "homepage": "https://github.com/revdotcom/revai-node-sdk#readme"
+}
