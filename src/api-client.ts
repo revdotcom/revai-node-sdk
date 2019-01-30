@@ -1,4 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
+const fs = require('fs');
+const path = require('path');
+const FormData = require('form-data');
 
 class RevAiApiClient {
     accessToken: string;
@@ -46,6 +49,24 @@ class RevAiApiClient {
         }
         catch (error) {
             console.log('error: ', error.response.data);
+        }
+    }
+
+    async submitJobLocalFile(filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+        let payload = new FormData();
+        payload.append('media', fs.createReadStream(path.join(__dirname, filename)));
+        // payload.append('type', 'audio/mp3');
+        // if (options)
+        //     payload.append('options', JSON.stringify(options));
+        try {
+            const response = await axios.post('/jobs', payload, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            const job = response.data;
+            return job;
+        }
+        catch (error) {
+            console.log('error: ', error);
         }
     }
 }
