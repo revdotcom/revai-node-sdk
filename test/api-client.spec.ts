@@ -10,8 +10,8 @@ const apiClient = new RevAiApiClient('testtoken');
 
 describe('rev ai api client', () => {
     beforeEach(() => {
-        mockedAxios.get.mockClear();
-        mockedAxios.post.mockClear();
+        mockedAxios.get.mockReset();
+        mockedAxios.post.mockReset();
     });
 
     test('get account', async () => {
@@ -97,6 +97,7 @@ describe('rev ai api client', () => {
             created_on: '2018-05-05T23:23:22.29Z'
         };
         const resp = { data: data };
+        mockedAxios.post.mockResolvedValue(resp);
 
         const job = await apiClient.submitJobLocalFile(filename);
 
@@ -123,6 +124,7 @@ describe('rev ai api client', () => {
             created_on: '2018-05-05T23:23:22.29Z'
         };
         const resp = { data: data };
+        mockedAxios.post.mockResolvedValue(resp);
 
         const job = await apiClient.submitJobLocalFile(filename, options);
 
@@ -137,4 +139,61 @@ describe('rev ai api client', () => {
         expect(mockedAxios.post).toBeCalledTimes(1);
         expect(job).toEqual(data);
     });
+
+    test('get transcript object', async() => {
+        const jobId = 'Umx5c6F7pH7r';
+        const transcriptVersion = 'vnd.rev.transcript.v1.0';
+        const expectedTranscript = {
+            "monologues": [
+                {
+                    "speaker": 1,
+                    "elements": [
+                        {
+                        "type": "text",
+                        "value": "Hello",
+                        "ts": 0.5,
+                        "end_ts": 1.5,
+                        "confidence": 1
+                        },
+                        {
+                        "type": "text",
+                        "value": "World",
+                        "ts": 1.75,
+                        "end_ts": 2.85,
+                        "confidence": 0.8
+                        },
+                        {
+                        "type": "punct",
+                        "value": "."
+                        }
+                    ]
+                }
+            ]
+        };
+        const resp = { data: expectedTranscript };
+        mockedAxios.get.mockResolvedValue(resp);
+
+        const transcript = await apiClient.getTranscriptObject(jobId);
+
+        expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+            headers: { 'Accept': `application/${transcriptVersion}+json` }
+        });
+        expect(mockedAxios.get).toBeCalledTimes(1);
+        expect(transcript).toEqual(expectedTranscript);
+    })
+
+    test('get transcript test', async() => {
+        const jobId = 'Umx5c6F7pH7r';
+        const expectedTranscript = 'Speaker 0    00:00    Hello World.'
+        const resp = { data: expectedTranscript }
+        mockedAxios.get.mockResolvedValue(resp);
+        
+        const transcript = await apiClient.getTranscriptText(jobId);
+
+        expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+            headers: { 'Accept': 'text/plain' }
+        });
+        expect(mockedAxios.get).toBeCalledTimes(1);
+        expect(transcript).toEqual(expectedTranscript);
+    })
 });

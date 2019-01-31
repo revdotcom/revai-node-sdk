@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import RevAiAccount from './models/RevAiAccount';
 import RevAiApiJob from './models/RevAiApiJob';
 import RevAiJobOptions from './models/RevAiJobOptions';
+import RevAiApiTranscript from './models/RevAiApiTranscript';
 const fs = require('fs');
 const FormData = require('form-data');
 
@@ -65,6 +66,33 @@ export default class RevAiApiClient {
             });
             const job = response.data;
             return job;
+        }
+        catch (error) {
+            console.log('error: ', error);
+        }
+    }
+
+    async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
+        try {
+            const transcriptVersion = 'vnd.rev.transcript.v1.0';
+            const response = await axios.get(`/jobs/${id}/transcript`, {
+                headers: { 'Accept': `application/${transcriptVersion}+json` }
+            });
+            const transcript = response.data;
+            return transcript;
+        }
+        catch (error) { 
+            console.log('error: ', error);
+        }
+    }
+
+    async getTranscriptText(id: string): Promise<string> {
+        try {
+            const response = await axios.get(`/jobs/${id}/transcript`, {
+                headers: { 'Accept': 'text/plain' }
+            });
+            const transcript = response.data;
+            return transcript;
         }
         catch (error) {
             console.log('error: ', error);
