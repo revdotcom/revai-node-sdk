@@ -1,9 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
+import RevAiAccount from './models/RevAiAccount';
+import RevAiApiJob from './models/RevAiApiJob';
+import RevAiJobOptions from './models/RevAiJobOptions';
 const fs = require('fs');
-const path = require('path');
 const FormData = require('form-data');
 
-class RevAiApiClient {
+export default class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
@@ -20,7 +22,7 @@ class RevAiApiClient {
             return account;
         }
         catch (error) {
-            console.log('error: ', error.response.data);
+            console.log('error: ', error);
         }
     }
 
@@ -31,7 +33,7 @@ class RevAiApiClient {
             return job;
         }
         catch (error) { 
-            console.log('error: ', error.response.data);
+            console.log('error: ', error);
         }
     }
 
@@ -48,19 +50,18 @@ class RevAiApiClient {
             return job;
         }
         catch (error) {
-            console.log('error: ', error.response.data);
+            console.log('error: ', error);
         }
     }
 
     async submitJobLocalFile(filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         let payload = new FormData();
-        payload.append('media', fs.createReadStream(path.join(__dirname, filename)));
-        // payload.append('type', 'audio/mp3');
-        // if (options)
-        //     payload.append('options', JSON.stringify(options));
+        payload.append('media', fs.createReadStream(filename));
+        if (options)
+            payload.append('options', JSON.stringify(options));
         try {
             const response = await axios.post('/jobs', payload, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+                headers: payload.getHeaders()
             });
             const job = response.data;
             return job;
@@ -69,32 +70,4 @@ class RevAiApiClient {
             console.log('error: ', error);
         }
     }
-}
-
-export default RevAiApiClient;
-
-export interface RevAiJobOptions {
-    media_url?: string;
-    metadata?: string;
-    callback_url?: string;
-    skip_diarization?: boolean;
-}
-
-export interface RevAiAccount {
-    email: string;
-    balance_seconds: number;
-}
-
-export interface RevAiApiJob {
-    id: string;
-    status: string;
-    created_on: string;
-    completed_on?: string;
-    metadata?: string;
-    name?: string;
-    callback_url?: string;
-    duration_seconds?: number;
-    media_url?: string;
-    failure?: string;
-    failure_detail?: string;
 }
