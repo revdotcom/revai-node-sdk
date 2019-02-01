@@ -3,8 +3,6 @@ import RevAiAccount from './models/RevAiAccount';
 import RevAiApiJob from './models/RevAiApiJob';
 import RevAiJobOptions from './models/RevAiJobOptions';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
-import RevAiApiError from './models/RevAiApiError';
-import createError from './createError';
 const fs = require('fs');
 const FormData = require('form-data');
 
