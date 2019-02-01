@@ -7,6 +7,13 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 const apiClient = new RevAiApiClient('testtoken');
+const jobId = 'Umx5c6F7pH7r';
+const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
+const jobDetails = {
+    id: jobId,
+    status: 'in_progress',
+    created_on: '2018-05-05T23:23:22.29Z'
+}
 
 describe('rev ai api client', () => {
     beforeEach(() => {
@@ -29,56 +36,36 @@ describe('rev ai api client', () => {
     });
 
     test('get job by id', async() => {
-        const jobId = 'Umx5c6F7pH7r';
-        const data = {
-            id: jobId,
-            status: 'in_progress',
-            created_on: '2018-05-05T23:23:22.29Z'
-        };
-        const resp = { data: data };
+        const resp = { data: jobDetails };
         mockedAxios.get.mockResolvedValue(resp);
 
         const job = await apiClient.getJobDetails(jobId);
 
         expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}`);
         expect(mockedAxios.get).toBeCalledTimes(1);
-        expect(job).toEqual(data);
+        expect(job).toEqual(jobDetails);
     });
 
     test('submit job with media url without options', async() => {
-        const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
-        const options = { media_url: mediaUrl }
-        const data = {
-            id: 'Umx5c6F7pH7r',
-            status: 'in_progress',
-            created_on: '2018-05-05T23:23:22.29Z'
-        };
-        const resp = { data: data };
+        const resp = { data: jobDetails };
         mockedAxios.post.mockResolvedValue(resp);
 
         const job = await apiClient.submitJobUrl(mediaUrl);
 
-        expect(mockedAxios.post).toBeCalledWith('/jobs', options, {
+        expect(mockedAxios.post).toBeCalledWith('/jobs', { media_url: mediaUrl }, {
             headers: { 'Content-Type': 'application/json' }
         });
         expect(mockedAxios.post).toBeCalledTimes(1);
-        expect(job).toEqual(data);
+        expect(job).toEqual(jobDetails);
     });
 
     test('submit job with media url with options', async() => {
-        const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
-        const options = { 
-            media_url: mediaUrl,
+        const resp = { data: jobDetails };
+        mockedAxios.post.mockResolvedValue(resp);
+        const options = {
             metadata: 'This is a sample submit jobs option',
             callback_url: 'https://www.example.com/callback'
-        };
-        const data = {
-            id: 'Umx5c6F7pH7r',
-            status: 'in_progress',
-            created_on: '2018-05-05T23:23:22.29Z'
-        };
-        const resp = { data: data };
-        mockedAxios.post.mockResolvedValue(resp);
+        }
 
         const job = await apiClient.submitJobUrl(mediaUrl, options);
 
@@ -86,17 +73,12 @@ describe('rev ai api client', () => {
             headers: { 'Content-Type': 'application/json' }
         });
         expect(mockedAxios.post).toBeCalledTimes(1);
-        expect(job).toEqual(data);
+        expect(job).toEqual(jobDetails);
     });
 
     test('submit job with local file without options', async() => {
         const filename = 'path/to/test.mp3';
-        const data = {
-            id: 'Umx5c6F7pH7r',
-            status: 'in_progress',
-            created_on: '2018-05-05T23:23:22.29Z'
-        };
-        const resp = { data: data };
+        const resp = { data: jobDetails };
         mockedAxios.post.mockResolvedValue(resp);
 
         const job = await apiClient.submitJobLocalFile(filename);
@@ -109,22 +91,17 @@ describe('rev ai api client', () => {
         const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
         expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
         expect(mockedAxios.post).toBeCalledTimes(1);
-        expect(job).toEqual(data);
+        expect(job).toEqual(jobDetails);
     });
 
     test('submit job with local file with options', async() => {
         const filename = 'path/to/test.mp3';
+        const resp = { data: jobDetails };
+        mockedAxios.post.mockResolvedValue(resp);
         const options = {
-            metadata: 'This is a sample submit jobs option for multipart',
+            metadata: 'This is a sample submit jobs option',
             callback_url: 'https://www.example.com/callback'
         }
-        const data = {
-            id: 'Umx5c6F7pH7r',
-            status: 'in_progress',
-            created_on: '2018-05-05T23:23:22.29Z'
-        };
-        const resp = { data: data };
-        mockedAxios.post.mockResolvedValue(resp);
 
         const job = await apiClient.submitJobLocalFile(filename, options);
 
@@ -132,17 +109,15 @@ describe('rev ai api client', () => {
             '_boundary': expect.anything(),
             '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'), 
                 expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
-                '{"metadata":"This is a sample submit jobs option for multipart","callback_url":"https://www.example.com/callback"}'])
+                '{"metadata":"This is a sample submit jobs option","callback_url":"https://www.example.com/callback"}'])
         })
         const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
         expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
         expect(mockedAxios.post).toBeCalledTimes(1);
-        expect(job).toEqual(data);
+        expect(job).toEqual(jobDetails);
     });
 
     test('get transcript object', async() => {
-        const jobId = 'Umx5c6F7pH7r';
-        const transcriptVersion = 'vnd.rev.transcript.v1.0';
         const expectedTranscript = {
             "monologues": [
                 {
@@ -176,14 +151,13 @@ describe('rev ai api client', () => {
         const transcript = await apiClient.getTranscriptObject(jobId);
 
         expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-            headers: { 'Accept': `application/${transcriptVersion}+json` }
+            headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
         });
         expect(mockedAxios.get).toBeCalledTimes(1);
         expect(transcript).toEqual(expectedTranscript);
     })
 
     test('get transcript test', async() => {
-        const jobId = 'Umx5c6F7pH7r';
         const expectedTranscript = 'Speaker 0    00:00    Hello World.'
         const resp = { data: expectedTranscript }
         mockedAxios.get.mockResolvedValue(resp);
