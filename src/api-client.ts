@@ -3,6 +3,7 @@ import RevAiAccount from './models/RevAiAccount';
 import RevAiApiJob from './models/RevAiApiJob';
 import RevAiJobOptions from './models/RevAiJobOptions';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
+import createError from './createError';
 const fs = require('fs');
 const FormData = require('form-data');
 
@@ -24,7 +25,9 @@ export default class RevAiApiClient {
             return account;
         }
         catch (error) {
-            console.log('error: ', error);
+            const data = error.response.data;
+            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
+            throw revError;
         }
     }
 
@@ -35,7 +38,9 @@ export default class RevAiApiClient {
             return job;
         }
         catch (error) { 
-            console.log('error:\n', error);
+            const data = error.response.data;
+            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
+            throw revError;
         }
     }
 
@@ -53,7 +58,9 @@ export default class RevAiApiClient {
             return job;
         }
         catch (error) {
-            console.log('error:\n', error);
+            const data = error.response.data;
+            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
+            throw revError;
         }
     }
 
@@ -71,7 +78,9 @@ export default class RevAiApiClient {
             return job;
         }
         catch (error) {
-            console.log('error:\n', error);
+            const data = error.response.data;
+            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
+            throw revError;
         }
     }
 
@@ -84,7 +93,9 @@ export default class RevAiApiClient {
             return transcript;
         }
         catch (error) { 
-            console.log('error:\n', error);
+            const data = error.response.data;
+            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
+            throw revError;
         }
     }
 
@@ -97,7 +108,9 @@ export default class RevAiApiClient {
             return transcript;
         }
         catch (error) {
-            console.log('error:\n', error);
+            const data = error.response.data;
+            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
+            throw revError;
         }
     }
 }
