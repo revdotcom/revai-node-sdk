@@ -1,6 +1,12 @@
 import axios, { AxiosInstance } from 'axios';
+import RevAiAccount from './models/RevAiAccount';
+import RevAiApiJob from './models/RevAiApiJob';
+import RevAiJobOptions from './models/RevAiJobOptions';
+import RevAiApiTranscript from './models/RevAiApiTranscript';
+const fs = require('fs');
+const FormData = require('form-data');
 
-class RevAiApiClient {
+export default class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
@@ -8,6 +14,7 @@ class RevAiApiClient {
         this.accessToken = accessToken;
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        axios.defaults.headers['User-Agent'] = 'node_sdk';
     }
 
     async getAccount(): Promise<RevAiAccount> {
@@ -17,7 +24,7 @@ class RevAiApiClient {
             return account;
         }
         catch (error) {
-            console.log('error: ', error.response.data);
+            console.log('error: ', error);
         }
     }
 
@@ -28,7 +35,7 @@ class RevAiApiClient {
             return job;
         }
         catch (error) { 
-            console.log('error: ', error.response.data);
+            console.log('error:\n', error);
         }
     }
 
@@ -37,6 +44,7 @@ class RevAiApiClient {
             options['media_url'] = mediaUrl;
         else
             options = { 'media_url': mediaUrl };
+        
         try {
             const response = await axios.post('/jobs', options, {
                 headers: { 'Content-Type': 'application/json' }
@@ -45,35 +53,51 @@ class RevAiApiClient {
             return job;
         }
         catch (error) {
-            console.log('error: ', error.response.data);
+            console.log('error:\n', error);
         }
     }
-}
 
-export default RevAiApiClient;
+    async submitJobLocalFile(filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+        let payload = new FormData();
+        payload.append('media', fs.createReadStream(filename));
+        if (options)
+            payload.append('options', JSON.stringify(options));
+        
+        try {
+            const response = await axios.post('/jobs', payload, {
+                headers: payload.getHeaders()
+            });
+            const job = response.data;
+            return job;
+        }
+        catch (error) {
+            console.log('error:\n', error);
+        }
+    }
 
-export interface RevAiJobOptions {
-    media_url?: string;
-    metadata?: string;
-    callback_url?: string;
-    skip_diarization?: boolean;
-}
+    async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
+        try {
+            const response = await axios.get(`/jobs/${id}/transcript`, {
+                headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
+            });
+            const transcript = response.data;
+            return transcript;
+        }
+        catch (error) { 
+            console.log('error:\n', error);
+        }
+    }
 
-export interface RevAiAccount {
-    email: string;
-    balance_seconds: number;
-}
-
-export interface RevAiApiJob {
-    id: string;
-    status: string;
-    created_on: string;
-    completed_on?: string;
-    metadata?: string;
-    name?: string;
-    callback_url?: string;
-    duration_seconds?: number;
-    media_url?: string;
-    failure?: string;
-    failure_detail?: string;
+    async getTranscriptText(id: string): Promise<string> {
+        try {
+            const response = await axios.get(`/jobs/${id}/transcript`, {
+                headers: { 'Accept': 'text/plain' }
+            });
+            const transcript = response.data;
+            return transcript;
+        }
+        catch (error) {
+            console.log('error:\n', error);
+        }
+    }
 }
