@@ -20,7 +20,7 @@ export default class RevAiApiClient {
 
     async getAccount(): Promise<RevAiAccount> {
         try {
-            const response = await axios.get('account');
+            const response = await axios.get('/account');
             const account = response.data;
             return account;
         }

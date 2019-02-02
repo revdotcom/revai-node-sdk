@@ -15,13 +15,14 @@ const jobDetails = {
     created_on: '2018-05-05T23:23:22.29Z'
 }
 
-describe('rev ai api client', () => {
+// getAccount
+describe('get account', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
     });
 
-    test('get account', async () => {
+    test('get account email and balance', async () => {
         const accountEmail = 'test@rev.com';
         const balanceSeconds = 300;
         const data = { email: accountEmail, balance_seconds: balanceSeconds};
@@ -30,9 +31,17 @@ describe('rev ai api client', () => {
 
         const account = await apiClient.getAccount();
 
-        expect(mockedAxios.get).toBeCalledWith('account');
+        expect(mockedAxios.get).toBeCalledWith('/account');
         expect(mockedAxios.get).toBeCalledTimes(1);
         expect(account).toEqual(data);
+    });
+});
+
+// getJobDetails
+describe('get job details', () => {
+    beforeEach(() => {
+        mockedAxios.get.mockReset();
+        mockedAxios.post.mockReset();
     });
 
     test('get job by id', async() => {
@@ -44,6 +53,14 @@ describe('rev ai api client', () => {
         expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}`);
         expect(mockedAxios.get).toBeCalledTimes(1);
         expect(job).toEqual(jobDetails);
+    });
+});
+
+// submitJobUrl
+describe('submit job with medial url', () => {
+    beforeEach(() => {
+        mockedAxios.get.mockReset();
+        mockedAxios.post.mockReset();
     });
 
     test('submit job with media url without options', async() => {
@@ -74,6 +91,14 @@ describe('rev ai api client', () => {
         });
         expect(mockedAxios.post).toBeCalledTimes(1);
         expect(job).toEqual(jobDetails);
+    });
+});
+
+// submitJobLocalFile
+describe('submit job with local file', () => {
+    beforeEach(() => {
+        mockedAxios.get.mockReset();
+        mockedAxios.post.mockReset();
     });
 
     test('submit job with local file without options', async() => {
@@ -116,7 +141,10 @@ describe('rev ai api client', () => {
         expect(mockedAxios.post).toBeCalledTimes(1);
         expect(job).toEqual(jobDetails);
     });
+});
 
+// getTranscriptObject
+describe('get transcript object', () => {
     test('get transcript object', async() => {
         const expectedTranscript = {
             "monologues": [
@@ -155,9 +183,18 @@ describe('rev ai api client', () => {
         });
         expect(mockedAxios.get).toBeCalledTimes(1);
         expect(transcript).toEqual(expectedTranscript);
-    })
+    });
+})
 
-    test('get transcript test', async() => {
+
+// getTranscriptText
+describe('get transcript text', () => {
+    beforeEach(() => {
+        mockedAxios.get.mockReset();
+        mockedAxios.post.mockReset();
+    });
+
+    test('get transcript text', async() => {
         const expectedTranscript = 'Speaker 0    00:00    Hello World.'
         const resp = { data: expectedTranscript }
         mockedAxios.get.mockResolvedValue(resp);
