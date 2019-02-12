@@ -3,7 +3,12 @@ import RevAiAccount from './models/RevAiAccount';
 import RevAiApiJob from './models/RevAiApiJob';
 import RevAiJobOptions from './models/RevAiJobOptions';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
-import createError from './createError';
+import { 
+    RevAiApiError,
+    InvalidParameterError,
+    InvalidStateError,
+    InsufficientCreditsError
+} from './models/RevAiApiError';
 const fs = require('fs');
 const FormData = require('form-data');
 
@@ -21,26 +26,31 @@ export default class RevAiApiClient {
     async getAccount(): Promise<RevAiAccount> {
         try {
             const response = await axios.get('/account');
-            const account = response.data;
-            return account;
+            return response.data;
         }
         catch (error) {
-            const data = error.response.data;
-            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
-            throw revError;
+            switch (error.response.status) {
+                case 401:
+                    throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
         }
     }
 
     async getJobDetails(id: string): Promise<RevAiApiJob> {
         try {
             const response = await axios.get(`/jobs/${id}`);
-            const job = response.data;
-            return job;
+            return response.data;
         }
         catch (error) { 
-            const data = error.response.data;
-            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
-            throw revError;
+            switch (error.response.status) {
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
         }
     }
 
@@ -54,13 +64,19 @@ export default class RevAiApiClient {
             const response = await axios.post('/jobs', options, {
                 headers: { 'Content-Type': 'application/json' }
             });
-            const job = response.data;
-            return job;
+            return response.data;
         }
         catch (error) {
-            const data = error.response.data;
-            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
-            throw revError;
+            switch (error.response.status) {
+                case 400:
+                    throw new InvalidParameterError(error);
+                case 401:
+                    throw new RevAiApiError(error);
+                case 403:
+                    throw new InsufficientCreditsError(error);
+                default:
+                    throw error;
+            }
         }
     }
 
@@ -74,13 +90,19 @@ export default class RevAiApiClient {
             const response = await axios.post('/jobs', payload, {
                 headers: payload.getHeaders()
             });
-            const job = response.data;
-            return job;
+            return response.data;
         }
         catch (error) {
-            const data = error.response.data;
-            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
-            throw revError;
+            switch (error.response.status) {
+                case 400:
+                    throw new InvalidParameterError(error);
+                case 401:
+                    throw new RevAiApiError(error);
+                case 403:
+                    throw new InsufficientCreditsError(error);
+                default:
+                    throw error;
+            }
         }
     }
 
@@ -89,13 +111,19 @@ export default class RevAiApiClient {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
             });
-            const transcript = response.data;
-            return transcript;
+            return response.data;
         }
         catch (error) { 
-            const data = error.response.data;
-            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
-            throw revError;
+            switch (error.response.status) {
+                case 400:
+                case 409:
+                    throw new InvalidStateError(error);
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
         }
     }
 
@@ -104,13 +132,19 @@ export default class RevAiApiClient {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'text/plain' }
             });
-            const transcript = response.data;
-            return transcript;
+            return response.data;
         }
         catch (error) {
-            const data = error.response.data;
-            const revError = createError(error.response.status, data.title, data.detail, data.type, data.current_value, data.allowed_values);
-            throw revError;
+            switch (error.response.status) {
+                case 400:
+                case 409:
+                    throw new InvalidStateError(error);
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
         }
     }
 }
