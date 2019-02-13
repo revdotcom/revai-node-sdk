@@ -10,6 +10,7 @@ import {
     InsufficientCreditsError
 } from './models/RevAiApiError';
 const fs = require('fs');
+const versionNumber = require('../package.json').version;
 const FormData = require('form-data');
 
 export default class RevAiApiClient {
@@ -20,7 +21,7 @@ export default class RevAiApiClient {
         this.accessToken = accessToken;
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        axios.defaults.headers['User-Agent'] = 'node_sdk';
+        axios.defaults.headers['User-Agent'] = `node_sdk-${versionNumber}`;
     }
 
     async getAccount(): Promise<RevAiAccount> {
@@ -148,3 +149,5 @@ export default class RevAiApiClient {
         }
     }
 }
+
+const client = new RevAiApiClient("adwads");
