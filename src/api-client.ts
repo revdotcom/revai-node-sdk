@@ -149,5 +149,3 @@ export default class RevAiApiClient {
         }
     }
 }
-
-const client = new RevAiApiClient("adwads");
