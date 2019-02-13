@@ -1,4 +1,4 @@
-import RevAisut from '../src/api-client';
+import RevAiApiClient from '../src/api-client';
 import axios from 'axios';
 import { 
     setupFakeApiError,
@@ -18,7 +18,7 @@ const FormData = require('form-data');
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-const sut = new RevAisut('testtoken');
+const sut = new RevAiApiClient('testtoken');
 const jobId = 'Umx5c6F7pH7r';
 const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
 const jobDetails = {
