@@ -28,8 +28,7 @@ const jobDetails = {
 }
 const filename = 'path/to/test.mp3';
 
-// getAccount
-describe('get account', () => {
+describe('getAccount', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
@@ -66,8 +65,7 @@ describe('get account', () => {
     });
 });
 
-// getJobDetails
-describe('get job details', () => {
+describe('getJobDetails', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
@@ -114,8 +112,7 @@ describe('get job details', () => {
     });
 });
 
-// submitJobUrl
-describe('submit job with media url', () => {
+describe('submitJobUrl', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
@@ -202,8 +199,7 @@ describe('submit job with media url', () => {
     });
 });
 
-// submitJobLocalFile
-describe('submit job with local file', () => {
+describe('submitJobLocalFile', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
@@ -311,8 +307,7 @@ describe('submit job with local file', () => {
     });
 });
 
-// getTranscriptObject
-describe('get transcript object', () => {
+describe('getTranscriptObject', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
@@ -401,9 +396,7 @@ describe('get transcript object', () => {
     });
 })
 
-
-// getTranscriptText
-describe('get transcript text', () => {
+describe('getTranscriptText', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();

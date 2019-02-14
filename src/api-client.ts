@@ -21,7 +21,7 @@ export default class RevAiApiClient {
         this.accessToken = accessToken;
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        axios.defaults.headers['User-Agent'] = `node_sdk-${versionNumber}`;
+        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/${versionNumber}`;
     }
 
     async getAccount(): Promise<RevAiAccount> {
@@ -116,12 +116,11 @@ export default class RevAiApiClient {
         }
         catch (error) { 
             switch (error.response.status) {
-                case 400:
-                case 409:
-                    throw new InvalidStateError(error);
                 case 401:
                 case 404:
                     throw new RevAiApiError(error);
+                case 409:
+                    throw new InvalidStateError(error);
                 default:
                     throw error;
             }
@@ -137,12 +136,11 @@ export default class RevAiApiClient {
         }
         catch (error) {
             switch (error.response.status) {
-                case 400:
-                case 409:
-                    throw new InvalidStateError(error);
                 case 401:
                 case 404:
                     throw new RevAiApiError(error);
+                case 409:
+                    throw new InvalidStateError(error);
                 default:
                     throw error;
             }
