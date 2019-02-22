@@ -1,35 +1,40 @@
 import axios, { AxiosInstance } from 'axios';
+import FormData = require('form-data');
+import fs = require('fs');
+
 import RevAiAccount from './models/RevAiAccount';
-import RevAiApiJob from './models/RevAiApiJob';
-import RevAiJobOptions from './models/RevAiJobOptions';
-import RevAiApiTranscript from './models/RevAiApiTranscript';
-import { 
-    RevAiApiError,
+import {
+    InsufficientCreditsError,
     InvalidParameterError,
     InvalidStateError,
-    InsufficientCreditsError
+    RevAiApiError
 } from './models/RevAiApiError';
-const fs = require('fs');
+import RevAiApiJob from './models/RevAiApiJob';
+import RevAiApiTranscript from './models/RevAiApiTranscript';
+import RevAiJobOptions from './models/RevAiJobOptions';
+
+/* tslint:disable:no-var-requires */
 const versionNumber = require('../package.json').version;
-const FormData = require('form-data');
+/* tslint:enable:no-var-requires */
 
 export default class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
-    constructor(accessToken: string, version = 'v1') {
+    constructor (accessToken: string, version = 'v1') {
         this.accessToken = accessToken;
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
+        /* tslint:disable:no-string-literal */
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
         axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/${versionNumber}`;
+        /* tslint:enable:no-string-literal */
     }
 
-    async getAccount(): Promise<RevAiAccount> {
+    async getAccount (): Promise<RevAiAccount> {
         try {
             const response = await axios.get('/account');
             return response.data;
-        }
-        catch (error) {
+        } catch (error) {
             switch (error.response.status) {
                 case 401:
                     throw new RevAiApiError(error);
@@ -39,12 +44,11 @@ export default class RevAiApiClient {
         }
     }
 
-    async getJobDetails(id: string): Promise<RevAiApiJob> {
+    async getJobDetails (id: string): Promise<RevAiApiJob> {
         try {
             const response = await axios.get(`/jobs/${id}`);
             return response.data;
-        }
-        catch (error) { 
+        } catch (error) {
             switch (error.response.status) {
                 case 401:
                 case 404:
@@ -55,19 +59,19 @@ export default class RevAiApiClient {
         }
     }
 
-    async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
-        if (options)
-            options['media_url'] = mediaUrl;
-        else
+    async submitJobUrl (mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+        if (options) {
+            options.media_url = mediaUrl;
+        } else {
             options = { 'media_url': mediaUrl };
-        
+        }
+
         try {
             const response = await axios.post('/jobs', options, {
                 headers: { 'Content-Type': 'application/json' }
             });
             return response.data;
-        }
-        catch (error) {
+        } catch (error) {
             switch (error.response.status) {
                 case 400:
                     throw new InvalidParameterError(error);
@@ -81,19 +85,19 @@ export default class RevAiApiClient {
         }
     }
 
-    async submitJobLocalFile(filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+    async submitJobLocalFile (filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         let payload = new FormData();
         payload.append('media', fs.createReadStream(filename));
-        if (options)
+        if (options) {
             payload.append('options', JSON.stringify(options));
-        
+        }
+
         try {
             const response = await axios.post('/jobs', payload, {
                 headers: payload.getHeaders()
             });
             return response.data;
-        }
-        catch (error) {
+        } catch (error) {
             switch (error.response.status) {
                 case 400:
                     throw new InvalidParameterError(error);
@@ -107,14 +111,13 @@ export default class RevAiApiClient {
         }
     }
 
-    async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
+    async getTranscriptObject (id: string): Promise<RevAiApiTranscript> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
             });
             return response.data;
-        }
-        catch (error) { 
+        } catch (error) {
             switch (error.response.status) {
                 case 401:
                 case 404:
@@ -127,14 +130,13 @@ export default class RevAiApiClient {
         }
     }
 
-    async getTranscriptText(id: string): Promise<string> {
+    async getTranscriptText (id: string): Promise<string> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'text/plain' }
             });
             return response.data;
-        }
-        catch (error) {
+        } catch (error) {
             switch (error.response.status) {
                 case 401:
                 case 404:

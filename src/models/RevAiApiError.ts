@@ -9,9 +9,9 @@ export class RevAiApiError {
     constructor (e: AxiosError) {
         if (e.response) {
             this.statusCode = e.response.status;
-            this.title = e.response.data.title || "";
-            this.detail = e.response.data.detail || "";
-            this.type = e.response.data.type || "";
+            this.title = e.response.data.title || '';
+            this.detail = e.response.data.detail || '';
+            this.type = e.response.data.type || '';
         }
     }
 }
@@ -26,21 +26,21 @@ export class InvalidParameterError extends RevAiApiError {
 }
 
 export class InvalidStateError extends RevAiApiError {
-    current_value: string;
-    allowed_values: string[];
+    currentValue: string;
+    allowedValues: string[];
 
     constructor (e: AxiosError) {
         super(e);
-        this.current_value = e.response.data.current_value;
-        this.allowed_values = e.response.data.allowed_values;
+        this.currentValue = e.response.data.current_value;
+        this.allowedValues = e.response.data.allowed_values;
     }
 }
 
 export class InsufficientCreditsError extends RevAiApiError {
-    current_balance: number;
+    currentBalance: number;
 
     constructor (e: AxiosError) {
         super(e);
-        this.current_balance = e.response.data.current_balance;
+        this.currentBalance = e.response.data.current_balance;
     }
 }
