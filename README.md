@@ -25,7 +25,7 @@ your [Settings Page](https://www.rev.ai/settings). Create a client with the
 given Access Token:
 
 ```javascript
-import RevAiAPIClient from revai-node-sdk;
+import RevAiAPIClient from 'revai-node-sdk';
 
 // create your client
 var client = new RevAiAPIClient("ACCESS TOKEN");
@@ -46,9 +46,7 @@ var job = client.submitJobUrl("https://example.com/file-to-transcribe.mp3");
 `job` will contain all the information normally found in a successful response from our
 [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-If you want to get fancy, both send job methods take `metadata`, `callback_url`, and a boolean
-`skip_diarization` as optional parameters, these are also described in the request body of
-the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, and a boolean `skip_diarization` as optional parameters, these are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
 ### Checking your file's status
 
