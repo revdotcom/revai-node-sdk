@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
-import FormData = require('form-data');
-import fs = require('fs');
+import * as FormData from 'form-data';
+import * as fs from 'fs';
 
 import RevAiAccount from './models/RevAiAccount';
 import {
@@ -13,9 +13,8 @@ import RevAiApiJob from './models/RevAiApiJob';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
 import RevAiJobOptions from './models/RevAiJobOptions';
 
-/* tslint:disable:no-var-requires */
+/* tslint:disable-next-line:no-var-requires */
 const versionNumber = require('../package.json').version;
-/* tslint:enable:no-var-requires */
 
 export default class RevAiApiClient {
     accessToken: string;
