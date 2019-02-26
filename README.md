@@ -11,7 +11,7 @@ more examples.
 
 To install the package, run:
 
-    npm install @rev_ai/revai-node-sdk
+    npm install revai-node-sdk
 
 ## Usage
 
@@ -62,7 +62,7 @@ Once your file is transcribed, you can get your transcript in a few different fo
 // as text
 var transcriptText = client.getTranscriptText(job.id);
 
-// or as a python object
+// or as an object
 var transcriptObject = client.getTranscriptObject(job.id);
 ```
 
