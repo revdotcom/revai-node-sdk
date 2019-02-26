@@ -5,7 +5,6 @@
       "no-inferrable-types": [false],
       "no-internal-module": true,
       "no-var-requires": true,
-      "typedef": [false],
       "typedef-whitespace": [
         true, {
           "call-signature": "nospace",
@@ -113,6 +112,12 @@
               "singleline": "never"
           }
       ],
-      "space-before-function-paren": true
+      "space-before-function-paren": true,
+      "typedef": [
+        true,
+        "call-signature",
+        "property-declaration",
+        "arrow-call-signature"
+      ]
     }
   }
