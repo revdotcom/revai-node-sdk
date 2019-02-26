@@ -16,7 +16,11 @@
     "speech",
     "to",
     "text",
-    "speechtotext"
+    "speechtotext",
+    "ASR",
+    "automatic speech recognition",
+    "speech recognition",
+    "speech to text api"
   ],
   "author": "Rev Ai",
   "license": "MIT",

@@ -9,14 +9,9 @@ more examples.
 
 ## Installation
 
-You don't need this source code unless you want to modify the package. If you just
-want to use the package, just run:
+To install the package, run:
 
     npm install @rev_ai/revai-node-sdk
-
-Install from source with:
-
-    npm install <path/to/source>
 
 ## Usage
 
@@ -25,22 +20,22 @@ your [Settings Page](https://www.rev.ai/settings). Create a client with the
 given Access Token:
 
 ```javascript
-import RevAiAPIClient from 'revai-node-sdk';
+import RevAiAPIClient from '@rev_ai/revai-node-sdk';
 
-// create your client
+// Initialize your client with your revai access token
 var client = new RevAiAPIClient("ACCESS TOKEN");
 ```
 
-### Sending a file
+### Submitting a file
 
 Once you've set up your client with your Access Token sending a file is easy!
 
 ```javascript
-// you can send a local file
-var job = client.submitJobLocalFile("FILE PATH");
+// you can submit a local file
+var job = client.submitJobLocalFile("./path/to/file.mp4");
 
-// or send a link to the file you want transcribed
-var job = client.submitJobUrl("https://example.com/file-to-transcribe.mp3");
+// or submit via public url
+var job = client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 ```
 
 `job` will contain all the information normally found in a successful response from our
