@@ -1,4 +1,4 @@
-# Rev.ai Node SDK
+# Rev.Ai Node SDK
 
 [![Build Status](https://img.shields.io/travis/revdotcom/revai-node-sdk.svg?branch=master)](https://travis-ci.org/revdotcom/revai-node-sdk)
 
@@ -23,10 +23,11 @@ given Access Token:
 import RevAiAPIClient from '@rev_ai/revai-node-sdk';
 
 // Initialize your client with your revai access token
-var client = new RevAiAPIClient("ACCESS TOKEN");
+var accessToken = "Your Access Token";
+var client = new RevAiAPIClient(accessToken);
 ```
 
-### Submitting a file
+### Submitting a job
 
 Once you've set up your client with your Access Token sending a file is easy!
 
@@ -34,16 +35,16 @@ Once you've set up your client with your Access Token sending a file is easy!
 // you can submit a local file
 var job = client.submitJobLocalFile("./path/to/file.mp4");
 
-// or submit via public url
+// or submit via a public url
 var job = client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 ```
 
 `job` will contain all the information normally found in a successful response from our
 [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, and a boolean `skip_diarization` as optional parameters, these are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, and a boolean `skip_diarization` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-### Checking your file's status
+### Checking your job's status
 
 You can check the status of your transcription job using its `id`
 
@@ -51,7 +52,7 @@ You can check the status of your transcription job using its `id`
 var jobDetails = client.getJobDetails(job.id);
 ```
 
-`job_details` will contain all information normally found in a successful response from
+`jobDetails` will contain all information normally found in a successful response from
 our [Get Job](https://www.rev.ai/docs#operation/GetJobById) endpoint
 
 ### Getting your transcript
@@ -59,14 +60,11 @@ our [Get Job](https://www.rev.ai/docs#operation/GetJobById) endpoint
 Once your file is transcribed, you can get your transcript in a few different forms: 
 
 ```javascript
-// as text
+// as plain text
 var transcriptText = client.getTranscriptText(job.id);
 
 // or as an object
 var transcriptObject = client.getTranscriptObject(job.id);
 ```
 
-The object form of the transcript contains all the information outlined in the response
-of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint
-when using the json response schema. While the text output is a string containing 
-just the text of your transcript
+The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint when using the json response schema.
