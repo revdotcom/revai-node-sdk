@@ -1,5 +1,5 @@
 {
-  "name": "@rev_ai/revai-node-sdk",
+  "name": "revai-node-sdk",
   "version": "1.0.0",
   "description": "Rev.ai makes speech applications easy to build!",
   "main": "index.js",
@@ -13,7 +13,17 @@
     "url": "git+https://github.com/revdotcom/revai-node-sdk.git"
   },
   "keywords": [
-    "rev_ai"
+    "rev_ai",
+    "speech",
+    "to",
+    "text",
+    "speechtotext",
+    "ASR",
+    "automatic speech recognition",
+    "speech recognition",
+    "speech to text api",
+    "speech rec",
+    "speech api"
   ],
   "author": "Rev Ai",
   "license": "MIT",
