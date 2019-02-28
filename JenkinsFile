@@ -3,7 +3,7 @@ pipeline {
         node 'MacOS'
     }
     stages {
-        stage('Build/Test') {
+        stage('Test') {
             steps {
                 checkout scm
                 sh """#!/bin/bash
