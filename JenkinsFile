@@ -12,7 +12,6 @@ pipeline {
                     nvm use v7.10.1
                     npm run test
                 """
-                }
             }
         }
 
@@ -33,7 +32,6 @@ pipeline {
                     node ../build_release_package_json.js
                     npm publish ./dist
                 """
-                }
             }
         }
 
