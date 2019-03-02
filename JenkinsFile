@@ -30,6 +30,8 @@ pipeline {
             steps {
                 sh """
                     npm run build
+                    npm set registry "https://registry.npmjs.org"
+                    npm set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
                     node build_release_package_json.js
                     npm publish ./dist
                 """
