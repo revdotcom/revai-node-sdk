@@ -47,6 +47,14 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            notifyComplete('SUCCESS')
+        }
+        failure {
+            notifyComplete('FAILURE')
+        }
+    }
 }
 
 // get the url to the curent repo without the preceding https
@@ -89,4 +97,31 @@ def checkVersionAlreadyExists(version) {
     } else {
         echo "will publish ${version}"
     }
+}
+
+def notifyComplete(String buildStatus) {
+    String SUCCESS = 'SUCCESS'
+    String FAILURE = 'FAILURE'
+
+    if (env.NOSLACK_NOTIFICATIONS == 'true')
+    {
+        echo "Slack notifications are disabled"
+        return
+    }
+    
+    // build status of null means successful
+    buildStatus =  buildStatus ?: SUCCESS
+    def prevBuildResult = currentBuild.getPreviousBuild()?.getResult()
+    echo "notifyComplete with status ${buildStatus}, previous build was ${prevBuildResult}"
+        
+    if (buildStatus == FAILURE)
+        slackSend (
+            color: '#FF0000', // red
+            channel: '#rev-ai-dev',
+            message: "${env.JOB_NAME} ${env.BUILD_NUMBER} for release ${discoverVersion()} failed after ${currentBuild.durationString} (<${env.BUILD_URL}|Open>)")
+    else if (buildStatus == SUCCESS && prevBuildResult != SUCCESS)
+        slackSend (
+            color: '#00FF00', // green
+            channel: '#rev-ai-dev', 
+            message: "${env.JOB_NAME} ${env.BUILD_NUMBER} for release ${discoverVersion()} back to normal after ${currentBuild.durationString} (<${env.BUILD_URL}|Open>)")
 }
