@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label ''
+        docker { image 'node:10-alpine'}
     }
     environment {
         GIT_CREDENTIALS = credentials("${GITHUB_CREDENTIALS}")
@@ -9,9 +9,6 @@ pipeline {
         stage('Test') {
             steps {
                 sh """#!/bin/bash
-                    source '$HOME/.nvm/nvm.sh'
-                    nvm install v7.10.1
-                    nvm use v7.10.1
                     npm i
                     npm run test
                 """
