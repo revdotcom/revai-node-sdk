@@ -1,15 +1,18 @@
 pipeline {
     agent {
-        node 'MacOS'
+        label ''
+    }
+    environment {
+        GIT_CREDENTIALS = credentials("${GITHUB_CREDENTIALS}")
     }
     stages {
         stage('Test') {
             steps {
-                checkout scm
                 sh """#!/bin/bash
                     source '$HOME/.nvm/nvm.sh'
                     nvm install v7.10.1
                     nvm use v7.10.1
+                    npm i
                     npm run test
                 """
             }
@@ -67,7 +70,7 @@ def tagRepo(version) {
     // see if it's still on remote - needed to avoid overwriting the tag
     sh """#!/bin/bash
         source ~/.bash_profile
-        git fetch https://${env.GIT_CREDENTIALS}@${getRepoUrl()} --tags
+        git fetch https://${GIT_CREDENTIALS}@${getRepoUrl()} --tags
     """
     // try to tag
     sh """#!/bin/bash
@@ -76,7 +79,7 @@ def tagRepo(version) {
     """
     sh """#!/bin/bash
         source ~/.bash_profile
-        git push https://${env.GIT_CREDENTIALS}@${getRepoUrl()} ${version}
+        git push https://${GIT_CREDENTIALS}@${getRepoUrl()} ${version}
     """
 }
 
@@ -86,7 +89,7 @@ def checkVersionAlreadyExists(version) {
 
     if (sh(script: """#!/bin/bash
         source ~/.bash_profile
-        git ls-remote https://${env.GIT_CREDENTIALS}@${getRepoUrl()} --tags origin ${version}""", returnStdout: true).trim() != "") {
+        git ls-remote https://${GIT_CREDENTIALS}@${getRepoUrl()} --tags origin ${version}""", returnStdout: true).trim() != "") {
         echo "${version} is already released, please increase the version number for build to publish"
     } else {
         echo "will publish ${version}"
