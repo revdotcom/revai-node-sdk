@@ -1,6 +1,8 @@
 pipeline {
     agent {
-        docker { image 'node:10-alpine'}
+        dockerfile {
+            label 'linux'
+        }
     }
     environment {
         GIT_CREDENTIALS = credentials("${GITHUB_CREDENTIALS}")
