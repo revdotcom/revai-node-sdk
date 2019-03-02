@@ -1,6 +1,6 @@
 FROM node:10-alpine
 
-RUN adduser -u 1001 -ms /bin/bash dockeruser
+RUN adduser -u 1001 -s /bin/bash dockeruser
 
 USER dockeruser
 WORKDIR /home/dockeruser
