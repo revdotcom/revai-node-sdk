@@ -1,6 +1,7 @@
 const fs = require('fs');
+const path = require('path');
 
-const origPackage = fs.readFileSync('./package.json').toString();
+const origPackage = fs.readFileSync('package.json').toString();
 
 try {
     const pkg = JSON.parse(origPackage);
@@ -10,8 +11,8 @@ try {
     pkg.module = 'index.js';
 
     const buildPackage = JSON.stringify(pkg, null, 2);
-
-    fs.writeFile(path.join(root, 'dist', 'package.json'), buildPackage, function() {
+    const root = __dirname
+    fs.writeFile(path.join(root, "dist", "package.json"), buildPackage, function() {
         console.log('Package JSON for publish rendered');
         process.exit(0);
     });
