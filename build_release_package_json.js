@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const origPackage = fs.readFileSync('package.json').toString();
+const origPackage = fs.readFileSync('./package.json').toString();
 
 try {
     const pkg = JSON.parse(origPackage);
