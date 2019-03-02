@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh """#!/bin/bash
+                sh """
                     npm i
                     npm run test
                 """
@@ -26,8 +26,7 @@ pipeline {
 
         stage('Publish') {
             steps {
-                sh """#!/bin/bash
-                    source ~/.bash_profile
+                sh """
                     npm run build
                     node ../build_release_package_json.js
                     npm publish ./dist
@@ -60,22 +59,18 @@ def tagRepo(version) {
     echo "tagging repo with ${version}"
 
     // deletes current tag locally, this will make sure if the tag is deleted from remote it would be set again
-    sh """#!/bin/bash
-        source ~/.bash_profile
+    sh """
         git tag -d ${version} || (exit 0)
     """
     // see if it's still on remote - needed to avoid overwriting the tag
-    sh """#!/bin/bash
-        source ~/.bash_profile
+    sh """
         git fetch https://${GIT_CREDENTIALS}@${getRepoUrl()} --tags
     """
     // try to tag
-    sh """#!/bin/bash
-        source ~/.bash_profile
+    sh """
         git tag ${version}
     """
-    sh """#!/bin/bash
-        source ~/.bash_profile
+    sh """
         git push https://${GIT_CREDENTIALS}@${getRepoUrl()} ${version}
     """
 }
@@ -84,8 +79,7 @@ def tagRepo(version) {
 def checkVersionAlreadyExists(version) {
     echo "checking tag ${version}"
 
-    if (sh(script: """#!/bin/bash
-        source ~/.bash_profile
+    if (sh(script: """
         git ls-remote https://${GIT_CREDENTIALS}@${getRepoUrl()} --tags origin ${version}""", returnStdout: true).trim() != "") {
         echo "${version} is already released, please increase the version number for build to publish"
     } else {
