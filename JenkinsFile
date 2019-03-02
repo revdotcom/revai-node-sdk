@@ -2,6 +2,7 @@ pipeline {
     agent {
         dockerfile {
             label 'linux'
+            dir ''
         }
     }
     environment {
