@@ -14,9 +14,9 @@ import RevAiApiTranscript from './models/RevAiApiTranscript';
 import RevAiJobOptions from './models/RevAiJobOptions';
 
 /* tslint:disable-next-line:no-var-requires */
-const versionNumber = require('../package.json').version;
+const versionNumber = require('./package.json').version;
 
-export default class RevAiApiClient {
+export class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
