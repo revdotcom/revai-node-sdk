@@ -34,7 +34,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "express": "^4.16.4",
-    "form-data": "^5.6.0"
+    "form-data": "^2.3.3"
   },
   "devDependencies": {
     "@types/form-data": "^2.2.1",
