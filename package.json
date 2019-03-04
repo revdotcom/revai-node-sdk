@@ -4,7 +4,7 @@
   "description": "Rev.ai makes speech applications easy to build!",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "transpile": "tsc",
     "test": "jest",
     "lint": "tslint --project \".\""
   },
