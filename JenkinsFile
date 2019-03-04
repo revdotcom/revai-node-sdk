@@ -119,10 +119,10 @@ def notifyComplete(String buildStatus) {
         slackSend (
             color: '#FF0000', // red
             channel: '#rev-ai-dev',
-            message: "${env.JOB_NAME} ${env.BUILD_NUMBER} for release ${discoverVersion()} failed after ${currentBuild.durationString} (<${env.BUILD_URL}|Open>)")
+            message: "${env.JOB_NAME} ${env.BUILD_NUMBER} failed after ${currentBuild.durationString} (<${env.BUILD_URL}|Open>)")
     else if (buildStatus == SUCCESS && prevBuildResult != SUCCESS)
         slackSend (
             color: '#00FF00', // green
             channel: '#rev-ai-dev', 
-            message: "${env.JOB_NAME} ${env.BUILD_NUMBER} for release ${discoverVersion()} back to normal after ${currentBuild.durationString} (<${env.BUILD_URL}|Open>)")
+            message: "${env.JOB_NAME} ${env.BUILD_NUMBER} back to normal after ${currentBuild.durationString} (<${env.BUILD_URL}|Open>)")
 }
