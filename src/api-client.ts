@@ -13,7 +13,7 @@ import RevAiApiJob from './models/RevAiApiJob';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
 import RevAiJobOptions from './models/RevAiJobOptions';
 
-export default class RevAiApiClient {
+export class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;

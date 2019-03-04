@@ -20,7 +20,7 @@ your [Settings Page](https://www.rev.ai/settings). Create a client with the
 given Access Token:
 
 ```javascript
-import RevAiApiClient from 'revai-node-sdk';
+import { RevAiApiClient } from 'revai-node-sdk';
 
 // Initialize your client with your revai access token
 var accessToken = "Your Access Token";

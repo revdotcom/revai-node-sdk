@@ -1,4 +1,4 @@
-import RevAiApiClient from '../src/api-client';
+import { RevAiApiClient } from '../src/api-client';
 import axios from 'axios';
 import { 
     setupFakeApiError,
