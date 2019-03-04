@@ -8,10 +8,17 @@ pipeline {
         GIT_CREDENTIALS = credentials("${GITHUB_CREDENTIALS}")
     }
     stages {
+        stage('Build') {
+            steps {
+                sh  """
+                    npm install
+                    npm run build
+                """
+            }
+        }
         stage('Lint/Test') {
             steps {
                 sh """
-                    npm install
                     npm run lint
                     npm run test
                 """
@@ -30,7 +37,6 @@ pipeline {
         stage('Publish') {
             steps {
                 sh """
-                    npm run transpile
                     npm set registry "https://registry.npmjs.org"
                     npm set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
                     node build_release_package_json.js
