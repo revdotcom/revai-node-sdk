@@ -11,7 +11,7 @@ pipeline {
         stage('Lint/Test') {
             steps {
                 sh """
-                    npm i
+                    npm install
                     npm run lint
                     npm run test
                 """
