@@ -1,6 +1,6 @@
 {
   "name": "revai-node-sdk",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Rev.ai makes speech applications easy to build!",
   "main": "index.js",
   "scripts": {

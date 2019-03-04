@@ -22,7 +22,7 @@ export class RevAiApiClient {
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
         /* tslint:disable:no-string-literal */
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/1.0.4`;
+        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/1.0.5`;
         /* tslint:enable:no-string-literal */
     }
 
