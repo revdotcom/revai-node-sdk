@@ -8,10 +8,11 @@ pipeline {
         GIT_CREDENTIALS = credentials("${GITHUB_CREDENTIALS}")
     }
     stages {
-        stage('Test') {
+        stage('Lint/Test') {
             steps {
                 sh """
                     npm i
+                    npm run lint
                     npm run test
                 """
             }
