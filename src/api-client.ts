@@ -13,10 +13,7 @@ import RevAiApiJob from './models/RevAiApiJob';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
 import RevAiJobOptions from './models/RevAiJobOptions';
 
-/* tslint:disable-next-line:no-var-requires */
-const versionNumber = require('../package.json').version;
-
-export default class RevAiApiClient {
+export class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
@@ -25,7 +22,7 @@ export default class RevAiApiClient {
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
         /* tslint:disable:no-string-literal */
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/${versionNumber}`;
+        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/1.0.6`;
         /* tslint:enable:no-string-literal */
     }
 
