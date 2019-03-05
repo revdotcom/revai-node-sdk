@@ -33,10 +33,10 @@ Once you've set up your client with your Access Token sending a file is easy!
 
 ```javascript
 // you can submit a local file
-var job = client.submitJobLocalFile("./path/to/file.mp4");
+var job = await client.submitJobLocalFile("./path/to/file.mp4");
 
 // or submit via a public url
-var job = client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
+var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 ```
 
 `job` will contain all the information normally found in a successful response from our
@@ -49,7 +49,7 @@ If you want to get fancy, both send job methods can take a `RevAiJobOptions` obj
 You can check the status of your transcription job using its `id`
 
 ```javascript
-var jobDetails = client.getJobDetails(job.id);
+var jobDetails = await client.getJobDetails(job.id);
 ```
 
 `jobDetails` will contain all information normally found in a successful response from
@@ -61,10 +61,10 @@ Once your file is transcribed, you can get your transcript in a few different fo
 
 ```javascript
 // as plain text
-var transcriptText = client.getTranscriptText(job.id);
+var transcriptText = await client.getTranscriptText(job.id);
 
 // or as an object
-var transcriptObject = client.getTranscriptObject(job.id);
+var transcriptObject = await client.getTranscriptObject(job.id);
 ```
 
 The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint when using the json response schema.
