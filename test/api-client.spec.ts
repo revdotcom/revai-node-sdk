@@ -1,5 +1,5 @@
-import { RevAiApiClient } from '../src/api-client';
 import axios from 'axios';
+import { RevAiApiClient } from '../src/api-client';
 import {
     setupFakeApiError,
     setupFakeInvalidStateError,
@@ -12,6 +12,7 @@ import {
     InvalidStateError,
     InsufficientCreditsError
 } from '../src/models/RevAiApiError';
+
 const fs = require('fs');
 const FormData = require('form-data');
 jest.mock('axios');
@@ -20,6 +21,7 @@ describe('api-client', () => {
     const mockedAxios = axios as jest.Mocked<typeof axios>;
     const sut = new RevAiApiClient('testtoken');
     const jobId = 'Umx5c6F7pH7r';
+    const otherJobId = 'EMx5c67p3dr';
     const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
     const jobDetails = {
         id: jobId,
@@ -31,6 +33,7 @@ describe('api-client', () => {
     beforeEach(() => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
+        mockedAxios.delete.mockReset();
     });
 
     describe('getAccount', () => {
@@ -56,7 +59,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getAccount();
+                await sut.getAccount();
             }
 
             catch (e) {
@@ -85,7 +88,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getJobDetails(jobId);
+                await sut.getJobDetails(jobId);
             }
 
             catch (e) {
@@ -98,11 +101,122 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getJobDetails(jobId);
+                await sut.getJobDetails(jobId);
             }
 
             catch (e) {
                 expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+    });
+
+    describe('getListOfJobs', () => {
+        afterEach(() => {
+            expect(mockedAxios.get).toBeCalledTimes(1);
+        })
+
+        it('get list of jobs with limit of 5', async() => {
+            const jobDetails2 = {
+                id: otherJobId,
+                status: 'transcribed',
+                created_on: '2013-05-05T23:23:22.29Z'
+            };
+            const resp = { data: [jobDetails, jobDetails2] };
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const jobs = await sut.getListOfJobs(5);
+
+            expect(jobs).toEqual([jobDetails, jobDetails2]);
+            expect(mockedAxios.get).toBeCalledWith('/jobs?limit=5');
+        });
+
+        it('get list of jobs starting after certain job id', async() => {
+            const resp = { data: [jobDetails] };
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const jobs = await sut.getListOfJobs(undefined, otherJobId);
+
+            expect(jobs).toEqual([jobDetails]);
+            expect(mockedAxios.get).toBeCalledWith(`/jobs?starting_after=${otherJobId}`);
+        });
+
+        it('handles when api returns invalid parameters', async () => {
+            const fakeError = setupFakeInvalidParametersError();
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getListOfJobs(-1);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new InvalidParameterError(fakeError));
+            }
+            expect(mockedAxios.get).toBeCalledWith('/jobs?limit=-1');
+        });
+
+        it('handles when api returns unauthorized', async () => {
+            const fakeError = setupFakeApiError(401, "Unauthorized");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getListOfJobs();
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+            expect(mockedAxios.get).toBeCalledWith('/jobs');
+        });
+    });
+
+    describe('deleteJob', () => {
+        afterEach(() => {
+            expect(mockedAxios.delete).toBeCalledWith(`/jobs/${jobId}`);
+            expect(mockedAxios.delete).toBeCalledTimes(1);
+        })
+
+        it('delete job by id', async() => {
+            mockedAxios.delete.mockResolvedValue({});
+
+            await sut.deleteJob(jobId);
+        });
+
+        it('handles when api returns unauthorized', async () => {
+            const fakeError = setupFakeApiError(401, "Unauthorized");
+            mockedAxios.delete.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.deleteJob(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns jobnotfound', async () => {
+            const fakeError = setupFakeApiError(404, "Job not found");
+            mockedAxios.delete.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.deleteJob(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns invalid state', async () => {
+            const fakeError = setupFakeInvalidStateError();
+            mockedAxios.delete.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.deleteJob(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new InvalidStateError(fakeError));
             }
         });
     });
@@ -145,7 +259,7 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.submitJobUrl(mediaUrl);
+                await sut.submitJobUrl(mediaUrl);
             }
 
             catch (e) {
@@ -161,7 +275,7 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.submitJobUrl(mediaUrl);
+                await sut.submitJobUrl(mediaUrl);
             }
 
             catch (e) {
@@ -177,7 +291,7 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.submitJobUrl(mediaUrl);
+                await sut.submitJobUrl(mediaUrl);
             }
 
             catch (e) {
@@ -242,7 +356,7 @@ describe('api-client', () => {
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
             try {
-                const result = await sut.submitJobLocalFile(filename);
+                await sut.submitJobLocalFile(filename);
             }
 
             catch (e) {
@@ -262,7 +376,7 @@ describe('api-client', () => {
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
             try {
-                const result = await sut.submitJobLocalFile(filename);
+                await sut.submitJobLocalFile(filename);
             }
 
             catch (e) {
@@ -282,7 +396,7 @@ describe('api-client', () => {
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
             try {
-                const result = await sut.submitJobLocalFile(filename);
+                await sut.submitJobLocalFile(filename);
             }
 
             catch (e) {
@@ -341,7 +455,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getTranscriptObject(jobId);
+                await sut.getTranscriptObject(jobId);
             }
 
             catch (e) {
@@ -354,7 +468,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getTranscriptObject(jobId);
+                await sut.getTranscriptObject(jobId);
             }
 
             catch (e) {
@@ -367,7 +481,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getTranscriptObject(jobId);
+                await sut.getTranscriptObject(jobId);
             }
 
             catch (e) {
@@ -399,7 +513,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getTranscriptText(jobId);
+                await sut.getTranscriptText(jobId);
             }
 
             catch (e) {
@@ -412,7 +526,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getTranscriptText(jobId);
+                await sut.getTranscriptText(jobId);
             }
 
             catch (e) {
@@ -425,7 +539,7 @@ describe('api-client', () => {
             mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
 
             try {
-                const result = await sut.getTranscriptText(jobId);
+                await sut.getTranscriptText(jobId);
             }
 
             catch (e) {

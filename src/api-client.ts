@@ -70,8 +70,9 @@ export class RevAiApiClient {
             return response.data;
         } catch (error) {
             switch (error.response.status) {
+                case 400:
+                    throw new InvalidParameterError(error);
                 case 401:
-                case 404:
                     throw new RevAiApiError(error);
                 default:
                     throw error;
