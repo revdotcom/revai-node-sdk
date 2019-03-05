@@ -1,4 +1,4 @@
-# Rev.ai Node SDK 
+# Rev.ai Node SDK
 
 [![Build Status](https://img.shields.io/travis/revdotcom/revai-node-sdk.svg?branch=master)](https://travis-ci.org/revdotcom/revai-node-sdk)
 
@@ -16,7 +16,7 @@ To install the package, run:
 ## Usage
 
 All you need to get started is your Access Token, which can be generated on
-your [Settings Page](https://www.rev.ai/settings). Create a client with the 
+your [Settings Page](https://www.rev.ai/settings). Create a client with the
 given Access Token:
 
 ```javascript
@@ -57,7 +57,7 @@ our [Get Job](https://www.rev.ai/docs#operation/GetJobById) endpoint
 
 ### Getting your transcript
 
-Once your file is transcribed, you can get your transcript in a few different forms: 
+Once your file is transcribed, you can get your transcript in a few different forms:
 
 ```javascript
 // as plain text

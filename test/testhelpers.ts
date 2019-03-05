@@ -13,15 +13,15 @@ export const setupFakeApiError = (statusCode: number, title: string, type?: stri
         config: null,
         code: statusCode.toString(),
         request: {},
-        response: { 
+        response: {
             data: {
                 title: title,
                 type: type,
                 detail: detail
-            }, 
-            status: statusCode, 
-            statusText: 'Failed', 
-            headers: null, 
+            },
+            status: statusCode,
+            statusText: 'Failed',
+            headers: null,
             config: null
         },
         name: 'axiosError',
@@ -30,7 +30,8 @@ export const setupFakeApiError = (statusCode: number, title: string, type?: stri
 };
 
 export const setupFakeInvalidStateError = (): AxiosError => {
-    var err = setupFakeApiError(409, "Job is in invalid state", 
+    var err = setupFakeApiError(409,
+        "Job is in invalid state",
         "https://www/rev.ai/api/speech/v1/errors/invalid-job-state",
         "Job is in invalid state to obtain the transcript"
     );
@@ -40,7 +41,8 @@ export const setupFakeInvalidStateError = (): AxiosError => {
 }
 
 export const setupFakeInsufficientCreditsError = (): AxiosError => {
-    var err = setupFakeApiError(403, "You do not have enough credits", 
+    var err = setupFakeApiError(403,
+        "You do not have enough credits",
         "https://www/rev.ai/api/speech/v1/errors/out-of-credit",
         "You only have 60 seconds remaining"
     );
@@ -49,7 +51,8 @@ export const setupFakeInsufficientCreditsError = (): AxiosError => {
 }
 
 export const setupFakeInvalidParametersError = (): AxiosError => {
-    var err = setupFakeApiError(400, "Your request parameters didn't validate", 
+    var err = setupFakeApiError(400,
+        "Your request parameters didn't validate",
         "https://www/rev.ai/api/speech/v1/errors/invalid-parameters"
     );
     err.response.data["parameters"] = {

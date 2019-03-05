@@ -12,7 +12,6 @@ fs.access(destDir, (err) => {
   copyFile(src, path.join(destDir, filename));
 });
 
-
 function copyFile(src, dest) {
 
   let readStream = fs.createReadStream(src);

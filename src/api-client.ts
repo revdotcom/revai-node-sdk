@@ -55,6 +55,46 @@ export class RevAiApiClient {
         }
     }
 
+    async getListOfJobs (limit?: number, starting_after?: string): Promise<RevAiApiJob[]> {
+        try {
+            let params = [];
+            if (limit) {
+                params.push(`limit=${limit}`);
+            }
+            if (starting_after) {
+                params.push(`starting_after=${starting_after}`);
+            }
+
+            const query = `?${params.join('&')}`;
+            const response = await axios.get(`/jobs${params.length > 0 ? query : ''}`);
+            return response.data;
+        } catch (error) {
+            switch (error.response.status) {
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
+        }
+    }
+
+    async deleteJob (id: string): Promise<void> {
+        try {
+            await axios.delete(`/jobs/${id}`);
+        } catch (error) {
+            switch (error.response.status) {
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                case 409:
+                    throw new InvalidStateError(error);
+                default:
+                    throw error;
+            }
+        }
+    }
+
     async submitJobUrl (mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         if (options) {
             options.media_url = mediaUrl;
