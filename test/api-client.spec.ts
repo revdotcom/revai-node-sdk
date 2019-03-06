@@ -115,6 +115,16 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledTimes(1);
         })
 
+        it('get list of jobs', async() => {
+            const resp = { data: [jobDetails] };
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const jobs = await sut.getListOfJobs();
+
+            expect(jobs).toEqual([jobDetails]);
+            expect(mockedAxios.get).toBeCalledWith('/jobs');
+        });
+
         it('get list of jobs with limit of 5', async() => {
             const jobDetails2 = {
                 id: otherJobId,
@@ -138,6 +148,22 @@ describe('api-client', () => {
 
             expect(jobs).toEqual([jobDetails]);
             expect(mockedAxios.get).toBeCalledWith(`/jobs?starting_after=${otherJobId}`);
+        });
+
+        it('get list of jobs with limit of 5 and starting after certain job id', async() => {
+            const limit = 5;
+            const jobDetails2 = {
+                id: otherJobId,
+                status: 'transcribed',
+                created_on: '2013-05-05T23:23:22.29Z'
+            };
+            const resp = { data: [jobDetails, jobDetails2] };
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const jobs = await sut.getListOfJobs(limit, otherJobId);
+
+            expect(jobs).toEqual([jobDetails, jobDetails2]);
+            expect(mockedAxios.get).toBeCalledWith(`/jobs?limit=${limit}&starting_after=${otherJobId}`);
         });
 
         it('handles when api returns invalid parameters', async () => {

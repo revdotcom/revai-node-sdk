@@ -55,14 +55,14 @@ export class RevAiApiClient {
         }
     }
 
-    async getListOfJobs (limit?: number, starting_after?: string): Promise<RevAiApiJob[]> {
+    async getListOfJobs (limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
         try {
             let params = [];
             if (limit) {
                 params.push(`limit=${limit}`);
             }
-            if (starting_after) {
-                params.push(`starting_after=${starting_after}`);
+            if (startingAfter) {
+                params.push(`starting_after=${startingAfter}`);
             }
 
             const query = `?${params.join('&')}`;
