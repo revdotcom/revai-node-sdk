@@ -55,6 +55,35 @@ var jobDetails = client.getJobDetails(job.id);
 `jobDetails` will contain all information normally found in a successful response from
 our [Get Job](https://www.rev.ai/docs#operation/GetJobById) endpoint
 
+### Checking multiple files
+
+You can retrieve a list of transcription jobs with optional parameters
+
+```javascript
+var jobs = client.getListOfJobs();
+
+// limit amount of retrieved jobs
+var jobs = client.getListOfJobs(3);
+
+// get jobs starting after a certain job id
+var jobs = client.getListOfJobs(undefined, 'Umx5c6F7pH7r');
+```
+
+`jobs` will contain a list of job details having all information normally found in a successful response
+from our [Get List of Jobs](https://www.rev.ai/docs#operation/GetListOfJobs) endpoint
+
+### Deleting a job
+
+You can delete a transcription job using its `id`
+
+```javascript
+client.deleteJob(job.id);
+```
+
+ All data related to the job, such as input media and transcript, will be permanently deleted.
+ A job can only by deleted once it's completed (either with success or failure).
+
+
 ### Getting your transcript
 
 Once your file is transcribed, you can get your transcript in a few different forms:
