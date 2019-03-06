@@ -22,7 +22,7 @@ export class RevAiApiClient {
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
         /* tslint:disable:no-string-literal */
         axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/1.0.7`;
+        axios.defaults.headers['User-Agent'] = `RevAi-NodeSDK/1.1.0`;
         /* tslint:enable:no-string-literal */
     }
 
@@ -49,6 +49,47 @@ export class RevAiApiClient {
                 case 401:
                 case 404:
                     throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
+        }
+    }
+
+    async getListOfJobs (limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
+        try {
+            let params = [];
+            if (limit) {
+                params.push(`limit=${limit}`);
+            }
+            if (startingAfter) {
+                params.push(`starting_after=${startingAfter}`);
+            }
+
+            const query = `?${params.join('&')}`;
+            const response = await axios.get(`/jobs${params.length > 0 ? query : ''}`);
+            return response.data;
+        } catch (error) {
+            switch (error.response.status) {
+                case 400:
+                    throw new InvalidParameterError(error);
+                case 401:
+                    throw new RevAiApiError(error);
+                default:
+                    throw error;
+            }
+        }
+    }
+
+    async deleteJob (id: string): Promise<void> {
+        try {
+            await axios.delete(`/jobs/${id}`);
+        } catch (error) {
+            switch (error.response.status) {
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                case 409:
+                    throw new InvalidStateError(error);
                 default:
                     throw error;
             }
