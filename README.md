@@ -42,7 +42,7 @@ var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 `job` will contain all the information normally found in a successful response from our
 [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, and a boolean `skip_diarization` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, a boolean `skip_diarization`, `custom_vocabularies` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
 ### Checking your job's status
 
