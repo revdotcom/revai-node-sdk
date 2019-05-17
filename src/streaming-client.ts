@@ -3,11 +3,14 @@ import * as sockets from 'websocket';
 import { Duplex, PassThrough } from 'stream';
 
 import AudioConfig from './models/streaming/AudioConfig';
+import BufferedDuplex from './models/streaming/BufferedDuplex';
 
 export class RevAiStreamingClient {
     accessToken: string;
     config: AudioConfig;
     baseUrl: string;
+    requests: PassThrough;
+    responses: PassThrough;
     constructor(accessToken: string, config: AudioConfig, version = 'v1alpha'){
         this.accessToken = accessToken;
         this.config = config;
@@ -18,9 +21,9 @@ export class RevAiStreamingClient {
 
     start (): Duplex {
         var requests = new PassThrough();
-        var responses = new PassThrough();
+        var responses = new PassThrough({ objectMode: true });
         const client = new sockets.client();
-        console.log(this.baseUrl);
+
         client.on('connectFailed', function(error) {
             console.log("failed to connect");
             console.log(error);
@@ -35,32 +38,22 @@ export class RevAiStreamingClient {
             });
             connection.on('message', function(message) {
                 if (message.type === 'utf8') {
-                    console.log(message.utf8Data);
-                }
-                else {
-                    console.log(message);
+                    responses.write(JSON.parse(message.utf8Data));
                 }
             });
             
             function sendFromBuffer() {
                 if (connection.connected) {
-                    connection.send(requests.read(8000));
+                    var value = requests.read(requests.readableLength);
+                    if (value != null) {
+                        connection.send(value);
+                    }
+                    setTimeout(sendFromBuffer, 250);
                 }
             }
             sendFromBuffer();
         });
         client.connect(this.baseUrl);
-        var duplex = new Duplex({
-            write (chunk: any, encoding?: any, callback?: any) {
-                requests.write(chunk, encoding);
-                callback();
-            },
-
-            read (size) {
-                responses.read(size);
-                console.log("reading");
-            }
-        });
-        return duplex;
+        return new BufferedDuplex(requests, responses, { readableObjectMode: true });
     }
 }
