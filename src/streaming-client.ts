@@ -18,7 +18,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
         super();
         this.accessToken = accessToken;
         this.config = config;
-        this.baseUrl = `wss://api-test.rev.ai/speechtotext/${version}/stream?` +
+        this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream?` +
             `access_token=${accessToken}` +
             `&content_type=${config.getContentTypeString()}`;
         this.requests = new PassThrough();
