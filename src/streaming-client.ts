@@ -14,7 +14,7 @@ export class RevAiStreamingClient {
     constructor(accessToken: string, config: AudioConfig, version = 'v1alpha'){
         this.accessToken = accessToken;
         this.config = config;
-        this.baseUrl = `wss://api-test.rev.ai/speechtotext/${version}/stream?` +
+        this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream?` +
             `access_token=${accessToken}` +
             `&content_type=${config.getContentTypeString()}`;
         this.requests = new PassThrough();
@@ -65,17 +65,3 @@ export class RevAiStreamingClient {
         this.requests.end(null);
     }
 }
-
-let audioConfig = new AudioConfig();
-audioConfig.contentType = "audio/*";
-const token = "02-MhfBgAVW-kHX6qGWzG0GO0u-5Qy8oWsMeNvYkXVPpiQRUnGarKMYewusVjpAMHUKcwChQa2PKo4qVvYs_tWgkymYvU";
-var test = new RevAiStreamingClient(token, audioConfig);
-var stream = test.start();
-var file = fs.createReadStream('../discovery-1min.wav');
-file.pipe(stream);
-stream.on('readable', function () {
-    console.log(stream.read());
-});
-stream.on('end', function () {
-    console.log("End of Stream");
-});
