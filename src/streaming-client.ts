@@ -52,7 +52,7 @@ export class RevAiStreamingClient {
             function sendFromBuffer() {
                 if (connection.connected) {
                     var value = self.requests.read(self.requests.readableLength);
-                    if (value != null) {
+                    if (value !== null) {
                         connection.send(value);
                     }
                     setTimeout(sendFromBuffer, 100);
