@@ -7,3 +7,4 @@ export * from './models/RevAiApiJob';
 export * from './models/RevAiApiTranscript';
 export * from './models/streaming/AudioConfig';
 export * from './models/streaming/BufferedDuplex';
+export * from './models/streaming/StreamingResponse';
