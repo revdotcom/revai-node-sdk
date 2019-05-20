@@ -78,8 +78,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
 
 /*
 Example: 
-let audioConfig = new AudioConfig();
-audioConfig.contentType = "audio/x-wav";
+let audioConfig = new AudioConfig("audio/x.wav");
 const token = "token";
 var client = new RevAiStreamingClient(token, audioConfig);
 var stream = client.start();

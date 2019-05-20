@@ -4,6 +4,13 @@ export default class AudioConfig {
     rate?: number;
     format?: string;
     channels?: number;
+    constructor(contentType: string, layout?: string, rate?: number, format?: string, channels?: number){
+        this.contentType = contentType;
+        this.layout = layout;
+        this.rate = rate;
+        this.format = format;
+        this.channels = channels;
+    }
 
     getContentTypeString (): string {
         return `${this.contentType}` +
