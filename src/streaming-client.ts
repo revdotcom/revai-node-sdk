@@ -31,7 +31,6 @@ export class RevAiStreamingClient extends events.EventEmitter {
         this.client.on('connectFailed', function(error: Error) {
             self.emit('connectFailed', error);
             self.requests.end();
-            throw error;
         });
         this.client.on('connect', function(connection: any) {
             self.emit('connect');
@@ -39,7 +38,6 @@ export class RevAiStreamingClient extends events.EventEmitter {
                 self.emit('error', error);
                 self.requests.end();
                 self.responses.push(null);
-                throw error;
             });
             connection.on('close', function(code: number, reason: string) {
                 self.emit('close', code, reason);
@@ -64,7 +62,6 @@ export class RevAiStreamingClient extends events.EventEmitter {
             sendFromBuffer();
         });
         this.client.connect(this.baseUrl);
-        console.log(this.client);
         return new BufferedDuplex(this.requests, this.responses, { readableObjectMode: true });
     }
 
