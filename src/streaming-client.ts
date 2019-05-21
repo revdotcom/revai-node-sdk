@@ -79,8 +79,8 @@ export class RevAiStreamingClient extends events.EventEmitter {
 }
 
 /*
-Example: 
-let audioConfig = new AudioConfig("audio/x.wav");
+// Example: 
+let audioConfig = new AudioConfig("audio/x-wav");
 const token = "token";
 var client = new RevAiStreamingClient(token, audioConfig);
 var stream = client.start();
@@ -93,6 +93,9 @@ client.on('close', (code, reason) => {
 
 var file = fs.createReadStream('../test.wav');
 file.pipe(stream);
+client.on('connect', id => {
+    console.log(`job id: ${id}`);
+})
 stream.on('data', data => {
     console.log(data);
 });
