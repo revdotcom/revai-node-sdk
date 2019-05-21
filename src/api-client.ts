@@ -26,7 +26,7 @@ export class RevAiApiClient {
         /* tslint:enable:no-string-literal */
     }
 
-    async getAccount (): Promise<RevAiAccount> {
+    async getAccount(): Promise<RevAiAccount> {
         try {
             const response = await axios.get('/account');
             return response.data;
@@ -40,7 +40,7 @@ export class RevAiApiClient {
         }
     }
 
-    async getJobDetails (id: string): Promise<RevAiApiJob> {
+    async getJobDetails(id: string): Promise<RevAiApiJob> {
         try {
             const response = await axios.get(`/jobs/${id}`);
             return response.data;
@@ -55,7 +55,7 @@ export class RevAiApiClient {
         }
     }
 
-    async getListOfJobs (limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
+    async getListOfJobs(limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
         try {
             let params = [];
             if (limit) {
@@ -80,7 +80,7 @@ export class RevAiApiClient {
         }
     }
 
-    async deleteJob (id: string): Promise<void> {
+    async deleteJob(id: string): Promise<void> {
         try {
             await axios.delete(`/jobs/${id}`);
         } catch (error) {
@@ -96,7 +96,7 @@ export class RevAiApiClient {
         }
     }
 
-    async submitJobUrl (mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+    async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         if (options) {
             options.media_url = mediaUrl;
         } else {
@@ -122,7 +122,7 @@ export class RevAiApiClient {
         }
     }
 
-    async submitJobLocalFile (filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+    async submitJobLocalFile(filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         let payload = new FormData();
         payload.append('media', fs.createReadStream(filename));
         if (options) {
@@ -148,7 +148,7 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptObject (id: string): Promise<RevAiApiTranscript> {
+    async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
@@ -167,7 +167,7 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptText (id: string): Promise<string> {
+    async getTranscriptText(id: string): Promise<string> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'text/plain' }

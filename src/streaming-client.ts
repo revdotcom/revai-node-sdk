@@ -26,14 +26,13 @@ export class RevAiStreamingClient extends events.EventEmitter {
         this.client = new sockets.client();
     }
 
-    start (): Duplex {
+    start(): Duplex {
         var self = this;
         this.client.on('connectFailed', function(error: Error) {
             self.emit('connectFailed', error);
             self.requests.end();
         });
         this.client.on('connect', function(connection: any) {
-            self.emit('connect');
             connection.on('error', function(error : Error) {
                 self.emit('error', error);
                 self.requests.end();
@@ -46,8 +45,14 @@ export class RevAiStreamingClient extends events.EventEmitter {
             });
             connection.on('message', function(message: any) {
                 if (message.type === 'utf8') {
-                    self.responses.write(JSON.parse(message.utf8Data) as StreamingResponse);
-                }
+                    var response = JSON.parse(message.utf8Data) as StreamingResponse;
+                    if (response.type == "connected"){
+                        self.emit('connect', response.id);
+                    }
+                    else{
+                        self.responses.write(response);
+                    }
+                };
             });
             
             function sendFromBuffer() {
@@ -65,7 +70,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
         return new BufferedDuplex(this.requests, this.responses, { readableObjectMode: true });
     }
 
-    end (): void {
+    end(): void {
         this.client.abort();
         this.requests.write("EOS");
         this.requests.end();

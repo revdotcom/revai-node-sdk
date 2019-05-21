@@ -5,6 +5,7 @@ import { RevAiStreamingClient } from '../src/streaming-client';
 const WebSocketClient = require('websocket').client;
 const fs = require('fs');
 const events = require('events');
+
 jest.mock('websocket');
 
 const audioConfig = new AudioConfig("audio/x-wav");
@@ -16,6 +17,7 @@ describe('streaming-client', () => {
     });
 
     describe('start', () => {
+
         it ('Connects to api with parameters', () => {
             const sut = new RevAiStreamingClient(token, audioConfig);
 
@@ -37,23 +39,23 @@ describe('streaming-client', () => {
 
             expect(res).toBeInstanceOf(BufferedDuplex);
         });
+    });
 
-        it ('Throws error when connection fails', () => {
-            var threwExpected = false;
+    describe('end', () => {
+
+        it ('Ends streaming connection', () => {
+            var ended = false;
             const sut = new RevAiStreamingClient(token, audioConfig);
-            sut.on('connectFailed', (error) => {
-                console.log(error);
-                if (error.prototype.message === "fake error"){
-                    threwExpected = true;
-                }
-            });
 
             const res = sut.start();
-            const mockedClient = WebSocketClient.mock.instances[0];
-            mockedClient.emit.mockRestore();
-            mockedClient.emit('connectFailed', new Error("fake error"));
+            res.on('end', () => {
+                ended = true;
+            });
+            sut.end();
 
-            expect(threwExpected).toBeTruthy();
+            const mockedClient = WebSocketClient.mock.instances[0];
+            expect(mockedClient.abort).toBeCalledTimes(1);
+            expect(ended).toBeTruthy();
         });
     });
 });
