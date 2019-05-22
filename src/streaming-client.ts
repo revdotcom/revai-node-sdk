@@ -52,8 +52,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
         this.client.on('connect', function(connection: any) {
             connection.on('error', function(error : Error) {
                 self.emit('error', error);
-                self.requests.end();
-                self.responses.push(null);
+                self.end();
             });
             connection.on('close', function(code: number, reason: string) {
                 self.emit('close', code, reason);

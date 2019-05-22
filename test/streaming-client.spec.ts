@@ -1,26 +1,22 @@
+import { PassThrough } from 'stream';
+import { WebSocketClient, WebSocketConnection } from 'websocket';
 import AudioConfig from '../src/models/streaming/AudioConfig';
 import BufferedDuplex from '../src/models/streaming/BufferedDuplex';
 import { RevAiStreamingClient } from '../src/streaming-client';
-
 const fs = require('fs');
 const events = require('events');
-var WebSocketClient = require('websocket').client;
 
 jest.mock('stream');
 
 const audioConfig = new AudioConfig("audio/x-wav");
 const token = "testToken";
 var sut = new RevAiStreamingClient(token, audioConfig);
-var mockClient = new WebSocketClient(); 
+var mockClient = new WebSocketClient();
 sut.client = mockClient;
 
 describe('streaming-client', () => {
     beforeEach(() => {
-        jest.spyOn(mockClient, 'connect');
-        jest.spyOn(mockClient, 'on');
-        jest.spyOn(mockClient, 'abort');
         mockClient.connect.mockReset();
-        mockClient.on.mockReset();
         mockClient.abort.mockReset();
     });
 
@@ -40,14 +36,15 @@ describe('streaming-client', () => {
 
             expect(res).toBeInstanceOf(BufferedDuplex);
         });
+    });
 
+    describe('client events', () => {
         it('Emits httpResponse event when client emits httpResponse', () => {
-            mockClient.on.mockRestore();
+            const res = sut.start();
             var statusCode = null;
             sut.on('httpResponse', code => {
                 statusCode = code;
             });
-            const res = sut.start();
 
             mockClient.emit('httpResponse', {statusCode: 401});
 
@@ -55,17 +52,70 @@ describe('streaming-client', () => {
         });
 
         it('Emits connectFailed event when client emits connectFailed', () => {
-            mockClient.on.mockRestore();
+            const res = sut.start();
             var connectionError = null;
             var expectedError = new Error("fake error")
             sut.on('connectFailed', error => {
                 connectionError = error;
             });
-            const res = sut.start();
             
             mockClient.emit('connectFailed', expectedError);
 
             expect(connectionError).toBe(expectedError);
+        });
+
+        it('Emits close code and reason on connection close', () => {
+            const res = sut.start();
+            var closeCode = null;
+            var closeReason = null;
+            const expectedCloseCode = 1000;
+            const expectedCloseReason = "NormalClosure";
+            var mockConnection = new WebSocketConnection();
+            sut.on('close', (code, reason) => {
+                closeCode = code;
+                closeReason = reason;
+            });
+
+            mockClient.emit('connect', mockConnection);
+            mockConnection.emit('close', expectedCloseCode, expectedCloseReason);
+
+            expect(closeCode).toBe(expectedCloseCode);
+            expect(closeReason).toBe(expectedCloseReason);
+        });
+
+        it('Emits error on connection error', () => {
+            const res = sut.start();
+            var connectionError = null;
+            const expectedError = new Error("fake connection error");
+            var mockConnection = new WebSocketConnection();
+            sut.on('error', error => {
+                connectionError = error;
+            });
+
+            mockClient.emit('connect', mockConnection);
+            mockConnection.emit('error', expectedError);
+
+            expect(connectionError).toBe(expectedError);
+        });
+
+        it('Emits connect event on receiving connected message', () => {
+            const res = sut.start();
+            var jobId = null;
+            const expectedJobId = "1";
+            var mockConnection = new WebSocketConnection();
+            sut.on('connect', id => {
+                jobId = id;
+            });
+
+            mockClient.emit('connect', mockConnection);
+            mockConnection.emit('message', 
+                {
+                    type: 'utf8', 
+                    utf8Data: `{ \"type\": \"connected\", \"id\": \"${expectedJobId}\"}`
+                }
+            );
+
+            expect(jobId).toBe(expectedJobId);
         });
     });
 
