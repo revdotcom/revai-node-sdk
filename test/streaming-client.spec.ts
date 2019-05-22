@@ -12,15 +12,16 @@ const audioConfig = new AudioConfig("audio/x-wav");
 const token = "testToken";
 var sut = new RevAiStreamingClient(token, audioConfig);
 var mockClient = new WebSocketClient(); 
+sut.client = mockClient;
 
 describe('streaming-client', () => {
     beforeEach(() => {
-        mockClient = new WebSocketClient();
         jest.spyOn(mockClient, 'connect');
         jest.spyOn(mockClient, 'on');
         jest.spyOn(mockClient, 'abort');
-        sut = new RevAiStreamingClient(token, audioConfig);
-        sut.client = mockClient;
+        mockClient.connect.mockReset();
+        mockClient.on.mockReset();
+        mockClient.abort.mockReset();
     });
 
     describe('start', () => {
