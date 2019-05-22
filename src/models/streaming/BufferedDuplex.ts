@@ -25,12 +25,12 @@ export default class BufferedDuplex extends Duplex {
     private setUpOutputHandlersAndRead(size : any): void {
         var self = this;
         self.output
-        .on('readable', function () {
-            self.readOutput(size);
-        })
-        .on('end', function () {
-            self.push(null);
-        });
+            .on('readable', function () {
+                self.readOutput(size);
+            })
+            .on('end', function () {
+                self.push(null);
+            });
         self.areOutputHandlersSetup = true;
     }
 
