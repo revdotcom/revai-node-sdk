@@ -85,7 +85,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
     }
 }
 
-
+/*
 // Example: 
 let audioConfig = new AudioConfig("audio/x-wav");
 const token = "token";
@@ -112,3 +112,4 @@ stream.on('data', data => {
 stream.on('end', function () {
     console.log("End of Stream");
 });
+*/

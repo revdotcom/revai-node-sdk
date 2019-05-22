@@ -2,60 +2,77 @@ import AudioConfig from '../src/models/streaming/AudioConfig';
 import BufferedDuplex from '../src/models/streaming/BufferedDuplex';
 import { RevAiStreamingClient } from '../src/streaming-client';
 
-const WebSocketClient = require('websocket').client;
 const fs = require('fs');
 const events = require('events');
+var WebSocketClient = require('websocket').client;
 
-jest.mock('websocket');
+jest.mock('stream');
 
 const audioConfig = new AudioConfig("audio/x-wav");
 const token = "testToken";
+var sut = new RevAiStreamingClient(token, audioConfig);
+var mockClient = new WebSocketClient(); 
 
 describe('streaming-client', () => {
     beforeEach(() => {
-        WebSocketClient.mockReset();
+        mockClient = new WebSocketClient();
+        jest.spyOn(mockClient, 'connect');
+        jest.spyOn(mockClient, 'on');
+        jest.spyOn(mockClient, 'abort');
+        sut = new RevAiStreamingClient(token, audioConfig);
+        sut.client = mockClient;
     });
 
     describe('start', () => {
-
-        it ('Connects to api with parameters', () => {
-            const sut = new RevAiStreamingClient(token, audioConfig);
-
+        it('Connects to api with parameters', () => {
             const res = sut.start();
 
-            expect(WebSocketClient).toBeCalledTimes(1);
-            const mockedClient = WebSocketClient.mock.instances[0];
-            expect(mockedClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
+            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
                 `access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}`
             );
-            expect(mockedClient.connect).toBeCalledTimes(1);
+            expect(mockClient.connect).toBeCalledTimes(1);
         });
 
-        it ('Returns duplex stream', () => {
-            const sut = new RevAiStreamingClient(token, audioConfig);
-
+        it('Returns duplex stream', () => {
             const res = sut.start();
 
             expect(res).toBeInstanceOf(BufferedDuplex);
         });
+
+        it('Emits httpResponse event when client emits httpResponse', () => {
+            mockClient.on.mockRestore();
+            var statusCode = null;
+            sut.on('httpResponse', code => {
+                statusCode = code;
+            });
+            const res = sut.start();
+
+            mockClient.emit('httpResponse', {statusCode: 401});
+
+            expect(statusCode).toBe(401);
+        });
+
+        it('Emits connectFailed event when client emits connectFailed', () => {
+            mockClient.on.mockRestore();
+            var connectionError = null;
+            var expectedError = new Error("fake error")
+            sut.on('connectFailed', error => {
+                connectionError = error;
+            });
+            const res = sut.start();
+            
+            mockClient.emit('connectFailed', expectedError);
+
+            expect(connectionError).toBe(expectedError);
+        });
     });
 
     describe('end', () => {
-
-        it ('Ends streaming connection', () => {
-            var ended = false;
-            const sut = new RevAiStreamingClient(token, audioConfig);
-
-            const res = sut.start();
-            res.on('end', () => {
-                ended = true;
-            });
+        it('Aborts client connection', () => {
             sut.end();
 
-            const mockedClient = WebSocketClient.mock.instances[0];
-            expect(mockedClient.abort).toBeCalledTimes(1);
-            expect(ended).toBeTruthy();
+            expect(mockClient.abort).toBeCalledTimes(1);
         });
     });
 });
