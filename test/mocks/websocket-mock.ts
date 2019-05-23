@@ -2,9 +2,11 @@ import * as events from 'events';
 
 export class WebSocketConnection extends events.EventEmitter {
     send: any;
-    constructor(){
+    connected: boolean;
+    constructor(connected = true){
         super();
         this.send = jest.fn();
+        this.connected = connected;
     }
 }
 

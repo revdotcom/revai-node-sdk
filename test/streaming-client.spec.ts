@@ -6,18 +6,19 @@ import { RevAiStreamingClient } from '../src/streaming-client';
 const fs = require('fs');
 const events = require('events');
 
-jest.mock('stream');
+jest.useFakeTimers();
+
+let sut: RevAiStreamingClient;
+let mockClient: WebSocketClient;
 
 const audioConfig = new AudioConfig("audio/x-wav");
 const token = "testToken";
-var sut = new RevAiStreamingClient(token, audioConfig);
-var mockClient = new WebSocketClient();
-sut.client = mockClient;
 
 describe('streaming-client', () => {
     beforeEach(() => {
-        mockClient.connect.mockReset();
-        mockClient.abort.mockReset();
+        sut = new RevAiStreamingClient(token, audioConfig);
+        mockClient = new WebSocketClient();
+        sut.client = mockClient;
     });
 
     describe('start', () => {
@@ -38,7 +39,7 @@ describe('streaming-client', () => {
         });
     });
 
-    describe('client events', () => {
+    describe('client setup', () => {
         it('Emits httpResponse event when client emits httpResponse', () => {
             const res = sut.start();
             var statusCode = null;
@@ -103,8 +104,8 @@ describe('streaming-client', () => {
             var jobId = null;
             const expectedJobId = "1";
             var mockConnection = new WebSocketConnection();
-            sut.on('connect', id => {
-                jobId = id;
+            sut.on('connect', response => {
+                jobId = response.id;
             });
 
             mockClient.emit('connect', mockConnection);
@@ -116,6 +117,41 @@ describe('streaming-client', () => {
             );
 
             expect(jobId).toBe(expectedJobId);
+        });
+    });
+
+    describe('Message sending', () => {
+        it('Sends messages written to input of duplex', () => {
+            const res = sut.start();
+            const mockConnection = new WebSocketConnection();
+            mockClient.emit('connect', mockConnection);
+            const input = Buffer.from([0x62]);
+
+            res.write(input);
+            jest.runOnlyPendingTimers();
+
+            expect(mockConnection.send).toBeCalledTimes(1);
+            expect(mockConnection.send).toBeCalledWith(input);
+        });
+
+        it.only('Writes hypothesis messages to output', () => {
+            const res = sut.start();
+            var message = null;
+            const mockConnection = new WebSocketConnection();
+            mockClient.emit('connect', mockConnection);
+            res.on('readable', () => {
+                console.log("hi");
+                message = (res.read());
+            });
+
+            mockConnection.emit('message', 
+                {
+                    type: 'utf8', 
+                    utf8Data: `{ \"type\": \"partial\", \"transcript\": \"hello world\"}`
+                }
+            );
+
+            expect(message).toBe({ type: "partial", transcript: "hello world"});
         });
     });
 

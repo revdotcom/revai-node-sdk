@@ -5,7 +5,11 @@ import { Duplex, PassThrough } from 'stream';
 
 import AudioConfig from './models/streaming/AudioConfig';
 import BufferedDuplex from './models/streaming/BufferedDuplex';
-import StreamingResponse from './models/streaming/StreamingResponse';
+import { 
+    StreamingResponse, 
+    StreamingHypothesis, 
+    StreamingConnected 
+} from './models/streaming/StreamingResponses';
 
 export class RevAiStreamingClient extends events.EventEmitter {
     baseUrl: string;
@@ -34,8 +38,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
 
     end(): void {
         this.client.abort();
-        this.requests.write("EOS");
-        this.requests.end();
+        this.requests.end("EOS");
         this.responses.push(null);
     }
 
@@ -60,12 +63,12 @@ export class RevAiStreamingClient extends events.EventEmitter {
             });
             connection.on('message', function(message: any) {
                 if (message.type === 'utf8') {
-                    var response = JSON.parse(message.utf8Data) as StreamingResponse;
-                    if (response.type == "connected"){
-                        self.emit('connect', response.id);
+                    var response = JSON.parse(message.utf8Data);
+                    if ((response as StreamingResponse).type == "connected"){
+                        self.emit('connect', response as StreamingConnected);
                     }
                     else{
-                        self.responses.write(response);
+                        self.responses.write(response as StreamingHypothesis);
                     }
                 };
             });
