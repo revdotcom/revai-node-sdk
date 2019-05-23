@@ -134,14 +134,15 @@ describe('streaming-client', () => {
             expect(mockConnection.send).toBeCalledWith(input);
         });
 
-        it.only('Writes hypothesis messages to output', () => {
+        it('Writes hypothesis messages to output', () => {
             const res = sut.start();
+            console.log(res);
             var message = null;
             const mockConnection = new WebSocketConnection();
             mockClient.emit('connect', mockConnection);
-            res.on('readable', () => {
+            res.on('data', data => {
                 console.log("hi");
-                message = (res.read());
+                message = data;
             });
 
             mockConnection.emit('message', 
@@ -150,8 +151,8 @@ describe('streaming-client', () => {
                     utf8Data: `{ \"type\": \"partial\", \"transcript\": \"hello world\"}`
                 }
             );
-
-            expect(message).toBe({ type: "partial", transcript: "hello world"});
+            console.log(res);
+            expect(message).toBe({type: "partial", transcript: "hello world"});
         });
     });
 

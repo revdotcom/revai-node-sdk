@@ -64,10 +64,10 @@ export class RevAiStreamingClient extends events.EventEmitter {
             connection.on('message', function(message: any) {
                 if (message.type === 'utf8') {
                     var response = JSON.parse(message.utf8Data);
-                    if ((response as StreamingResponse).type == "connected"){
+                    if ((response as StreamingResponse).type == "connected") {
                         self.emit('connect', response as StreamingConnected);
                     }
-                    else{
+                    else {
                         self.responses.write(response as StreamingHypothesis);
                     }
                 };
@@ -102,8 +102,8 @@ client.on('httpResponse', code => {
 client.on('connectFailed', (error) => {
     console.log(error);
 })
-client.on('connect', id => {
-    console.log(`job id: ${id}`);
+client.on('connect', connectionMessage => {
+    console.log(connectionMessage);
 })
 
 var file = fs.createReadStream('../test.wav');

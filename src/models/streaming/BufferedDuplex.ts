@@ -36,7 +36,7 @@ export default class BufferedDuplex extends Duplex {
 
     private readOutput(size : any): void {
         var chunk;
-        while(null !== (chunk = this.output.read(size))) {
+        while((chunk = this.output.read(size)) !== null) {
             if (!this.push(chunk)) break;
         }
     }
