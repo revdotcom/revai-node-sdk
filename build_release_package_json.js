@@ -7,7 +7,6 @@ try {
     const pkg = JSON.parse(origPackage);
     delete pkg.devDependencies;
     delete pkg.scripts;
-    delete pkg.jest;
     pkg.main = 'index.js';
     pkg.module = 'index.js';
 

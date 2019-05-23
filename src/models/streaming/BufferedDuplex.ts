@@ -1,6 +1,6 @@
 import { Duplex, PassThrough } from 'stream';
 
-export default class BufferedDuplex extends Duplex {
+export class BufferedDuplex extends Duplex {
     input: PassThrough;
     output: PassThrough;
     areOutputHandlersSetup: boolean;
@@ -35,8 +35,8 @@ export default class BufferedDuplex extends Duplex {
     }
 
     private readOutput(size : any): void {
-        var chunk;
-        while((chunk = this.output.read(size)) !== null) {
+        var chunk = this.output.read(size);
+        while(chunk !== null) {
             if (!this.push(chunk)) break;
         }
     }

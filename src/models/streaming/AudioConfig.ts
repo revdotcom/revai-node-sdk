@@ -1,10 +1,10 @@
-export default class AudioConfig {
+export class AudioConfig {
     contentType: string;
     layout?: string;
     rate?: number;
     format?: string;
     channels?: number;
-    constructor(contentType = "audio/*", layout?: string, rate?: number, format?: string, channels?: number){
+    constructor(contentType = "audio/*", layout?: string, rate?: number, format?: string, channels?: number) {
         this.contentType = contentType;
         this.layout = layout;
         this.rate = rate;
