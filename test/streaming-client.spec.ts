@@ -136,7 +136,6 @@ describe('streaming-client', () => {
 
         it('Writes hypothesis messages to output', () => {
             const res = sut.start();
-            console.log(res);
             var message = null;
             const mockConnection = new WebSocketConnection();
             mockClient.emit('connect', mockConnection);
@@ -151,8 +150,10 @@ describe('streaming-client', () => {
                     utf8Data: `{ \"type\": \"partial\", \"transcript\": \"hello world\"}`
                 }
             );
-            console.log(res);
-            expect(message).toBe({type: "partial", transcript: "hello world"});
+
+            setTimeout(() => { 
+                expect(message).toBe({type: "partial", transcript: "hello world"});
+            }, 100);
         });
     });
 
@@ -161,6 +162,27 @@ describe('streaming-client', () => {
             sut.end();
 
             expect(mockClient.abort).toBeCalledTimes(1);
+        });
+
+        it('Ends duplex stream', () => {
+            var duplex = sut.start();
+            var ended = false;
+            duplex.on('end', () => {
+                ended = true;
+            });
+
+            sut.end();
+            
+            setTimeout(() => {
+                expect(ended).toBeTruthy();
+            }, 100);
+        });
+
+        it('Closes off input stream', () => {
+            var duplex = sut.start();
+            sut.end();
+
+            expect(() => { duplex.write("message"); }).toThrow();
         });
     });
 });

@@ -11,7 +11,7 @@ export default class BufferedDuplex extends Duplex {
         this.areOutputHandlersSetup = false;
     }
 
-    _write(chunk: any, encoding: any, callback: any) : boolean {
+    _write(chunk: any, encoding: any, callback: any): boolean {
         return this.input.write(chunk, encoding, callback);
     }
 
