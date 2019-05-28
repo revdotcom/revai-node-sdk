@@ -62,9 +62,9 @@ export class RevAiStreamingClient extends events.EventEmitter {
     private responses: PassThrough;
 
     /**
-     * @param accessToken {string} Access token associated with the user's account
-     * @param config {AudioConfig} Configuration of the audio the user will send from this client
-     * @param version (optional) {string} Version of the Rev.ai API the user wants to use
+     * @param accessToken Access token associated with the user's account
+     * @param config Configuration of the audio the user will send from this client
+     * @param version (optional) Version of the Rev.ai API the user wants to use
      */
     constructor(accessToken: string, config: AudioConfig, version = 'v1alpha') {
         super();

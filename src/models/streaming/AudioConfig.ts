@@ -9,11 +9,11 @@ export class AudioConfig {
     channels?: number;
 
     /**
-     * @param contentType {string} Content type of the audio stream.
-     * @param layout (optional) {string} Layout of the audio channels. "interleaved" or "non-interleaved".
-     * @param rate (optional) {int} Sample rate of audio. 8000-48000hz supported.
-     * @param format (optional) {string} Format of audio.
-     * @param channels (optional) {int} Number of audio channels. 1-10 supported.
+     * @param contentType Content type of the audio stream.
+     * @param layout (optional) Layout of the audio channels. "interleaved" or "non-interleaved".
+     * @param rate (optional) Sample rate of audio. 8000-48000hz supported.
+     * @param format (optional) Format of audio.
+     * @param channels (optional) Number of audio channels. 1-10 supported.
      */
     constructor(
         contentType = 'audio/*',

@@ -6,8 +6,6 @@ import { RevAiStreamingClient } from '../src/streaming-client';
 const fs = require('fs');
 const events = require('events');
 
-jest.useFakeTimers();
-
 let sut: RevAiStreamingClient;
 let mockClient: WebSocketClient;
 
@@ -138,7 +136,7 @@ describe('streaming-client', () => {
     });
 
     describe('Message sending', () => {
-        it('Sends messages written to input of duplex', () => {
+        it('Sends messages written to input of duplex', done => {
             // Setup
             const res = sut.start();
             const mockConnection = new WebSocketConnection();
@@ -147,21 +145,22 @@ describe('streaming-client', () => {
 
             // Act
             res.write(input);
-            jest.runOnlyPendingTimers();
 
             // Assert
-            expect(mockConnection.send).toBeCalledTimes(1);
-            expect(mockConnection.send).toBeCalledWith(input);
+            setTimeout(() => {
+                expect(mockConnection.send).toBeCalledTimes(1);
+                expect(mockConnection.send).toBeCalledWith(input);
+                done();  
+            }, 250);
         });
 
-        it('Writes hypothesis messages to output', () => {
+        it('Writes hypothesis messages to output', done => {
             // Setup
             const res = sut.start();
             let message = null;
             const mockConnection = new WebSocketConnection();
             mockClient.emit('connect', mockConnection);
             res.on('data', data => {
-                console.log("hi");
                 message = data;
             });
 
@@ -176,6 +175,7 @@ describe('streaming-client', () => {
             // Assert
             setTimeout(() => { 
                 expect(message).toBe({type: "partial", transcript: "hello world"});
+                done();
             }, 100);
         });
     });
@@ -189,7 +189,7 @@ describe('streaming-client', () => {
             expect(mockClient.abort).toBeCalledTimes(1);
         });
 
-        it('Ends duplex stream', () => {
+        it.only('Ends duplex stream', done => {
             // Setup
             let duplex = sut.start();
             let ended = false;
@@ -203,6 +203,7 @@ describe('streaming-client', () => {
             // Assert
             setTimeout(() => {
                 expect(ended).toBeTruthy();
+                done();
             }, 100);
         });
 

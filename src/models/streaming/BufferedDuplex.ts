@@ -9,9 +9,9 @@ export class BufferedDuplex extends Duplex {
     areOutputHandlersSetup: boolean;
 
     /**
-     * @param input {PassThrough} Buffer for the Writable side of the stream.
-     * @param output {PassThrough} Buffer for the Readable side of the stream.
-     * @param options {object} Options to be passed through to the superclass.
+     * @param input Buffer for the Writable side of the stream.
+     * @param output Buffer for the Readable side of the stream.
+     * @param options Options to be passed through to the superclass.
      */
     constructor (input: PassThrough, output: PassThrough, options?: any) {
         super(options);
@@ -43,8 +43,8 @@ export class BufferedDuplex extends Duplex {
     }
 
     private readOutput(size: any): void {
-        let chunk = this.output.read(size);
-        while (chunk !== null) {
+        let chunk;
+        while ((chunk = this.output.read(size)) !== null) {
             if (!this.push(chunk)) {
                 break;
             }
