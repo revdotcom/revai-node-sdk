@@ -3,6 +3,7 @@ import * as FormData from 'form-data';
 import * as fs from 'fs';
 
 import RevAiAccount from './models/async/RevAiAccount';
+import RevAiJobOptions from './models/async/RevAiJobOptions';
 import {
     InsufficientCreditsError,
     InvalidParameterError,
@@ -11,7 +12,6 @@ import {
 } from './models/RevAiApiError';
 import RevAiApiJob from './models/RevAiApiJob';
 import RevAiApiTranscript from './models/RevAiApiTranscript';
-import RevAiJobOptions from './models/async/RevAiJobOptions';
 
 export class RevAiApiClient {
     accessToken: string;

@@ -1,6 +1,6 @@
 import * as events from 'events';
 
-export class WebSocketConnection extends events.EventEmitter {
+export class WebSocketConnectionMock extends events.EventEmitter {
     send: any;
     connected: boolean;
     constructor(connected = true){
@@ -10,7 +10,7 @@ export class WebSocketConnection extends events.EventEmitter {
     }
 }
 
-export class WebSocketClient extends events.EventEmitter {
+export class WebSocketClientMock extends events.EventEmitter {
     connect: any;
     abort: any;
     constructor(){
@@ -18,8 +18,4 @@ export class WebSocketClient extends events.EventEmitter {
         this.connect = jest.fn();
         this.abort = jest.fn();
     }
-}
-
-export function client() {
-    return new WebSocketClient();
 }

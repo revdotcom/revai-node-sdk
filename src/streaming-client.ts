@@ -1,23 +1,18 @@
-import * as fs from 'fs';
-import * as sockets from 'websocket';
 import * as events from 'events';
+import * as fs from 'fs';
 import { Duplex, PassThrough } from 'stream';
+import * as sockets from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
-import { 
-    StreamingResponse, 
-    StreamingHypothesis, 
-    StreamingConnected 
+import {
+    StreamingConnected,
+    StreamingHypothesis,
+    StreamingResponse
 } from './models/streaming/StreamingResponses';
 
 /**
  * Client which handles a streaming connection to the Rev.ai API.
- *
- * @param accessToken {string} Access token associated with the user's account
- * @param config {AudioConfig} Configuration of the audio the user will send from this client
- * @param version (optional) {string} Version of the Rev.ai API the user wants to use
- * 
  * @event httpResponse emitted when the client fails to start a websocket connection and
  *      receives an http response. Event contains the http status code of the response.
  * @event connectFailed emitted when the client fails to begin a websocket connection and
@@ -45,9 +40,9 @@ import {
  * client.on('connect', connectionMessage => {
  *     console.log(connectionMessage);
  * })
- * 
+ *
  * var stream = client.start();
- * 
+ *
  * var file = fs.createReadStream(<YOUR-AUDIO-FILE>);
  * stream.on('data', data => {
  *     console.log(data);
@@ -55,7 +50,7 @@ import {
  * stream.on('end', function () {
  *     console.log("End of Stream");
  * });
- * 
+ *
  * file.pipe(stream);
  */
 export class RevAiStreamingClient extends events.EventEmitter {
@@ -65,7 +60,13 @@ export class RevAiStreamingClient extends events.EventEmitter {
     private config: AudioConfig;
     private requests: PassThrough;
     private responses: PassThrough;
-    constructor(accessToken: string, config: AudioConfig, version = 'v1alpha'){
+
+    /**
+     * @param accessToken {string} Access token associated with the user's account
+     * @param config {AudioConfig} Configuration of the audio the user will send from this client
+     * @param version (optional) {string} Version of the Rev.ai API the user wants to use
+     */
+    constructor(accessToken: string, config: AudioConfig, version = 'v1alpha') {
         super();
         this.accessToken = accessToken;
         this.config = config;
@@ -76,11 +77,12 @@ export class RevAiStreamingClient extends events.EventEmitter {
         this.responses = new PassThrough({ objectMode: true });
         this.client = new sockets.client();
     }
+
     /**
      * Sets up the client and begins the streaming connection. Returns a duplex
      * from which the user can read responses from the api and to which the user
      * should write their audio data
-     * 
+     *
      * @returns BufferedDuplex. Data written to this buffer will be sent to the api
      * Data received from the api can be read from this duplex
      */
@@ -95,7 +97,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
      */
     end(): void {
         this.client.abort();
-        this.requests.end("EOS");
+        this.requests.end('EOS');
         this.responses.push(null);
     }
 
@@ -121,7 +123,7 @@ export class RevAiStreamingClient extends events.EventEmitter {
 
     private setUpConnectedHandlers(): void {
         this.client.on('connect', (connection: any) => {
-            connection.on('error', (error : Error) => {
+            connection.on('error', (error: Error) => {
                 this.emit('error', error);
                 this.end();
             });
@@ -131,20 +133,19 @@ export class RevAiStreamingClient extends events.EventEmitter {
             });
             connection.on('message', (message: any) => {
                 if (message.type === 'utf8') {
-                    var response = JSON.parse(message.utf8Data);
-                    if ((response as StreamingResponse).type == "connected") {
+                    let response = JSON.parse(message.utf8Data);
+                    if ((response as StreamingResponse).type === 'connected') {
                         this.emit('connect', response as StreamingConnected);
-                    }
-                    else {
+                    } else {
                         this.responses.write(response as StreamingHypothesis);
                     }
-                };
+                }
             });
-            
+
             function sendFromBuffer(buffer: PassThrough): void {
                 if (connection.connected) {
-                    var value = buffer.read(buffer.readableLength);
-                    if (value != null) {
+                    let value = buffer.read(buffer.readableLength);
+                    if (value !== null) {
                         connection.send(value);
                     }
                     setTimeout(() => sendFromBuffer(buffer), 100);

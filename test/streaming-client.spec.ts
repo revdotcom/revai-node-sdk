@@ -23,8 +23,10 @@ describe('streaming-client', () => {
 
     describe('start', () => {
         it('Connects to api with parameters', () => {
+            // Act
             const res = sut.start();
 
+            // Assert
             expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
                 `access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}`
@@ -33,81 +35,95 @@ describe('streaming-client', () => {
         });
 
         it('Returns duplex stream', () => {
+            // Act
             const res = sut.start();
 
+            // Assert
             expect(res).toBeInstanceOf(BufferedDuplex);
         });
-    });
 
-    describe('client setup', () => {
-        it('Emits httpResponse event when client emits httpResponse', () => {
+        it('adds event listener to httpResponse', () => {
+            // Setup
             const res = sut.start();
-            var statusCode = null;
+            let statusCode = null;
             sut.on('httpResponse', code => {
                 statusCode = code;
             });
 
+            // Act
             mockClient.emit('httpResponse', {statusCode: 401});
 
+            // Assert
             expect(statusCode).toBe(401);
         });
 
-        it('Emits connectFailed event when client emits connectFailed', () => {
+        it('adds event listener to connectFailed', () => {
+            // Setup
             const res = sut.start();
-            var connectionError = null;
-            var expectedError = new Error("fake error")
+            let connectionError = null;
+            let expectedError = new Error("fake error")
             sut.on('connectFailed', error => {
                 connectionError = error;
             });
             
+            // Act
             mockClient.emit('connectFailed', expectedError);
 
+            // Assert
             expect(connectionError).toBe(expectedError);
         });
 
-        it('Emits close code and reason on connection close', () => {
+        it('adds event listener to connection close', () => {
+            // Setup
             const res = sut.start();
-            var closeCode = null;
-            var closeReason = null;
+            let closeCode = null;
+            let closeReason = null;
             const expectedCloseCode = 1000;
             const expectedCloseReason = "NormalClosure";
-            var mockConnection = new WebSocketConnection();
+            let mockConnection = new WebSocketConnection();
             sut.on('close', (code, reason) => {
                 closeCode = code;
                 closeReason = reason;
             });
 
+            // Act
             mockClient.emit('connect', mockConnection);
             mockConnection.emit('close', expectedCloseCode, expectedCloseReason);
 
+            // Assert
             expect(closeCode).toBe(expectedCloseCode);
             expect(closeReason).toBe(expectedCloseReason);
         });
 
-        it('Emits error on connection error', () => {
+        it('adds event listener to connection error', () => {
+            // Setup
             const res = sut.start();
-            var connectionError = null;
+            let connectionError = null;
             const expectedError = new Error("fake connection error");
-            var mockConnection = new WebSocketConnection();
+            let mockConnection = new WebSocketConnection();
             sut.on('error', error => {
                 connectionError = error;
             });
 
+            // Act
             mockClient.emit('connect', mockConnection);
             mockConnection.emit('error', expectedError);
 
+            // Assert
             expect(connectionError).toBe(expectedError);
         });
 
-        it('Emits connect event on receiving connected message', () => {
+        it('emits connected event on connected message from server', () => {
+            // Setup
             const res = sut.start();
-            var jobId = null;
+            let jobId = null;
             const expectedJobId = "1";
-            var mockConnection = new WebSocketConnection();
+            let mockConnection = new WebSocketConnection();
             sut.on('connect', response => {
                 jobId = response.id;
             });
 
+            // Act
             mockClient.emit('connect', mockConnection);
             mockConnection.emit('message', 
                 {
@@ -116,27 +132,32 @@ describe('streaming-client', () => {
                 }
             );
 
+            // Assert
             expect(jobId).toBe(expectedJobId);
         });
     });
 
     describe('Message sending', () => {
         it('Sends messages written to input of duplex', () => {
+            // Setup
             const res = sut.start();
             const mockConnection = new WebSocketConnection();
             mockClient.emit('connect', mockConnection);
             const input = Buffer.from([0x62]);
 
+            // Act
             res.write(input);
             jest.runOnlyPendingTimers();
 
+            // Assert
             expect(mockConnection.send).toBeCalledTimes(1);
             expect(mockConnection.send).toBeCalledWith(input);
         });
 
         it('Writes hypothesis messages to output', () => {
+            // Setup
             const res = sut.start();
-            var message = null;
+            let message = null;
             const mockConnection = new WebSocketConnection();
             mockClient.emit('connect', mockConnection);
             res.on('data', data => {
@@ -144,6 +165,7 @@ describe('streaming-client', () => {
                 message = data;
             });
 
+            // Act
             mockConnection.emit('message', 
                 {
                     type: 'utf8', 
@@ -151,6 +173,7 @@ describe('streaming-client', () => {
                 }
             );
 
+            // Assert
             setTimeout(() => { 
                 expect(message).toBe({type: "partial", transcript: "hello world"});
             }, 100);
@@ -159,29 +182,38 @@ describe('streaming-client', () => {
 
     describe('end', () => {
         it('Aborts client connection', () => {
+            // Act
             sut.end();
 
+            // Assert
             expect(mockClient.abort).toBeCalledTimes(1);
         });
 
         it('Ends duplex stream', () => {
-            var duplex = sut.start();
-            var ended = false;
+            // Setup
+            let duplex = sut.start();
+            let ended = false;
             duplex.on('end', () => {
                 ended = true;
             });
 
+            // Act
             sut.end();
             
+            // Assert
             setTimeout(() => {
                 expect(ended).toBeTruthy();
             }, 100);
         });
 
         it('Closes off input stream', () => {
-            var duplex = sut.start();
+            // Setup
+            let duplex = sut.start();
+
+            // Act
             sut.end();
 
+            // Assert
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });

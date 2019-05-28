@@ -112,7 +112,6 @@
               "singleline": "never"
           }
       ],
-      "space-before-function-paren": true,
       "typedef": [
         true,
         "call-signature",
