@@ -153,31 +153,6 @@ describe('streaming-client', () => {
                 done();  
             }, 250);
         });
-
-        it('Writes hypothesis messages to output', done => {
-            // Setup
-            const res = sut.start();
-            let message = null;
-            const mockConnection = new WebSocketConnection();
-            mockClient.emit('connect', mockConnection);
-            res.on('data', data => {
-                message = data;
-            });
-
-            // Act
-            mockConnection.emit('message', 
-                {
-                    type: 'utf8', 
-                    utf8Data: `{ \"type\": \"partial\", \"transcript\": \"hello world\"}`
-                }
-            );
-
-            // Assert
-            setTimeout(() => { 
-                expect(message).toBe({type: "partial", transcript: "hello world"});
-                done();
-            }, 100);
-        });
     });
 
     describe('end', () => {
@@ -187,24 +162,6 @@ describe('streaming-client', () => {
 
             // Assert
             expect(mockClient.abort).toBeCalledTimes(1);
-        });
-
-        it.only('Ends duplex stream', done => {
-            // Setup
-            let duplex = sut.start();
-            let ended = false;
-            duplex.on('end', () => {
-                ended = true;
-            });
-
-            // Act
-            sut.end();
-            
-            // Assert
-            setTimeout(() => {
-                expect(ended).toBeTruthy();
-                done();
-            }, 100);
         });
 
         it('Closes off input stream', () => {
