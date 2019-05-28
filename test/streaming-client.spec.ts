@@ -6,6 +6,8 @@ import { RevAiStreamingClient } from '../src/streaming-client';
 const fs = require('fs');
 const events = require('events');
 
+jest.useFakeTimers();
+
 let sut: RevAiStreamingClient;
 let mockClient: WebSocketClient;
 
@@ -136,7 +138,7 @@ describe('streaming-client', () => {
     });
 
     describe('Message sending', () => {
-        it('Sends messages written to input of duplex', done => {
+        it('Sends messages written to input of duplex', () => {
             // Setup
             const res = sut.start();
             const mockConnection = new WebSocketConnection();
@@ -145,13 +147,11 @@ describe('streaming-client', () => {
 
             // Act
             res.write(input);
+            jest.runOnlyPendingTimers();
 
             // Assert
-            setTimeout(() => {
-                expect(mockConnection.send).toBeCalledTimes(1);
-                expect(mockConnection.send).toBeCalledWith(input);
-                done();  
-            }, 250);
+            expect(mockConnection.send).toBeCalledTimes(1);
+            expect(mockConnection.send).toBeCalledWith(input);
         });
     });
 
