@@ -141,17 +141,17 @@ export class RevAiStreamingClient extends events.EventEmitter {
                     }
                 }
             });
-
-            function sendFromBuffer(buffer: PassThrough): void {
-                if (connection.connected) {
-                    let value = buffer.read(buffer.readableLength);
-                    if (value !== null) {
-                        connection.send(value);
-                    }
-                    setTimeout(() => sendFromBuffer(buffer), 100);
-                }
-            }
-            sendFromBuffer(this.requests);
+            this.doSendLoop(connection, this.requests);
         });
+    }
+
+    private doSendLoop(connection: any, buffer: PassThrough): void {
+        if (connection.connected) {
+            let value = buffer.read(buffer.readableLength);
+            if (value !== null) {
+                connection.send(value);
+            }
+            setTimeout(() => this.doSendLoop(connection, buffer), 100);
+        }
     }
 }

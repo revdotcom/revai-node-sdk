@@ -23,7 +23,6 @@
       "curly": true,
       "label-position": true,
       "no-arg": true,
-      "no-conditional-assignment": true,
       "no-console": [
         true,
         "debug",
