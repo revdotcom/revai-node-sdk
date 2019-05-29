@@ -34,7 +34,6 @@
   "dependencies": {
     "axios": "^0.18.0",
     "form-data": "^2.3.3",
-    "stream": "0.0.2",
     "websocket": "^1.0.28"
   },
   "devDependencies": {
