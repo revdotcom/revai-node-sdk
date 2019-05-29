@@ -2,16 +2,16 @@ import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 
-import RevAiAccount from './models/async/RevAiAccount';
-import RevAiJobOptions from './models/async/RevAiJobOptions';
+import { RevAiAccount } from './models/async/RevAiAccount';
+import { RevAiJobOptions } from './models/async/RevAiJobOptions';
 import {
     InsufficientCreditsError,
     InvalidParameterError,
     InvalidStateError,
     RevAiApiError
 } from './models/RevAiApiError';
-import RevAiApiJob from './models/RevAiApiJob';
-import RevAiApiTranscript from './models/RevAiApiTranscript';
+import { RevAiApiJob } from './models/RevAiApiJob';
+import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
 export class RevAiApiClient {
     accessToken: string;

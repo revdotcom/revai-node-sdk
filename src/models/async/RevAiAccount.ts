@@ -1,4 +1,4 @@
-export default interface RevAiAccount {
+export interface RevAiAccount {
     email: string;
     balance_seconds: number;
 }
