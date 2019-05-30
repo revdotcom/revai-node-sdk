@@ -20,11 +20,11 @@ export class BufferedDuplex extends Duplex {
         this.areOutputHandlersSetup = false;
     }
 
-    private _write(chunk: any, encoding: string, callback: any): boolean {
+    public _write(chunk: any, encoding: string, callback: any): boolean {
         return this.input.write(chunk, encoding, callback);
     }
 
-    private _read(size: number): any {
+    public _read(size: number): any {
         if (!this.areOutputHandlersSetup) {
             return this.setUpOutputHandlersAndRead(size);
         }
