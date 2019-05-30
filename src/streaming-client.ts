@@ -80,7 +80,7 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     /**
-     * Sets up the client and begins the streaming connection. Returns a duplex
+     * Begins a streaming connection. Returns a duplex
      * from which the user can read responses from the api and to which the user
      * should write their audio data
      *

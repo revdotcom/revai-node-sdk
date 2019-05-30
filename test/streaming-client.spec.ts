@@ -53,6 +53,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(statusCode).toBe(401);
+            expect(() => { res.write("message"); }).toThrow();
         });
 
         it('adds event listener to connectFailed', () => {
@@ -69,6 +70,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(connectionError).toBe(expectedError);
+            expect(() => { res.write("message"); }).toThrow();
         });
 
         it('adds event listener to connection close', () => {
@@ -91,6 +93,7 @@ describe('streaming-client', () => {
             // Assert
             expect(closeCode).toBe(expectedCloseCode);
             expect(closeReason).toBe(expectedCloseReason);
+            expect(() => { res.write("message"); }).toThrow();
         });
 
         it('adds event listener to connection error', () => {
@@ -109,6 +112,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(connectionError).toBe(expectedError);
+            expect(() => { res.write("message"); }).toThrow();
         });
 
         it('emits connected event on connected message from server', () => {
