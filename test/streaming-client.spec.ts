@@ -1,4 +1,3 @@
-import { PassThrough } from 'stream';
 import { WebSocketClient, WebSocketConnection } from 'websocket';
 import { AudioConfig } from '../src/models/streaming/AudioConfig';
 import { BufferedDuplex } from '../src/models/streaming/BufferedDuplex';
@@ -17,8 +16,7 @@ const token = "testToken";
 describe('streaming-client', () => {
     beforeEach(() => {
         sut = new RevAiStreamingClient(token, audioConfig);
-        mockClient = new WebSocketClient();
-        sut.client = mockClient;
+        mockClient = sut.client;
     });
 
     describe('start', () => {

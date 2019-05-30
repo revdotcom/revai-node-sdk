@@ -20,18 +20,18 @@ export class BufferedDuplex extends Duplex {
         this.areOutputHandlersSetup = false;
     }
 
-    _write(chunk: any, encoding: any, callback: any): boolean {
+    private _write(chunk: any, encoding: string, callback: any): boolean {
         return this.input.write(chunk, encoding, callback);
     }
 
-    _read(size: any): any {
+    private _read(size: number): any {
         if (!this.areOutputHandlersSetup) {
             return this.setUpOutputHandlersAndRead(size);
         }
         return this.readOutput(size);
     }
 
-    private setUpOutputHandlersAndRead(size: any): void {
+    private setUpOutputHandlersAndRead(size: number): void {
         this.output
             .on('readable', () => {
                 this.readOutput(size);
@@ -42,7 +42,7 @@ export class BufferedDuplex extends Duplex {
         this.areOutputHandlersSetup = true;
     }
 
-    private readOutput(size: any): void {
+    private readOutput(size: number): void {
         let chunk;
         while ((chunk = this.output.read(size)) !== null) {
             if (!this.push(chunk)) {

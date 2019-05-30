@@ -1,7 +1,7 @@
-import * as events from 'events';
+import { EventEmitter } from 'events';
 import * as fs from 'fs';
 import { Duplex, PassThrough } from 'stream';
-import * as sockets from 'websocket';
+import { client } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
@@ -53,9 +53,9 @@ import {
  *
  * file.pipe(stream);
  */
-export class RevAiStreamingClient extends events.EventEmitter {
+export class RevAiStreamingClient extends EventEmitter {
     baseUrl: string;
-    client: sockets.WebSocketClient;
+    client: client;
     private accessToken: string;
     private config: AudioConfig;
     private requests: PassThrough;
@@ -70,12 +70,13 @@ export class RevAiStreamingClient extends events.EventEmitter {
         super();
         this.accessToken = accessToken;
         this.config = config;
-        this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream?` +
-            `access_token=${accessToken}` +
-            `&content_type=${config.getContentTypeString()}`;
+        this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
         this.requests = new PassThrough();
         this.responses = new PassThrough({ objectMode: true });
-        this.client = new sockets.client();
+        this.client = new client();
+        this.setUpHttpResponseHandler();
+        this.setUpConnectionFailureHandler();
+        this.setUpConnectedHandlers();
     }
 
     /**
@@ -86,25 +87,21 @@ export class RevAiStreamingClient extends events.EventEmitter {
      * @returns BufferedDuplex. Data written to this buffer will be sent to the api
      * Data received from the api can be read from this duplex
      */
-    start(): Duplex {
-        this.setUpClient();
-        this.client.connect(this.baseUrl);
+    public start(): Duplex {
+        let url = this.baseUrl +
+            `?access_token=${this.accessToken}` +
+            `&content_type=${this.config.getContentTypeString()}`;
+        this.client.connect(url);
         return new BufferedDuplex(this.requests, this.responses, { readableObjectMode: true });
     }
 
     /**
      * Ends the streaming connection and closes off the buffer returned from start()
      */
-    end(): void {
+    public end(): void {
         this.client.abort();
         this.requests.end('EOS');
         this.responses.push(null);
-    }
-
-    private setUpClient(): void {
-        this.setUpHttpResponseHandler();
-        this.setUpConnectionFailureHandler();
-        this.setUpConnectedHandlers();
     }
 
     private setUpHttpResponseHandler(): void {

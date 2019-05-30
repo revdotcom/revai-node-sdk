@@ -29,7 +29,7 @@ export class AudioConfig {
         this.channels = channels;
     }
 
-    getContentTypeString(): string {
+    public getContentTypeString(): string {
         return `${this.contentType}` +
             (this.layout ? `;layout=${this.layout}` : '') +
             (this.rate ? `;rate=${this.rate}` : '') +

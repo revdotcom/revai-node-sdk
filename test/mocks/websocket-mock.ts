@@ -1,18 +1,18 @@
-import * as events from 'events';
+import { EventEmitter } from 'events';
 
-export class WebSocketConnectionMock extends events.EventEmitter {
-    send: any;
+export class WebSocketConnectionMock extends EventEmitter {
     connected: boolean;
+    send: any;
     constructor(connected = true){
         super();
-        this.send = jest.fn();
         this.connected = connected;
+        this.send = jest.fn();
     }
 }
 
-export class WebSocketClientMock extends events.EventEmitter {
-    connect: any;
+export class WebSocketClientMock extends EventEmitter {
     abort: any;
+    connect: any
     constructor(){
         super();
         this.connect = jest.fn();
