@@ -1,4 +1,4 @@
-export default interface RevAiApiJob {
+export interface RevAiApiJob {
     id: string;
     status: string;
     created_on: string;

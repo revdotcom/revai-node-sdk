@@ -1,4 +1,4 @@
-export default interface RevAiApiTranscript {
+export interface RevAiApiTranscript {
     monologues: Monologue[];
 }
 

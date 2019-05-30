@@ -1,6 +1,6 @@
 import { CustomVocabulary } from './CustomVocabulary';
 
-export default interface RevAiJobOptions {
+export interface RevAiJobOptions {
     media_url?: string;
     metadata?: string;
     callback_url?: string;
