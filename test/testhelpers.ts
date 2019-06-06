@@ -25,7 +25,8 @@ export const setupFakeApiError = (statusCode: number, title: string, type?: stri
             config: null
         },
         name: 'axiosError',
-        message: 'fake error'
+        message: 'fake error',
+        isAxiosError: true
     };
 };
 
