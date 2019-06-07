@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import * as path from 'path';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 
@@ -148,11 +149,16 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
+    async getTranscriptObject(id: string, fileName = null, fileLocation = null): Promise<RevAiApiTranscript> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
             });
+
+            if (fileName) {
+                const fullPath = path.join(fileLocation || '', `${fileName}.json`);
+                await this.writeOutputToFile(fullPath, JSON.stringify(response.data, null, 4));
+            }
             return response.data;
         } catch (error) {
             switch (error.response.status) {
@@ -167,11 +173,16 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptText(id: string): Promise<string> {
+    async getTranscriptText(id: string, fileName = null, fileLocation = null): Promise<string> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'text/plain' }
             });
+
+            if (fileName) {
+                const fullPath = path.join(fileLocation || '', `${fileName}.txt`);
+                await this.writeOutputToFile(fullPath, response.data);
+            }
             return response.data;
         } catch (error) {
             switch (error.response.status) {
@@ -184,5 +195,35 @@ export class RevAiApiClient {
                     throw error;
             }
         }
+    }
+
+    async getCaptions(id: string, fileName = null, fileLocation = null): Promise<string> {
+        try {
+            const response = await axios.get(`/jobs/${id}/captions`, {
+                headers: { 'Accept': 'application/x-subrip' }
+            });
+
+            if (fileName) {
+                const fullPath = path.join(fileLocation || '', `${fileName}.srt`);
+                await this.writeOutputToFile(fullPath, response.data);
+            }
+            return response.data;
+        } catch (error) {
+            switch (error.response.status) {
+                case 401:
+                case 404:
+                    throw new RevAiApiError(error);
+                case 409:
+                    throw new InvalidStateError(error);
+                default:
+                    throw error;
+            }
+        }
+    }
+
+    private async writeOutputToFile(filepath: string, data: string){
+        await fs.writeFile(filepath, data, (err) => {
+            if (err) throw err;
+        });
     }
 }
