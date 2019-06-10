@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
-import * as path from 'path';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
+import * as path from 'path';
 
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
@@ -221,9 +221,12 @@ export class RevAiApiClient {
         }
     }
 
-    private async writeOutputToFile(filepath: string, data: string){
+    private async writeOutputToFile(filepath: string, data: string): void {
         await fs.writeFile(filepath, data, (err) => {
-            if (err) throw err;
+            if (err) {
+                throw err;
+            }
+
         });
     }
 }
