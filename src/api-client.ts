@@ -221,12 +221,11 @@ export class RevAiApiClient {
         }
     }
 
-    private async writeOutputToFile(filepath: string, data: string): void {
+    private async writeOutputToFile(filepath: string, data: string): Promise<void> {
         await fs.writeFile(filepath, data, (err) => {
             if (err) {
                 throw err;
             }
-
         });
     }
 }
