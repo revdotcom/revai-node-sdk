@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events';
-import * as fs from 'fs';
 import { Duplex, PassThrough } from 'stream';
 import { client } from 'websocket';
 

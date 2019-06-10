@@ -34,6 +34,7 @@ describe('api-client', () => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
         mockedAxios.delete.mockReset();
+        fs.writeFile.mockReset();
     });
 
     describe('getAccount', () => {
@@ -74,7 +75,7 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledTimes(1);
         })
 
-        it('get job by id', async() => {
+        it('get job by id', async () => {
             const resp = { data: jobDetails };
             mockedAxios.get.mockResolvedValue(resp);
 
@@ -115,7 +116,7 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledTimes(1);
         })
 
-        it('get list of jobs', async() => {
+        it('get list of jobs', async () => {
             const resp = { data: [jobDetails] };
             mockedAxios.get.mockResolvedValue(resp);
 
@@ -125,7 +126,7 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledWith('/jobs');
         });
 
-        it('get list of jobs with limit of 5', async() => {
+        it('get list of jobs with limit of 5', async () => {
             const jobDetails2 = {
                 id: otherJobId,
                 status: 'transcribed',
@@ -140,7 +141,7 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledWith('/jobs?limit=5');
         });
 
-        it('get list of jobs starting after certain job id', async() => {
+        it('get list of jobs starting after certain job id', async () => {
             const resp = { data: [jobDetails] };
             mockedAxios.get.mockResolvedValue(resp);
 
@@ -150,7 +151,7 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledWith(`/jobs?starting_after=${otherJobId}`);
         });
 
-        it('get list of jobs with limit of 5 and starting after certain job id', async() => {
+        it('get list of jobs with limit of 5 and starting after certain job id', async () => {
             const limit = 5;
             const jobDetails2 = {
                 id: otherJobId,
@@ -201,7 +202,7 @@ describe('api-client', () => {
             expect(mockedAxios.delete).toBeCalledTimes(1);
         })
 
-        it('delete job by id', async() => {
+        it('delete job by id', async () => {
             mockedAxios.delete.mockResolvedValue({});
 
             await sut.deleteJob(jobId);
@@ -252,7 +253,7 @@ describe('api-client', () => {
             expect(mockedAxios.post).toBeCalledTimes(1);
         });
 
-        it('submit job with media url without options', async() => {
+        it('submit job with media url without options', async () => {
             const resp = { data: jobDetails };
             mockedAxios.post.mockResolvedValue(resp);
 
@@ -264,7 +265,7 @@ describe('api-client', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with options', async() => {
+        it('submit job with media url with options', async () => {
             const resp = { data: jobDetails };
             mockedAxios.post.mockResolvedValue(resp);
             const options = {
@@ -335,7 +336,7 @@ describe('api-client', () => {
             expect(mockedAxios.post).toBeCalledTimes(1);
         });
 
-        it('submit job with local file without options', async() => {
+        it('submit job with local file without options', async () => {
             const resp = { data: jobDetails };
             mockedAxios.post.mockResolvedValue(resp);
 
@@ -343,15 +344,14 @@ describe('api-client', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
+                '_streams': expect.anything()
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with local file with options', async() => {
+        it('submit job with local file with options', async () => {
             const resp = { data: jobDetails };
             mockedAxios.post.mockResolvedValue(resp);
             const options = {
@@ -361,8 +361,7 @@ describe('api-client', () => {
             };
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
+                '_streams': expect.arrayContaining([expect.anything(), expect.anything(),
                     '{"metadata":"This is a sample submit jobs option","callback_url":"https://www.example.com/callback","custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}]}'])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -378,8 +377,7 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
+                '_streams': expect.anything()
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
@@ -398,8 +396,7 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
+                '_streams': expect.anything()
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
@@ -418,8 +415,7 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
+                '_streams': expect.anything()
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
@@ -435,15 +431,7 @@ describe('api-client', () => {
     });
 
     describe('getTranscriptObject', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
-            });
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
-
-        it('get transcript object', async() => {
-            const expectedTranscript = {
+        const expectedTranscript = {
                 "monologues": [
                     {
                         "speaker": 1,
@@ -470,11 +458,48 @@ describe('api-client', () => {
                     }
                 ]
             };
+        afterEach(() => {
+            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
+            });
+            expect(mockedAxios.get).toBeCalledTimes(1);
+        });
+
+        it('get transcript object', async () => {
             const resp = { data: expectedTranscript };
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptObject(jobId);
 
+            expect(fs.writeFile).toBeCalledTimes(0);
+            expect(transcript).toEqual(expectedTranscript);
+        });
+
+        it ('writes file when given filename', async () => {
+            const expectedFilename = 'exampleFilename';
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getTranscriptObject(jobId, expectedFilename);
+
+            expect(fs.writeFile).toBeCalledTimes(1);
+            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}.json`, JSON.stringify(resp.data, null, 4), expect.anything());
+            expect(transcript).toEqual(expectedTranscript);
+        });
+
+        it ('writes to path when given filename and path', async () => {
+            const expectedDir = './exampleDir';
+            const expectedFilename = 'exampleFilename';
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getTranscriptObject(jobId, expectedFilename, expectedDir);
+
+            expect(fs.writeFile).toBeCalledTimes(1);
+            expect(fs.writeFile).toBeCalledWith(
+                expect.stringMatching(/exampleDir.*exampleFilename.json/),
+                JSON.stringify(resp.data, null, 4), expect.anything()
+            );
             expect(transcript).toEqual(expectedTranscript);
         });
 
@@ -526,15 +551,46 @@ describe('api-client', () => {
             expect(mockedAxios.get).toBeCalledTimes(1);
         });
 
-        it('get transcript text', async() => {
+        it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptText(jobId);
 
+            expect(fs.writeFile).toBeCalledTimes(0);
             expect(transcript).toEqual(expectedTranscript);
-        })
+        });
+
+        it ('writes file when given filename', async () => {
+            const expectedFilename = 'exampleFilename';
+            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getTranscriptText(jobId, expectedFilename);
+
+            expect(fs.writeFile).toBeCalledTimes(1);
+            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}.txt`, resp.data, expect.anything());
+            expect(transcript).toEqual(expectedTranscript);
+        });
+
+        it ('writes to path when given filename and path', async () => {
+            const expectedDir = './exampleDir';
+            const expectedFilename = 'exampleFilename';
+            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getTranscriptText(jobId, expectedFilename, expectedDir);
+
+            expect(fs.writeFile).toBeCalledTimes(1);
+            expect(fs.writeFile).toBeCalledWith(
+                expect.stringMatching(/exampleDir.*exampleFilename.txt/),
+                resp.data, expect.anything()
+            );
+            expect(transcript).toEqual(expectedTranscript);
+        });
 
         it('handles when api returns unauthorized', async () => {
             const fakeError = setupFakeApiError(401, "Unauthorized");
@@ -568,6 +624,95 @@ describe('api-client', () => {
 
             try {
                 await sut.getTranscriptText(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new InvalidStateError(fakeError));
+            }
+        });
+    });
+
+    describe('getCaptions', () => {
+        afterEach(() => {
+            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/captions`, {
+                headers: { 'Accept': 'application/x-subrip' }
+            });
+            expect(mockedAxios.get).toBeCalledTimes(1);
+        });
+
+        it('get captions', async () => {
+            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getCaptions(jobId);
+
+            expect(fs.writeFile).toBeCalledTimes(0);
+            expect(transcript).toEqual(expectedTranscript);
+        })
+
+        it ('writes file when given filename', async () => {
+            const expectedFilename = 'exampleFilename';
+            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getCaptions(jobId, expectedFilename);
+
+            expect(fs.writeFile).toBeCalledTimes(1);
+            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}.srt`, resp.data, expect.anything());
+            expect(transcript).toEqual(expectedTranscript);
+        });
+
+        it ('writes to path when given filename and path', async () => {
+            const expectedDir = './exampleDir';
+            const expectedFilename = 'exampleFilename';
+            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
+            const resp = { data: expectedTranscript }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getCaptions(jobId, expectedFilename, expectedDir);
+
+            expect(fs.writeFile).toBeCalledTimes(1);
+            expect(fs.writeFile).toBeCalledWith(
+                expect.stringMatching(/exampleDir.*exampleFilename.srt/),
+                resp.data, expect.anything()
+            );
+            expect(transcript).toEqual(expectedTranscript);
+        });
+
+        it('handles when api returns unauthorized', async () => {
+            const fakeError = setupFakeApiError(401, "Unauthorized");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getCaptions(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns jobnotfound', async () => {
+            const fakeError = setupFakeApiError(404, "Job not found");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getCaptions(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns invalid state', async () => {
+            const fakeError = setupFakeInvalidStateError();
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getCaptions(jobId);
             }
 
             catch (e) {

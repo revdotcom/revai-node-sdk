@@ -94,6 +94,17 @@ var transcriptText = await client.getTranscriptText(job.id);
 
 // or as an object
 var transcriptObject = await client.getTranscriptObject(job.id);
+
+// as captions
+var captions = await client.getCaptions(job.id);
 ```
 
 The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint when using the json response schema.
+
+Any of these outputs can we written to a file by specifying a file path and name as follows:
+
+```javascript
+await client.getTranscriptText(job.id, 'filename', '/path/to/file/');
+```
+
+The type of file (.json, .txt, .srt) will be determined based on the output format requested

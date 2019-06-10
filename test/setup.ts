@@ -5,3 +5,9 @@ jest.mock('websocket', () => {
         client: require('./mocks/websocket-mock').WebSocketClientMock
     };
 });
+jest.mock('fs', () => {
+    return {
+        createReadStream: require('./mocks/fs-mock').createReadStreamMock,
+        writeFile: jest.fn()
+    };
+})
