@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { RevAiApiClient } from '../src/api-client';
+import { RevAiApiTranscript } from '../src/models/RevAiApiTranscript';
 import {
+    objectToStream,
     setupFakeApiError,
     setupFakeInvalidStateError,
     setupFakeInsufficientCreditsError,
@@ -34,7 +36,6 @@ describe('api-client', () => {
         mockedAxios.get.mockReset();
         mockedAxios.post.mockReset();
         mockedAxios.delete.mockReset();
-        fs.writeFile.mockReset();
     });
 
     describe('getAccount', () => {
@@ -460,45 +461,18 @@ describe('api-client', () => {
             };
         afterEach(() => {
             expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+                responseType: 'stream',
                 headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
             });
             expect(mockedAxios.get).toBeCalledTimes(1);
         });
 
         it('get transcript object', async () => {
-            const resp = { data: expectedTranscript };
+            const resp = { data: objectToStream(expectedTranscript) };
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptObject(jobId);
 
-            expect(fs.writeFile).toBeCalledTimes(0);
-            expect(transcript).toEqual(expectedTranscript);
-        });
-
-        it ('writes file when given filename', async () => {
-            const expectedFilename = 'exampleFilename.json';
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
-
-            const transcript = await sut.getTranscriptObject(jobId, expectedFilename);
-
-            expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}`, JSON.stringify(resp.data, null, 4), expect.anything());
-            expect(transcript).toEqual(expectedTranscript);
-        });
-
-        it ('writes to path when given filename and path', async () => {
-            const expectedDir = './exampleDir/exampleFilename.json';
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
-
-            const transcript = await sut.getTranscriptObject(jobId, expectedDir);
-
-            expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(
-                expect.stringMatching(/exampleDir.*exampleFilename.json/),
-                JSON.stringify(resp.data, null, 4), expect.anything()
-            );
             expect(transcript).toEqual(expectedTranscript);
         });
 
@@ -540,11 +514,97 @@ describe('api-client', () => {
                 expect(e).toEqual(new InvalidStateError(fakeError));
             }
         });
-    })
+    });
+
+    describe('getTranscriptObjectStream', () => {
+        const expectedTranscript = {
+                "monologues": [
+                    {
+                        "speaker": 1,
+                        "elements": [
+                            {
+                            "type": "text",
+                            "value": "Hello",
+                            "ts": 0.5,
+                            "end_ts": 1.5,
+                            "confidence": 1
+                            },
+                            {
+                            "type": "text",
+                            "value": "World",
+                            "ts": 1.75,
+                            "end_ts": 2.85,
+                            "confidence": 0.8
+                            },
+                            {
+                            "type": "punct",
+                            "value": "."
+                            }
+                        ]
+                    }
+                ]
+            };
+        afterEach(() => {
+            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+                responseType: 'stream',
+                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
+            });
+            expect(mockedAxios.get).toBeCalledTimes(1);
+        });
+
+        it('get transcript object', async () => {
+            const resp = { data: objectToStream(expectedTranscript) };
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getTranscriptObjectStream(jobId);
+
+            expect(transcript.read()).toEqual(expectedTranscript);
+        });
+
+        it('handles when api returns unauthorized', async () => {
+            const fakeError = setupFakeApiError(401, "Unauthorized");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getTranscriptObjectStream(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns jobnotfound', async () => {
+            const fakeError = setupFakeApiError(404, "Job not found");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getTranscriptObjectStream(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns invalid state', async () => {
+            const fakeError = setupFakeInvalidStateError();
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getTranscriptObjectStream(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new InvalidStateError(fakeError));
+            }
+        });
+    });
 
     describe('getTranscriptText', () => {
         afterEach(() => {
             expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+                responseType: 'stream',
                 headers: { 'Accept': 'text/plain' }
             });
             expect(mockedAxios.get).toBeCalledTimes(1);
@@ -552,41 +612,11 @@ describe('api-client', () => {
 
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: expectedTranscript }
+            const resp = { data: objectToStream(expectedTranscript) }
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptText(jobId);
 
-            expect(fs.writeFile).toBeCalledTimes(0);
-            expect(transcript).toEqual(expectedTranscript);
-        });
-
-        it ('writes file when given filename', async () => {
-            const expectedFilename = 'exampleFilename.txt';
-            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
-
-            const transcript = await sut.getTranscriptText(jobId, expectedFilename);
-
-            expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}`, resp.data, expect.anything());
-            expect(transcript).toEqual(expectedTranscript);
-        });
-
-        it ('writes to path when given filename and path', async () => {
-            const expectedDir = './exampleDir/exampleFilename.txt';
-            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
-
-            const transcript = await sut.getTranscriptText(jobId, expectedDir);
-
-            expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(
-                expect.stringMatching(/exampleDir.*exampleFilename.txt/),
-                resp.data, expect.anything()
-            );
             expect(transcript).toEqual(expectedTranscript);
         });
 
@@ -630,9 +660,69 @@ describe('api-client', () => {
         });
     });
 
+    describe('getTranscriptTextStream', () => {
+        afterEach(() => {
+            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
+                responseType: 'stream',
+                headers: { 'Accept': 'text/plain' }
+            });
+            expect(mockedAxios.get).toBeCalledTimes(1);
+        });
+
+        it('get transcript text', async () => {
+            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
+            const resp = { data: objectToStream(expectedTranscript) }
+            mockedAxios.get.mockResolvedValue(resp);
+
+            const transcript = await sut.getTranscriptTextStream(jobId);
+
+            expect(transcript.read()).toEqual(expectedTranscript);
+        });
+
+        it('handles when api returns unauthorized', async () => {
+            const fakeError = setupFakeApiError(401, "Unauthorized");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getTranscriptTextStream(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns jobnotfound', async () => {
+            const fakeError = setupFakeApiError(404, "Job not found");
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getTranscriptTextStream(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new RevAiApiError(fakeError));
+            }
+        });
+
+        it('handles when api returns invalid state', async () => {
+            const fakeError = setupFakeInvalidStateError();
+            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
+
+            try {
+                await sut.getTranscriptTextStream(jobId);
+            }
+
+            catch (e) {
+                expect(e).toEqual(new InvalidStateError(fakeError));
+            }
+        });
+    });
+
     describe('getCaptions', () => {
         afterEach(() => {
             expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/captions`, {
+                responseType: 'stream',
                 headers: { 'Accept': 'application/x-subrip' }
             });
             expect(mockedAxios.get).toBeCalledTimes(1);
@@ -640,43 +730,13 @@ describe('api-client', () => {
 
         it('get captions', async () => {
             const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            const resp = { data: expectedTranscript }
+            const resp = { data: objectToStream(expectedTranscript) }
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getCaptions(jobId);
 
-            expect(fs.writeFile).toBeCalledTimes(0);
-            expect(transcript).toEqual(expectedTranscript);
+            expect(transcript.read().toString()).toEqual(expectedTranscript);
         })
-
-        it ('writes file when given filename', async () => {
-            const expectedFilename = 'exampleFilename.srt';
-            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
-
-            const transcript = await sut.getCaptions(jobId, expectedFilename);
-
-            expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}`, resp.data, expect.anything());
-            expect(transcript).toEqual(expectedTranscript);
-        });
-
-        it ('writes to path when given filename and path', async () => {
-            const expectedDir = './exampleDir/exampleFilename.srt';
-            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
-
-            const transcript = await sut.getCaptions(jobId, expectedDir);
-
-            expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(
-                expect.stringMatching(/exampleDir.*exampleFilename.srt/),
-                resp.data, expect.anything()
-            );
-            expect(transcript).toEqual(expectedTranscript);
-        });
 
         it('handles when api returns unauthorized', async () => {
             const fakeError = setupFakeApiError(401, "Unauthorized");

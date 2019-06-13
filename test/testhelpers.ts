@@ -1,4 +1,12 @@
 import { AxiosError } from "axios";
+import { Readable } from 'stream';
+
+export function objectToStream(input: any): Readable {
+    const stream = new Readable({ objectMode: true });
+    stream.push(input);
+    stream.push(null);
+    return stream;
+}
 
 export const fakeAxiosError = {
     name: 'error',

@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Readable } from 'stream';
 
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
@@ -134,6 +135,7 @@ export class RevAiApiClient {
             const response = await axios.post('/jobs', payload, {
                 headers: payload.getHeaders()
             });
+
             return response.data;
         } catch (error) {
             switch (error.response.status) {
@@ -149,15 +151,18 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptObject(id: string, filePath = null): Promise<RevAiApiTranscript> {
+    async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
+        const stream = await this.getTranscriptObjectStream(id);
+        return stream.read();
+    }
+
+    async getTranscriptObjectStream(id: string): Promise<Readable> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
+                responseType: 'stream',
                 headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
             });
 
-            if (filePath) {
-                await this.writeOutputToFile(filePath, JSON.stringify(response.data, null, 4));
-            }
             return response.data;
         } catch (error) {
             switch (error.response.status) {
@@ -172,15 +177,23 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptText(id: string, filePath = null): Promise<string> {
+    async getTranscriptText(id: string): Promise<string> {
+        const stream = await this.getTranscriptTextStream(id);
+        const chunks = [];
+        return new Promise((resolve: any, reject: any): void => {
+            stream.on('data', chunk => chunks.push(chunk.toString('utf8')));
+            stream.on('error', reject);
+            stream.on('end', () => resolve(chunks.join('')));
+        });
+    }
+
+    async getTranscriptTextStream(id: string): Promise<Readable> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
+                responseType: 'stream',
                 headers: { 'Accept': 'text/plain' }
             });
 
-            if (fileName) {
-                await this.writeOutputToFile(filePath, response.data);
-            }
             return response.data;
         } catch (error) {
             switch (error.response.status) {
@@ -195,15 +208,13 @@ export class RevAiApiClient {
         }
     }
 
-    async getCaptions(id: string, filePath = null): Promise<string> {
+    async getCaptions(id: string): Promise<Readable> {
         try {
             const response = await axios.get(`/jobs/${id}/captions`, {
+                responseType: 'stream',
                 headers: { 'Accept': 'application/x-subrip' }
             });
 
-            if (fileName) {
-                await this.writeOutputToFile(filePath, response.data);
-            }
             return response.data;
         } catch (error) {
             switch (error.response.status) {
@@ -216,13 +227,5 @@ export class RevAiApiClient {
                     throw error;
             }
         }
-    }
-
-    private async writeOutputToFile(filepath: string, data: string): Promise<void> {
-        await fs.writeFile(filepath, data, (err) => {
-            if (err) {
-                throw err;
-            }
-        });
     }
 }
