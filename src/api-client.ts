@@ -149,15 +149,14 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptObject(id: string, fileName = null, fileLocation = null): Promise<RevAiApiTranscript> {
+    async getTranscriptObject(id: string, filePath = null): Promise<RevAiApiTranscript> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
             });
 
-            if (fileName) {
-                const fullPath = path.join(fileLocation || '', `${fileName}.json`);
-                await this.writeOutputToFile(fullPath, JSON.stringify(response.data, null, 4));
+            if (filePath) {
+                await this.writeOutputToFile(filePath, JSON.stringify(response.data, null, 4));
             }
             return response.data;
         } catch (error) {
@@ -173,15 +172,14 @@ export class RevAiApiClient {
         }
     }
 
-    async getTranscriptText(id: string, fileName = null, fileLocation = null): Promise<string> {
+    async getTranscriptText(id: string, filePath = null): Promise<string> {
         try {
             const response = await axios.get(`/jobs/${id}/transcript`, {
                 headers: { 'Accept': 'text/plain' }
             });
 
             if (fileName) {
-                const fullPath = path.join(fileLocation || '', `${fileName}.txt`);
-                await this.writeOutputToFile(fullPath, response.data);
+                await this.writeOutputToFile(filePath, response.data);
             }
             return response.data;
         } catch (error) {
@@ -197,15 +195,14 @@ export class RevAiApiClient {
         }
     }
 
-    async getCaptions(id: string, fileName = null, fileLocation = null): Promise<string> {
+    async getCaptions(id: string, filePath = null): Promise<string> {
         try {
             const response = await axios.get(`/jobs/${id}/captions`, {
                 headers: { 'Accept': 'application/x-subrip' }
             });
 
             if (fileName) {
-                const fullPath = path.join(fileLocation || '', `${fileName}.srt`);
-                await this.writeOutputToFile(fullPath, response.data);
+                await this.writeOutputToFile(filePath, response.data);
             }
             return response.data;
         } catch (error) {

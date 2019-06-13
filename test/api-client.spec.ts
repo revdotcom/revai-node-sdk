@@ -476,24 +476,23 @@ describe('api-client', () => {
         });
 
         it ('writes file when given filename', async () => {
-            const expectedFilename = 'exampleFilename';
+            const expectedFilename = 'exampleFilename.json';
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptObject(jobId, expectedFilename);
 
             expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}.json`, JSON.stringify(resp.data, null, 4), expect.anything());
+            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}`, JSON.stringify(resp.data, null, 4), expect.anything());
             expect(transcript).toEqual(expectedTranscript);
         });
 
         it ('writes to path when given filename and path', async () => {
-            const expectedDir = './exampleDir';
-            const expectedFilename = 'exampleFilename';
+            const expectedDir = './exampleDir/exampleFilename.json';
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
 
-            const transcript = await sut.getTranscriptObject(jobId, expectedFilename, expectedDir);
+            const transcript = await sut.getTranscriptObject(jobId, expectedDir);
 
             expect(fs.writeFile).toBeCalledTimes(1);
             expect(fs.writeFile).toBeCalledWith(
@@ -563,7 +562,7 @@ describe('api-client', () => {
         });
 
         it ('writes file when given filename', async () => {
-            const expectedFilename = 'exampleFilename';
+            const expectedFilename = 'exampleFilename.txt';
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
@@ -571,18 +570,17 @@ describe('api-client', () => {
             const transcript = await sut.getTranscriptText(jobId, expectedFilename);
 
             expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}.txt`, resp.data, expect.anything());
+            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}`, resp.data, expect.anything());
             expect(transcript).toEqual(expectedTranscript);
         });
 
         it ('writes to path when given filename and path', async () => {
-            const expectedDir = './exampleDir';
-            const expectedFilename = 'exampleFilename';
+            const expectedDir = './exampleDir/exampleFilename.txt';
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
 
-            const transcript = await sut.getTranscriptText(jobId, expectedFilename, expectedDir);
+            const transcript = await sut.getTranscriptText(jobId, expectedDir);
 
             expect(fs.writeFile).toBeCalledTimes(1);
             expect(fs.writeFile).toBeCalledWith(
@@ -652,7 +650,7 @@ describe('api-client', () => {
         })
 
         it ('writes file when given filename', async () => {
-            const expectedFilename = 'exampleFilename';
+            const expectedFilename = 'exampleFilename.srt';
             const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
@@ -660,18 +658,17 @@ describe('api-client', () => {
             const transcript = await sut.getCaptions(jobId, expectedFilename);
 
             expect(fs.writeFile).toBeCalledTimes(1);
-            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}.srt`, resp.data, expect.anything());
+            expect(fs.writeFile).toBeCalledWith(`${expectedFilename}`, resp.data, expect.anything());
             expect(transcript).toEqual(expectedTranscript);
         });
 
         it ('writes to path when given filename and path', async () => {
-            const expectedDir = './exampleDir';
-            const expectedFilename = 'exampleFilename';
+            const expectedDir = './exampleDir/exampleFilename.srt';
             const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
             const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
 
-            const transcript = await sut.getCaptions(jobId, expectedFilename, expectedDir);
+            const transcript = await sut.getCaptions(jobId, expectedDir);
 
             expect(fs.writeFile).toBeCalledTimes(1);
             expect(fs.writeFile).toBeCalledWith(
