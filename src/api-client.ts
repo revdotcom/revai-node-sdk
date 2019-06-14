@@ -19,6 +19,9 @@ export class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
+    private TEXT_OUTPUT = 'text/plain';
+    private JSON_OUTPUT = 'application/vnd.rev.transcript.v1.0+json';
+    private SRT_OUTPUT = 'application/x-subrip';
     constructor (accessToken: string, version = 'v1') {
         this.accessToken = accessToken;
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
@@ -152,67 +155,31 @@ export class RevAiApiClient {
     }
 
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
-        const stream = await this.getTranscriptObjectStream(id);
-        return stream.read();
+        return await this.getOutputsHelper(id, 'json', this.JSON_OUTPUT);
     }
 
     async getTranscriptObjectStream(id: string): Promise<Readable> {
-        try {
-            const response = await axios.get(`/jobs/${id}/transcript`, {
-                responseType: 'stream',
-                headers: { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }
-            });
-
-            return response.data;
-        } catch (error) {
-            switch (error.response.status) {
-                case 401:
-                case 404:
-                    throw new RevAiApiError(error);
-                case 409:
-                    throw new InvalidStateError(error);
-                default:
-                    throw error;
-            }
-        }
+        return await this.getOutputsHelper(id, 'stream', this.JSON_OUTPUT);
     }
 
     async getTranscriptText(id: string): Promise<string> {
-        const stream = await this.getTranscriptTextStream(id);
-        const chunks = [];
-        return new Promise((resolve: any, reject: any): void => {
-            stream.on('data', chunk => chunks.push(chunk.toString('utf8')));
-            stream.on('error', reject);
-            stream.on('end', () => resolve(chunks.join('')));
-        });
+        return await this.getOutputsHelper(id, 'text', this.TEXT_OUTPUT);
     }
 
     async getTranscriptTextStream(id: string): Promise<Readable> {
-        try {
-            const response = await axios.get(`/jobs/${id}/transcript`, {
-                responseType: 'stream',
-                headers: { 'Accept': 'text/plain' }
-            });
-
-            return response.data;
-        } catch (error) {
-            switch (error.response.status) {
-                case 401:
-                case 404:
-                    throw new RevAiApiError(error);
-                case 409:
-                    throw new InvalidStateError(error);
-                default:
-                    throw error;
-            }
-        }
+        return await this.getOutputsHelper(id, 'stream', this.TEXT_OUTPUT);
     }
 
     async getCaptions(id: string): Promise<Readable> {
+        return await this.getOutputsHelper(id, 'stream', this.SRT_OUTPUT);
+    }
+
+    private async getOutputsHelper(id: string, type: any, format: string): Promise<any> {
+        const endpoint = format === this.SRT_OUTPUT ? 'captions' : 'transcript';
         try {
-            const response = await axios.get(`/jobs/${id}/captions`, {
-                responseType: 'stream',
-                headers: { 'Accept': 'application/x-subrip' }
+            const response = await axios.get(`/jobs/${id}/${endpoint}`, {
+                responseType: type,
+                headers: { 'Accept': format }
             });
 
             return response.data;

@@ -461,14 +461,14 @@ describe('api-client', () => {
             };
         afterEach(() => {
             expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                responseType: 'stream',
+                responseType: 'json',
                 headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
             });
             expect(mockedAxios.get).toBeCalledTimes(1);
         });
 
         it('get transcript object', async () => {
-            const resp = { data: objectToStream(expectedTranscript) };
+            const resp = { data: expectedTranscript };
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptObject(jobId);
@@ -604,7 +604,7 @@ describe('api-client', () => {
     describe('getTranscriptText', () => {
         afterEach(() => {
             expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                responseType: 'stream',
+                responseType: 'text',
                 headers: { 'Accept': 'text/plain' }
             });
             expect(mockedAxios.get).toBeCalledTimes(1);
@@ -612,7 +612,7 @@ describe('api-client', () => {
 
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: objectToStream(expectedTranscript) }
+            const resp = { data: expectedTranscript }
             mockedAxios.get.mockResolvedValue(resp);
 
             const transcript = await sut.getTranscriptText(jobId);

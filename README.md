@@ -27,6 +27,12 @@ var accessToken = "Your Access Token";
 var client = new RevAiApiClient(accessToken);
 ```
 
+### Checking balance
+
+```javascript
+var accountInfo = await client.getAccount();
+```
+
 ### Submitting a job
 
 Once you've set up your client with your Access Token sending a file is easy!
