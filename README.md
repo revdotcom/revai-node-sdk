@@ -107,9 +107,9 @@ The text output is a string containing just the text of your transcript. The obj
 Any of these outputs can we retrieved as a stream for easy file writing:
 
 ```javascript
-await client.getTranscriptTextStream(job.id);
+var textStream = await client.getTranscriptTextStream(job.id);
 
-await client.getTranscriptObjectStream(job.id);
+var transcriptStream = await client.getTranscriptObjectStream(job.id);
 ```
 
 ### Getting captions output
@@ -117,5 +117,5 @@ await client.getTranscriptObjectStream(job.id);
 Another way to retrieve your file is captions output. We currently only support .srt output. A readable stream of your srt output can be retrieved as such:
 
 ```javascript
-await client.getCaptions(job.id);
+var captionsStream = await client.getCaptions(job.id);
 ```
