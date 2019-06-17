@@ -27,6 +27,12 @@ var accessToken = "Your Access Token";
 var client = new RevAiApiClient(accessToken);
 ```
 
+### Checking balance
+
+```javascript
+var accountInfo = await client.getAccount();
+```
+
 ### Submitting a job
 
 Once you've set up your client with your Access Token sending a file is easy!
@@ -97,3 +103,19 @@ var transcriptObject = await client.getTranscriptObject(job.id);
 ```
 
 The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint when using the json response schema.
+
+Any of these outputs can we retrieved as a stream for easy file writing:
+
+```javascript
+var textStream = await client.getTranscriptTextStream(job.id);
+
+var transcriptStream = await client.getTranscriptObjectStream(job.id);
+```
+
+### Getting captions output
+
+Another way to retrieve your file is captions output. We currently only support .srt output. A readable stream of your srt output can be retrieved as such:
+
+```javascript
+var captionsStream = await client.getCaptions(job.id);
+```
