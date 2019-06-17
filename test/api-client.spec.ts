@@ -345,7 +345,8 @@ describe('api-client', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.anything()
+                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
@@ -362,7 +363,8 @@ describe('api-client', () => {
             };
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.anything(), expect.anything(),
+                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
                     '{"metadata":"This is a sample submit jobs option","callback_url":"https://www.example.com/callback","custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}]}'])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -378,7 +380,8 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.anything()
+                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
@@ -397,7 +400,8 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.anything()
+                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 
@@ -416,7 +420,8 @@ describe('api-client', () => {
             mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.anything()
+                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
 

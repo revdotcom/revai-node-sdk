@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
-import * as path from 'path';
 import { Readable } from 'stream';
 
 import { RevAiAccount } from './models/async/RevAiAccount';
@@ -15,13 +14,16 @@ import {
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
+const enum ContentTypes {
+    JSON = 'application/vnd.rev.transcript.v1.0+json',
+    TEXT = 'text/plain',
+    SRT = 'application/x-subrip'
+}
+
 export class RevAiApiClient {
     accessToken: string;
     version: string;
     instance: AxiosInstance;
-    private TEXT_OUTPUT = 'text/plain';
-    private JSON_OUTPUT = 'application/vnd.rev.transcript.v1.0+json';
-    private SRT_OUTPUT = 'application/x-subrip';
     constructor (accessToken: string, version = 'v1') {
         this.accessToken = accessToken;
         axios.defaults.baseURL = `https://api.rev.ai/revspeech/${version}/`;
@@ -155,27 +157,31 @@ export class RevAiApiClient {
     }
 
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
-        return await this.getOutputsHelper(id, 'json', this.JSON_OUTPUT);
+        return await this.getOutputsHelper(id, 'json', ContentTypes.JSON) as RevAiApiTranscript;
     }
 
     async getTranscriptObjectStream(id: string): Promise<Readable> {
-        return await this.getOutputsHelper(id, 'stream', this.JSON_OUTPUT);
+        return await this.getOutputsHelper(id, 'stream', ContentTypes.JSON) as Readable;
     }
 
     async getTranscriptText(id: string): Promise<string> {
-        return await this.getOutputsHelper(id, 'text', this.TEXT_OUTPUT);
+        return await this.getOutputsHelper(id, 'text', ContentTypes.TEXT) as string;
     }
 
     async getTranscriptTextStream(id: string): Promise<Readable> {
-        return await this.getOutputsHelper(id, 'stream', this.TEXT_OUTPUT);
+        return await this.getOutputsHelper(id, 'stream', ContentTypes.TEXT) as Readable;
     }
 
     async getCaptions(id: string): Promise<Readable> {
-        return await this.getOutputsHelper(id, 'stream', this.SRT_OUTPUT);
+        return await this.getOutputsHelper(id, 'stream', ContentTypes.SRT) as Readable;
     }
 
-    private async getOutputsHelper(id: string, type: any, format: string): Promise<any> {
-        const endpoint = format === this.SRT_OUTPUT ? 'captions' : 'transcript';
+    private async getOutputsHelper(
+        id: string, 
+        type: any, 
+        format: string
+    ): Promise<Readable|string|RevAiApiTranscript> {
+        const endpoint = format === ContentTypes.SRT ? 'captions' : 'transcript';
         try {
             const response = await axios.get(`/jobs/${id}/${endpoint}`, {
                 responseType: type,
