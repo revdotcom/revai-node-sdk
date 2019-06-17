@@ -177,8 +177,8 @@ export class RevAiApiClient {
     }
 
     private async getOutputsHelper(
-        id: string, 
-        type: any, 
+        id: string,
+        type: any,
         format: string
     ): Promise<Readable|string|RevAiApiTranscript> {
         const endpoint = format === ContentTypes.SRT ? 'captions' : 'transcript';
