@@ -112,7 +112,7 @@ await client.getTranscriptTextStream(job.id);
 await client.getTranscriptObjectStream(job.id);
 ```
 
-### Captions
+### Getting captions output
 
 Another way to retrieve your file is captions output. We currently only support .srt output. A readable stream of your srt output can be retrieved as such:
 
