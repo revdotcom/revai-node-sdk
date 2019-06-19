@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+
 import {
     InsufficientCreditsError,
     InvalidParameterError,
@@ -17,7 +18,7 @@ export type AxiosResponseTypes = 'stream' | 'json' | 'text';
 export abstract class ApiRequestHandler {
     /** Single instance of axios which uses provided arguments for all requests */
     instance: AxiosInstance;
-    
+
     constructor (url: string, defaultHeaders: {}) {
         this.instance = axios.create({
             baseURL: url,
@@ -44,7 +45,7 @@ export abstract class ApiRequestHandler {
 
             return response.data;
         } catch (error) {
-            if (error.response == null){
+            if (error.response === null) {
                 throw error;
             }
             switch (error.response.status) {

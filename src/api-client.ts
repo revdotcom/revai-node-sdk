@@ -14,16 +14,18 @@ const enum ContentTypes {
     SRT = 'application/x-subrip'
 }
 
+// tslint:disable-next-line
+const sdkVersion = require('../package.json').version;
+
 export class RevAiApiClient extends ApiRequestHandler {
     accessToken: string;
     version: string;
     constructor (accessToken: string, version = 'v1') {
         super(`https://api.rev.ai/revspeech/${version}/`, {
             'Authorization': `Bearer ${accessToken}`,
-            'User-Agent': `RevAi-NodeSDK/2.0.1`
+            'User-Agent': `RevAi-NodeSDK/${sdkVersion}`
         });
         this.accessToken = accessToken;
-        /* tslint:enable:no-string-literal */
     }
 
     async getAccount(): Promise<RevAiAccount> {
@@ -31,7 +33,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             'get',
             '/account',
             {},
-            'json',
+            'json'
         );
     }
 
@@ -40,7 +42,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             'get',
             `/jobs/${id}`,
             {},
-            'json',
+            'json'
         );
     }
 
@@ -58,7 +60,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             'get',
             `/jobs${params.length > 0 ? query : ''}`,
             {},
-            'json',
+            'json'
         );
     }
 
@@ -67,7 +69,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             'delete',
             `/jobs/${id}`,
             {},
-            'text',
+            'text'
         );
     }
 
