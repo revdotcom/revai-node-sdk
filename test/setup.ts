@@ -7,5 +7,5 @@ jest.mock('websocket', () => {
 });
 
 jest.mock('axios', () => {
-    return require('./mocks/axios-mock').AxiosMock;
+    return require('./mocks/axios-mock');
 });

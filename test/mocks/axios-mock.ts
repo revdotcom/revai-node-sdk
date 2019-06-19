@@ -1,7 +1,8 @@
 const axios = jest.genMockFromModule('axios');
 
-export const AxiosMock = {
+const AxiosMock = {
     ...axios,
-    create: jest.fn().mockReturnThis(),
-    request: jest.fn()
+    create: jest.fn().mockReturnThis()
 };
+
+export default AxiosMock;

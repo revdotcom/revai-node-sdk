@@ -99,7 +99,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             `/jobs`,
             payload.getHeaders(),
             'json',
-            options
+            payload
         );
     }
 

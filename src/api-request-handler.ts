@@ -44,7 +44,9 @@ export abstract class ApiRequestHandler {
 
             return response.data;
         } catch (error) {
-            throw error;
+            if (error.response == null){
+                throw error;
+            }
             switch (error.response.status) {
                 case 400:
                     throw new InvalidParameterError(error);
