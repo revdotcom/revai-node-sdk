@@ -7,8 +7,8 @@ try {
     const pkg = JSON.parse(origPackage);
     delete pkg.devDependencies;
     delete pkg.scripts;
-    pkg.main = 'index.js';
-    pkg.module = 'index.js';
+    pkg.main = 'src/index.js';
+    pkg.module = 'src/index.js';
 
     const buildPackage = JSON.stringify(pkg, null, 2);
     const root = __dirname

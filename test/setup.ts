@@ -5,3 +5,7 @@ jest.mock('websocket', () => {
         client: require('./mocks/websocket-mock').WebSocketClientMock
     };
 });
+
+jest.mock('axios', () => {
+    return require('./mocks/axios-mock').AxiosMock;
+});
