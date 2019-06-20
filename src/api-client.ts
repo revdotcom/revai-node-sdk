@@ -17,11 +17,11 @@ const enum ContentTypes {
 // tslint:disable-next-line
 const sdkVersion = require('../package.json').version;
 
-export class RevAiApiClient extends ApiRequestHandler {
+export class RevAiApiClient {
     accessToken: string;
-    version: string;
+    apiHandler: ApiRequestHandler;
     constructor (accessToken: string, version = 'v1') {
-        super(`https://api.rev.ai/revspeech/${version}/`, {
+        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/revspeech/${version}/`, {
             'Authorization': `Bearer ${accessToken}`,
             'User-Agent': `RevAi-NodeSDK/${sdkVersion}`
         });
@@ -29,7 +29,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getAccount(): Promise<RevAiAccount> {
-        return await this.makeApiRequest<RevAiAccount>(
+        return await this.apiHandler.makeApiRequest<RevAiAccount>(
             'get',
             '/account',
             {},
@@ -38,7 +38,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getJobDetails(id: string): Promise<RevAiApiJob> {
-        return await this.makeApiRequest<RevAiApiJob>(
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>(
             'get',
             `/jobs/${id}`,
             {},
@@ -56,7 +56,7 @@ export class RevAiApiClient extends ApiRequestHandler {
         }
 
         const query = `?${params.join('&')}`;
-        return await this.makeApiRequest<RevAiApiJob[]>(
+        return await this.apiHandler.makeApiRequest<RevAiApiJob[]>(
             'get',
             `/jobs${params.length > 0 ? query : ''}`,
             {},
@@ -65,7 +65,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async deleteJob(id: string): Promise<void> {
-        return await this.makeApiRequest(
+        return await this.apiHandler.makeApiRequest(
             'delete',
             `/jobs/${id}`,
             {},
@@ -80,7 +80,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             options = { 'media_url': mediaUrl };
         }
 
-        return await this.makeApiRequest<RevAiApiJob>(
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>(
             'post',
             `/jobs`,
             { 'Content-Type': 'application/json' },
@@ -96,7 +96,7 @@ export class RevAiApiClient extends ApiRequestHandler {
             payload.append('options', JSON.stringify(options));
         }
 
-        return await this.makeApiRequest<RevAiApiJob>(
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>(
             'post',
             `/jobs`,
             payload.getHeaders(),
@@ -106,7 +106,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
-        return await this.makeApiRequest<RevAiApiTranscript>(
+        return await this.apiHandler.makeApiRequest<RevAiApiTranscript>(
             'get',
             `/jobs/${id}/transcript`,
             { 'Accept': ContentTypes.JSON },
@@ -115,7 +115,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getTranscriptObjectStream(id: string): Promise<Readable> {
-        return await this.makeApiRequest<Readable>(
+        return await this.apiHandler.makeApiRequest<Readable>(
             'get',
             `/jobs/${id}/transcript`,
             { 'Accept': ContentTypes.JSON },
@@ -124,7 +124,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getTranscriptText(id: string): Promise<string> {
-        return await this.makeApiRequest<string>(
+        return await this.apiHandler.makeApiRequest<string>(
             'get',
             `/jobs/${id}/transcript`,
             { 'Accept': ContentTypes.TEXT },
@@ -133,7 +133,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getTranscriptTextStream(id: string): Promise<Readable> {
-        return await this.makeApiRequest<Readable>(
+        return await this.apiHandler.makeApiRequest<Readable>(
             'get',
             `/jobs/${id}/transcript`,
             { 'Accept': ContentTypes.TEXT },
@@ -142,7 +142,7 @@ export class RevAiApiClient extends ApiRequestHandler {
     }
 
     async getCaptions(id: string): Promise<Readable> {
-        return await this.makeApiRequest<Readable>(
+        return await this.apiHandler.makeApiRequest<Readable>(
             'get',
             `/jobs/${id}/captions`,
             { 'Accept': ContentTypes.SRT },

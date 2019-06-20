@@ -14,19 +14,13 @@ import {
     InsufficientCreditsError
 } from '../src/models/RevAiApiError';
 
-class TestApiRequestHandler extends ApiRequestHandler {
-    constructor(baseURL: string, defaultHeaders: {}){
-        super(baseURL, defaultHeaders);
-    }
-}
-
 describe('api-request-handler', () => {
-    let sut: TestApiRequestHandler;
+    let sut: ApiRequestHandler;
     const baseURL = 'www.example.com';
     const defaultHeaders = { 'Authorization' : 'token' };
 
     beforeEach(() => {
-        sut = new TestApiRequestHandler(baseURL, defaultHeaders);
+        sut = new ApiRequestHandler(baseURL, defaultHeaders);
     });
 
     describe('makeApiRequest', () => {

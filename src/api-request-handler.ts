@@ -15,7 +15,7 @@ export type AxiosResponseTypes = 'stream' | 'json' | 'text';
  *
  * This class handles creating and sending requests as well as catching common errors
  */
-export abstract class ApiRequestHandler {
+export class ApiRequestHandler {
     /** Single instance of axios which uses provided arguments for all requests */
     instance: AxiosInstance;
 

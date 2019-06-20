@@ -1,12 +1,15 @@
-import axios from 'axios';
 import { RevAiApiClient } from '../src/api-client';
+import { ApiRequestHandler } from '../src/api-request-handler';
 import { RevAiApiTranscript } from '../src/models/RevAiApiTranscript';
 import { objectToStream } from './testhelpers';
 const fs = require('fs');
 const FormData = require('form-data');
 
+jest.mock('../src/api-request-handler');
+
+let sut: RevAiApiClient;
+
 describe('api-client', () => {
-    const sut = new RevAiApiClient('testtoken');
     const jobId = 'Umx5c6F7pH7r';
     const otherJobId = 'EMx5c67p3dr';
     const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
@@ -18,7 +21,8 @@ describe('api-client', () => {
     const filename = 'path/to/test.mp3';
     
     beforeEach(() => {
-        axios.request.mockReset();
+        ApiRequestHandler.mockClear();
+        sut = new RevAiApiClient('testtoken');
     });
 
     describe('getAccount', () => {
@@ -26,58 +30,55 @@ describe('api-client', () => {
             const accountEmail = 'test@rev.com';
             const balanceSeconds = 300;
             const data = { email: accountEmail, balance_seconds: balanceSeconds};
-            const resp = { data: data };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(data);
 
             const account = await sut.getAccount();
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: '/account',
-                headers: {},
-                responseType: 'json'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                '/account',
+                {},
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(account).toEqual(data);
         });
     });
 
     describe('getJobDetails', () => {
         it('get job by id', async () => {
-            const resp = { data: jobDetails };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.getJobDetails(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs/${jobDetails.id}`,
-                headers: {},
-                responseType: 'json'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs/${jobDetails.id}`,
+                {},
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
     });
 
     describe('getListOfJobs', () => {
-        afterEach(() => {
-            expect(axios.request).toBeCalledTimes(1);
-        })
-
         it('get list of jobs', async () => {
-            const resp = { data: [jobDetails] };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([jobDetails]);
 
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails]);
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs`,
-                headers: {},
-                responseType: 'json'
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs`,
+                {},
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
         it('get list of jobs with limit of 5', async () => {
@@ -86,33 +87,36 @@ describe('api-client', () => {
                 status: 'transcribed',
                 created_on: '2013-05-05T23:23:22.29Z'
             };
-            const resp = { data: [jobDetails, jobDetails2] };
-            axios.request.mockResolvedValue(resp);
+            const data = [jobDetails, jobDetails2];
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(data);
 
             const jobs = await sut.getListOfJobs(5);
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: '/jobs?limit=5',
-                headers: {},
-                responseType: 'json'
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                '/jobs?limit=5',
+                {},
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
         it('get list of jobs starting after certain job id', async () => {
-            const resp = { data: [jobDetails] };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([jobDetails]);
 
             const jobs = await sut.getListOfJobs(undefined, otherJobId);
 
             expect(jobs).toEqual([jobDetails]);
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs?starting_after=${otherJobId}`,
-                headers: {},
-                responseType: 'json'
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs?starting_after=${otherJobId}`,
+                {},
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
         it('get list of jobs with limit of 5 and starting after certain job id', async () => {
@@ -122,61 +126,60 @@ describe('api-client', () => {
                 status: 'transcribed',
                 created_on: '2013-05-05T23:23:22.29Z'
             };
-            const resp = { data: [jobDetails, jobDetails2] };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([jobDetails, jobDetails2]);
 
             const jobs = await sut.getListOfJobs(limit, otherJobId);
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs?limit=${limit}&starting_after=${otherJobId}`,
-                headers: {},
-                responseType: 'json'
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs?limit=${limit}&starting_after=${otherJobId}`,
+                {},
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
     });
 
     describe('deleteJob', () => {
         it('delete job by id', async () => {
-            axios.request.mockResolvedValue({});
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(null);
 
             await sut.deleteJob(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'delete',
-                url: `/jobs/${jobId}`,
-                headers: {},
-                responseType: 'text'
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'delete',
+                `/jobs/${jobId}`,
+                {},
+                'text'
             );
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
     });
 
     describe('submitJobUrl', () => {
-        afterEach(() => {
-            expect(axios.request).toBeCalledTimes(1);
-        });
-
         it('submit job with media url without options', async () => {
-            const resp = { data: jobDetails };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobUrl(mediaUrl);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'post',
-                url: '/jobs',
-                headers: { 'Content-Type': 'application/json' },
-                responseType: 'json',
-                data: { media_url: mediaUrl }
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'post',
+                '/jobs',
+                { 'Content-Type': 'application/json' },
+                'json',
+                { media_url: mediaUrl }
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with media url with options', async () => {
-            const resp = { data: jobDetails };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -185,25 +188,22 @@ describe('api-client', () => {
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'post',
-                url: '/jobs',
-                headers: { 'Content-Type': 'application/json' },
-                responseType: 'json',
-                data: options
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'post',
+                '/jobs',
+                { 'Content-Type': 'application/json' },
+                'json',
+                options
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
     });
 
     describe('submitJobLocalFile', () => {
-        afterEach(() => {
-            expect(axios.request).toBeCalledTimes(1);
-        });
-
         it('submit job with local file without options', async () => {
-            const resp = { data: jobDetails };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobLocalFile(filename);
 
@@ -213,19 +213,20 @@ describe('api-client', () => {
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(axios.request).toBeCalledWith({
-                method: 'post',
-                url: '/jobs',
-                headers: expectedHeader
-                responseType: 'json',
-                data: expectedPayload
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'post',
+                '/jobs',
+                expectedHeader
+                'json',
+                expectedPayload
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with local file with options', async () => {
-            const resp = { data: jobDetails };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -241,13 +242,14 @@ describe('api-client', () => {
 
             const job = await sut.submitJobLocalFile(filename, options);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'post',
-                url: '/jobs',
-                headers: expectedHeader
-                responseType: 'json',
-                data: expectedPayload
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'post',
+                '/jobs',
+                expectedHeader
+                'json',
+                expectedPayload
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
     });
@@ -282,18 +284,18 @@ describe('api-client', () => {
             };
 
         it('get transcript object', async () => {
-            const resp = { data: expectedTranscript };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
             const transcript = await sut.getTranscriptObject(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs/${jobId}/transcript`,
-                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` },
-                responseType: 'json'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs/${jobId}/transcript`,
+                { 'Accept': `application/vnd.rev.transcript.v1.0+json` },
+                'json'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
         });
     });
@@ -328,18 +330,18 @@ describe('api-client', () => {
             };
 
         it('get transcript object', async () => {
-            const resp = { data: objectToStream(expectedTranscript) };
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getTranscriptObjectStream(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs/${jobId}/transcript`,
-                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` },
-                responseType: 'stream'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs/${jobId}/transcript`,
+                { 'Accept': `application/vnd.rev.transcript.v1.0+json` },
+                'stream'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
         });
     });
@@ -347,41 +349,37 @@ describe('api-client', () => {
     describe('getTranscriptText', () => {
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: expectedTranscript }
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
             const transcript = await sut.getTranscriptText(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs/${jobId}/transcript`,
-                headers: { 'Accept': 'text/plain' },
-                responseType: 'text'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs/${jobId}/transcript`,
+                { 'Accept': 'text/plain' },
+                'text'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
         });
     });
 
     describe('getTranscriptTextStream', () => {
-        afterEach(() => {
-            
-        });
-
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: objectToStream(expectedTranscript) }
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getTranscriptTextStream(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs/${jobId}/transcript`,
-                headers: { 'Accept': 'text/plain' },
-                responseType: 'stream'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs/${jobId}/transcript`,
+                { 'Accept': 'text/plain' },
+                'stream'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
         });
     });
@@ -389,18 +387,18 @@ describe('api-client', () => {
     describe('getCaptions', () => {
         it('get captions', async () => {
             const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            const resp = { data: objectToStream(expectedTranscript) }
-            axios.request.mockResolvedValue(resp);
+            var mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getCaptions(jobId);
 
-            expect(axios.request).toBeCalledWith({
-                method: 'get',
-                url: `/jobs/${jobId}/captions`,
-                headers: { 'Accept': 'application/x-subrip' },
-                responseType: 'stream'
-            });
-            expect(axios.request).toBeCalledTimes(1);
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'get',
+                `/jobs/${jobId}/captions`,
+                { 'Accept': 'application/x-subrip' },
+                'stream'
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read().toString()).toEqual(expectedTranscript);
         })
     });
