@@ -10,6 +10,9 @@ import {
 export type HttpMethodTypes = 'post' | 'get' | 'delete';
 export type AxiosResponseTypes = 'stream' | 'json' | 'text';
 
+// tslint:disable-next-line
+const sdkVersion = require('../package.json').version;
+
 /**
  * Abstract class which should be inherited to make use of creating api calls
  *
@@ -19,10 +22,13 @@ export class ApiRequestHandler {
     /** Single instance of axios which uses provided arguments for all requests */
     instance: AxiosInstance;
 
-    constructor (url: string, defaultHeaders: {}) {
+    constructor (url: string, accessToken: string) {
         this.instance = axios.create({
             baseURL: url,
-            headers: defaultHeaders
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'User-Agent': `RevAi-NodeSDK/${sdkVersion}`
+            }
         });
     }
 

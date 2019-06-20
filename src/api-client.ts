@@ -14,18 +14,10 @@ const enum ContentTypes {
     SRT = 'application/x-subrip'
 }
 
-// tslint:disable-next-line
-const sdkVersion = require('../package.json').version;
-
 export class RevAiApiClient {
-    accessToken: string;
     apiHandler: ApiRequestHandler;
     constructor (accessToken: string, version = 'v1') {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/revspeech/${version}/`, {
-            'Authorization': `Bearer ${accessToken}`,
-            'User-Agent': `RevAi-NodeSDK/${sdkVersion}`
-        });
-        this.accessToken = accessToken;
+        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/revspeech/${version}/`, accessToken);
     }
 
     async getAccount(): Promise<RevAiAccount> {

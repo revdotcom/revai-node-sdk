@@ -30,7 +30,7 @@ describe('api-client', () => {
             const accountEmail = 'test@rev.com';
             const balanceSeconds = 300;
             const data = { email: accountEmail, balance_seconds: balanceSeconds};
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(data);
 
             const account = await sut.getAccount();
@@ -48,7 +48,7 @@ describe('api-client', () => {
 
     describe('getJobDetails', () => {
         it('get job by id', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.getJobDetails(jobId);
@@ -66,7 +66,7 @@ describe('api-client', () => {
 
     describe('getListOfJobs', () => {
         it('get list of jobs', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue([jobDetails]);
 
             const jobs = await sut.getListOfJobs();
@@ -88,7 +88,7 @@ describe('api-client', () => {
                 created_on: '2013-05-05T23:23:22.29Z'
             };
             const data = [jobDetails, jobDetails2];
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(data);
 
             const jobs = await sut.getListOfJobs(5);
@@ -104,7 +104,7 @@ describe('api-client', () => {
         });
 
         it('get list of jobs starting after certain job id', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue([jobDetails]);
 
             const jobs = await sut.getListOfJobs(undefined, otherJobId);
@@ -126,7 +126,7 @@ describe('api-client', () => {
                 status: 'transcribed',
                 created_on: '2013-05-05T23:23:22.29Z'
             };
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue([jobDetails, jobDetails2]);
 
             const jobs = await sut.getListOfJobs(limit, otherJobId);
@@ -144,7 +144,7 @@ describe('api-client', () => {
 
     describe('deleteJob', () => {
         it('delete job by id', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(null);
 
             await sut.deleteJob(jobId);
@@ -161,7 +161,7 @@ describe('api-client', () => {
 
     describe('submitJobUrl', () => {
         it('submit job with media url without options', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobUrl(mediaUrl);
@@ -178,7 +178,7 @@ describe('api-client', () => {
         });
 
         it('submit job with media url with options', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
@@ -202,7 +202,7 @@ describe('api-client', () => {
 
     describe('submitJobLocalFile', () => {
         it('submit job with local file without options', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobLocalFile(filename);
@@ -225,7 +225,7 @@ describe('api-client', () => {
         });
 
         it('submit job with local file with options', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
@@ -284,7 +284,7 @@ describe('api-client', () => {
             };
 
         it('get transcript object', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
             const transcript = await sut.getTranscriptObject(jobId);
@@ -330,7 +330,7 @@ describe('api-client', () => {
             };
 
         it('get transcript object', async () => {
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getTranscriptObjectStream(jobId);
@@ -349,7 +349,7 @@ describe('api-client', () => {
     describe('getTranscriptText', () => {
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
             const transcript = await sut.getTranscriptText(jobId);
@@ -368,7 +368,7 @@ describe('api-client', () => {
     describe('getTranscriptTextStream', () => {
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getTranscriptTextStream(jobId);
@@ -387,7 +387,7 @@ describe('api-client', () => {
     describe('getCaptions', () => {
         it('get captions', async () => {
             const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            var mockHandler = ApiRequestHandler.mock.instances[0];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getCaptions(jobId);

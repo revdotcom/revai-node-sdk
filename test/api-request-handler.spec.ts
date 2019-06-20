@@ -17,10 +17,10 @@ import {
 describe('api-request-handler', () => {
     let sut: ApiRequestHandler;
     const baseURL = 'www.example.com';
-    const defaultHeaders = { 'Authorization' : 'token' };
+    const accessToken = 'token';
 
     beforeEach(() => {
-        sut = new ApiRequestHandler(baseURL, defaultHeaders);
+        sut = new ApiRequestHandler(baseURL, accessToken);
     });
 
     describe('makeApiRequest', () => {
