@@ -1,27 +1,15 @@
-import axios from 'axios';
 import { RevAiApiClient } from '../src/api-client';
+import { ApiRequestHandler } from '../src/api-request-handler';
 import { RevAiApiTranscript } from '../src/models/RevAiApiTranscript';
-import {
-    objectToStream,
-    setupFakeApiError,
-    setupFakeInvalidStateError,
-    setupFakeInsufficientCreditsError,
-    setupFakeInvalidParametersError
-} from './testhelpers';
-import {
-    RevAiApiError,
-    InvalidParameterError,
-    InvalidStateError,
-    InsufficientCreditsError
-} from '../src/models/RevAiApiError';
-
+import { objectToStream } from './testhelpers';
 const fs = require('fs');
 const FormData = require('form-data');
-jest.mock('axios');
+
+jest.mock('../src/api-request-handler');
+
+let sut: RevAiApiClient;
 
 describe('api-client', () => {
-    const mockedAxios = axios as jest.Mocked<typeof axios>;
-    const sut = new RevAiApiClient('testtoken');
     const jobId = 'Umx5c6F7pH7r';
     const otherJobId = 'EMx5c67p3dr';
     const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
@@ -31,100 +19,51 @@ describe('api-client', () => {
         created_on: '2018-05-05T23:23:22.29Z'
     }
     const filename = 'path/to/test.mp3';
-
+    
     beforeEach(() => {
-        mockedAxios.get.mockReset();
-        mockedAxios.post.mockReset();
-        mockedAxios.delete.mockReset();
+        ApiRequestHandler.mockClear();
+        sut = new RevAiApiClient('testtoken');
     });
 
     describe('getAccount', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith('/account');
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
-
         it('get account email and balance', async () => {
             const accountEmail = 'test@rev.com';
             const balanceSeconds = 300;
             const data = { email: accountEmail, balance_seconds: balanceSeconds};
-            const resp = { data: data };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(data);
 
             const account = await sut.getAccount();
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', '/account', {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(account).toEqual(data);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getAccount();
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
         });
     });
 
     describe('getJobDetails', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}`);
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        })
-
         it('get job by id', async () => {
-            const resp = { data: jobDetails };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.getJobDetails(jobId);
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobDetails.id}`, {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getJobDetails(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getJobDetails(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
         });
     });
 
     describe('getListOfJobs', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        })
-
         it('get list of jobs', async () => {
-            const resp = { data: [jobDetails] };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([jobDetails]);
 
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails]);
-            expect(mockedAxios.get).toBeCalledWith('/jobs');
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
         it('get list of jobs with limit of 5', async () => {
@@ -133,23 +72,27 @@ describe('api-client', () => {
                 status: 'transcribed',
                 created_on: '2013-05-05T23:23:22.29Z'
             };
-            const resp = { data: [jobDetails, jobDetails2] };
-            mockedAxios.get.mockResolvedValue(resp);
+            const data = [jobDetails, jobDetails2];
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(data);
 
             const jobs = await sut.getListOfJobs(5);
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockedAxios.get).toBeCalledWith('/jobs?limit=5');
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', '/jobs?limit=5', {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
         it('get list of jobs starting after certain job id', async () => {
-            const resp = { data: [jobDetails] };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([jobDetails]);
 
             const jobs = await sut.getListOfJobs(undefined, otherJobId);
 
             expect(jobs).toEqual([jobDetails]);
-            expect(mockedAxios.get).toBeCalledWith(`/jobs?starting_after=${otherJobId}`);
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', 
+                `/jobs?starting_after=${otherJobId}`, {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
         it('get list of jobs with limit of 5 and starting after certain job id', async () => {
@@ -159,116 +102,46 @@ describe('api-client', () => {
                 status: 'transcribed',
                 created_on: '2013-05-05T23:23:22.29Z'
             };
-            const resp = { data: [jobDetails, jobDetails2] };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([jobDetails, jobDetails2]);
 
             const jobs = await sut.getListOfJobs(limit, otherJobId);
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockedAxios.get).toBeCalledWith(`/jobs?limit=${limit}&starting_after=${otherJobId}`);
-        });
-
-        it('handles when api returns invalid parameters', async () => {
-            const fakeError = setupFakeInvalidParametersError();
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getListOfJobs(-1);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidParameterError(fakeError));
-            }
-            expect(mockedAxios.get).toBeCalledWith('/jobs?limit=-1');
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getListOfJobs();
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-            expect(mockedAxios.get).toBeCalledWith('/jobs');
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get',
+                `/jobs?limit=${limit}&starting_after=${otherJobId}`, {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
     });
 
     describe('deleteJob', () => {
-        afterEach(() => {
-            expect(mockedAxios.delete).toBeCalledWith(`/jobs/${jobId}`);
-            expect(mockedAxios.delete).toBeCalledTimes(1);
-        })
-
         it('delete job by id', async () => {
-            mockedAxios.delete.mockResolvedValue({});
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(null);
 
             await sut.deleteJob(jobId);
-        });
 
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.delete.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.deleteJob(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.delete.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.deleteJob(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns invalid state', async () => {
-            const fakeError = setupFakeInvalidStateError();
-            mockedAxios.delete.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.deleteJob(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidStateError(fakeError));
-            }
+            expect(mockHandler.makeApiRequest).toBeCalledWith('delete', `/jobs/${jobId}`, {}, 'text');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
     });
 
     describe('submitJobUrl', () => {
-        afterEach(() => {
-            expect(mockedAxios.post).toBeCalledTimes(1);
-        });
-
         it('submit job with media url without options', async () => {
-            const resp = { data: jobDetails };
-            mockedAxios.post.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobUrl(mediaUrl);
 
-            expect(mockedAxios.post).toBeCalledWith('/jobs', { media_url: mediaUrl }, {
-                headers: { 'Content-Type': 'application/json' }
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with media url with options', async () => {
-            const resp = { data: jobDetails };
-            mockedAxios.post.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -277,69 +150,17 @@ describe('api-client', () => {
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
-            expect(mockedAxios.post).toBeCalledWith('/jobs', options, {
-                headers: { 'Content-Type': 'application/json' }
-            });
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', options);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.submitJobUrl(mediaUrl);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-            expect(mockedAxios.post).toBeCalledWith('/jobs', { media_url: mediaUrl }, {
-                headers: { 'Content-Type': 'application/json' }
-            });
-        });
-
-        it('handles when api returns insufficient credits', async () => {
-            const fakeError = setupFakeInsufficientCreditsError();
-            mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.submitJobUrl(mediaUrl);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InsufficientCreditsError(fakeError));
-            }
-            expect(mockedAxios.post).toBeCalledWith('/jobs', { media_url: mediaUrl }, {
-                headers: { 'Content-Type': 'application/json' }
-            });
-        });
-
-        it('handles when api returns invalid parameters', async () => {
-            const fakeError = setupFakeInvalidParametersError();
-            mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.submitJobUrl(mediaUrl);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidParameterError(fakeError));
-            }
-            expect(mockedAxios.post).toBeCalledWith('/jobs', { media_url: mediaUrl }, {
-                headers: { 'Content-Type': 'application/json' }
-            });
         });
     });
 
     describe('submitJobLocalFile', () => {
-        afterEach(() => {
-            expect(mockedAxios.post).toBeCalledTimes(1);
-        });
-
         it('submit job with local file without options', async () => {
-            const resp = { data: jobDetails };
-            mockedAxios.post.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobLocalFile(filename);
 
@@ -349,13 +170,15 @@ describe('api-client', () => {
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with local file with options', async () => {
-            const resp = { data: jobDetails };
-            mockedAxios.post.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -371,68 +194,10 @@ describe('api-client', () => {
 
             const job = await sut.submitJobLocalFile(filename, options);
 
-            expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
-            const expectedPayload = expect.objectContaining({
-                '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
-            });
-            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-
-            try {
-                await sut.submitJobLocalFile(filename);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-            expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
-        });
-
-        it('handles when api returns insufficient credits', async () => {
-            const fakeError = setupFakeInsufficientCreditsError();
-            mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
-            const expectedPayload = expect.objectContaining({
-                '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
-            });
-            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-
-            try {
-                await sut.submitJobLocalFile(filename);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InsufficientCreditsError(fakeError));
-            }
-            expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
-        });
-
-        it('handles when api returns invalid parameters', async () => {
-            const fakeError = setupFakeInvalidParametersError();
-            mockedAxios.post.mockImplementation(() => Promise.reject(fakeError));
-            const expectedPayload = expect.objectContaining({
-                '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"')])
-            });
-            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-
-            try {
-                await sut.submitJobLocalFile(filename);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidParameterError(fakeError));
-            }
-            expect(mockedAxios.post).toBeCalledWith('/jobs', expectedPayload, { headers: expectedHeader });
         });
     });
 
@@ -464,63 +229,20 @@ describe('api-client', () => {
                     }
                 ]
             };
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                responseType: 'json',
-                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
-            });
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
 
         it('get transcript object', async () => {
-            const resp = { data: expectedTranscript };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
             const transcript = await sut.getTranscriptObject(jobId);
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
+                { 'Accept': `application/vnd.rev.transcript.v1.0+json` }, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
         });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptObject(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptObject(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns invalid state', async () => {
-            const fakeError = setupFakeInvalidStateError();
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptObject(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidStateError(fakeError));
-            }
-        });
     });
-
+    
     describe('getTranscriptObjectStream', () => {
         const expectedTranscript = {
                 "monologues": [
@@ -549,237 +271,62 @@ describe('api-client', () => {
                     }
                 ]
             };
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                responseType: 'stream',
-                headers: { 'Accept': `application/vnd.rev.transcript.v1.0+json` }
-            });
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
 
         it('get transcript object', async () => {
-            const resp = { data: objectToStream(expectedTranscript) };
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getTranscriptObjectStream(jobId);
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
+                { 'Accept': `application/vnd.rev.transcript.v1.0+json` }, 'stream');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptObjectStream(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptObjectStream(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns invalid state', async () => {
-            const fakeError = setupFakeInvalidStateError();
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptObjectStream(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidStateError(fakeError));
-            }
         });
     });
 
     describe('getTranscriptText', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                responseType: 'text',
-                headers: { 'Accept': 'text/plain' }
-            });
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
-
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: expectedTranscript }
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
             const transcript = await sut.getTranscriptText(jobId);
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
+                { 'Accept': 'text/plain' }, 'text');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptText(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptText(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns invalid state', async () => {
-            const fakeError = setupFakeInvalidStateError();
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptText(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidStateError(fakeError));
-            }
         });
     });
 
     describe('getTranscriptTextStream', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/transcript`, {
-                responseType: 'stream',
-                headers: { 'Accept': 'text/plain' }
-            });
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
-
         it('get transcript text', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
-            const resp = { data: objectToStream(expectedTranscript) }
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getTranscriptTextStream(jobId);
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/transcript`, { 'Accept': 'text/plain' }, 'stream');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
-        });
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptTextStream(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptTextStream(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns invalid state', async () => {
-            const fakeError = setupFakeInvalidStateError();
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getTranscriptTextStream(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidStateError(fakeError));
-            }
         });
     });
 
     describe('getCaptions', () => {
-        afterEach(() => {
-            expect(mockedAxios.get).toBeCalledWith(`/jobs/${jobId}/captions`, {
-                responseType: 'stream',
-                headers: { 'Accept': 'application/x-subrip' }
-            });
-            expect(mockedAxios.get).toBeCalledTimes(1);
-        });
-
         it('get captions', async () => {
             const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            const resp = { data: objectToStream(expectedTranscript) }
-            mockedAxios.get.mockResolvedValue(resp);
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
             const transcript = await sut.getCaptions(jobId);
 
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions`,
+                { 'Accept': 'application/x-subrip' }, 'stream');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read().toString()).toEqual(expectedTranscript);
         })
-
-        it('handles when api returns unauthorized', async () => {
-            const fakeError = setupFakeApiError(401, "Unauthorized");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getCaptions(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns jobnotfound', async () => {
-            const fakeError = setupFakeApiError(404, "Job not found");
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getCaptions(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-        });
-
-        it('handles when api returns invalid state', async () => {
-            const fakeError = setupFakeInvalidStateError();
-            mockedAxios.get.mockImplementation(() => Promise.reject(fakeError));
-
-            try {
-                await sut.getCaptions(jobId);
-            }
-
-            catch (e) {
-                expect(e).toEqual(new InvalidStateError(fakeError));
-            }
-        });
     });
 });
