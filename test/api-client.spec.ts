@@ -35,12 +35,7 @@ describe('api-client', () => {
 
             const account = await sut.getAccount();
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                '/account',
-                {},
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', '/account', {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(account).toEqual(data);
         });
@@ -53,12 +48,7 @@ describe('api-client', () => {
 
             const job = await sut.getJobDetails(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs/${jobDetails.id}`,
-                {},
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobDetails.id}`, {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -72,12 +62,7 @@ describe('api-client', () => {
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails]);
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs`,
-                {},
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
@@ -94,12 +79,7 @@ describe('api-client', () => {
             const jobs = await sut.getListOfJobs(5);
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                '/jobs?limit=5',
-                {},
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', '/jobs?limit=5', {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
@@ -110,12 +90,8 @@ describe('api-client', () => {
             const jobs = await sut.getListOfJobs(undefined, otherJobId);
 
             expect(jobs).toEqual([jobDetails]);
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs?starting_after=${otherJobId}`,
-                {},
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', 
+                `/jobs?starting_after=${otherJobId}`, {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
 
@@ -132,12 +108,8 @@ describe('api-client', () => {
             const jobs = await sut.getListOfJobs(limit, otherJobId);
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs?limit=${limit}&starting_after=${otherJobId}`,
-                {},
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get',
+                `/jobs?limit=${limit}&starting_after=${otherJobId}`, {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
     });
@@ -149,12 +121,7 @@ describe('api-client', () => {
 
             await sut.deleteJob(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'delete',
-                `/jobs/${jobId}`,
-                {},
-                'text'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('delete', `/jobs/${jobId}`, {}, 'text');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
     });
@@ -166,13 +133,8 @@ describe('api-client', () => {
 
             const job = await sut.submitJobUrl(mediaUrl);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'post',
-                '/jobs',
-                { 'Content-Type': 'application/json' },
-                'json',
-                { media_url: mediaUrl }
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -188,13 +150,8 @@ describe('api-client', () => {
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'post',
-                '/jobs',
-                { 'Content-Type': 'application/json' },
-                'json',
-                options
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', options);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -213,13 +170,8 @@ describe('api-client', () => {
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'post',
-                '/jobs',
-                expectedHeader
-                'json',
-                expectedPayload
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -242,13 +194,8 @@ describe('api-client', () => {
 
             const job = await sut.submitJobLocalFile(filename, options);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'post',
-                '/jobs',
-                expectedHeader
-                'json',
-                expectedPayload
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -289,12 +236,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranscriptObject(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs/${jobId}/transcript`,
-                { 'Accept': `application/vnd.rev.transcript.v1.0+json` },
-                'json'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
+                { 'Accept': `application/vnd.rev.transcript.v1.0+json` }, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
         });
@@ -335,12 +278,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranscriptObjectStream(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs/${jobId}/transcript`,
-                { 'Accept': `application/vnd.rev.transcript.v1.0+json` },
-                'stream'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
+                { 'Accept': `application/vnd.rev.transcript.v1.0+json` }, 'stream');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
         });
@@ -354,12 +293,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranscriptText(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs/${jobId}/transcript`,
-                { 'Accept': 'text/plain' },
-                'text'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
+                { 'Accept': 'text/plain' }, 'text');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
         });
@@ -373,12 +308,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranscriptTextStream(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs/${jobId}/transcript`,
-                { 'Accept': 'text/plain' },
-                'stream'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/transcript`, { 'Accept': 'text/plain' }, 'stream');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
         });
@@ -392,12 +323,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getCaptions(jobId);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith(
-                'get',
-                `/jobs/${jobId}/captions`,
-                { 'Accept': 'application/x-subrip' },
-                'stream'
-            );
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions`,
+                { 'Accept': 'application/x-subrip' }, 'stream');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(transcript.read().toString()).toEqual(expectedTranscript);
         })

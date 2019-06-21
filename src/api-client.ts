@@ -21,21 +21,11 @@ export class RevAiApiClient {
     }
 
     async getAccount(): Promise<RevAiAccount> {
-        return await this.apiHandler.makeApiRequest<RevAiAccount>(
-            'get',
-            '/account',
-            {},
-            'json'
-        );
+        return await this.apiHandler.makeApiRequest<RevAiAccount>('get', '/account', {}, 'json');
     }
 
     async getJobDetails(id: string): Promise<RevAiApiJob> {
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>(
-            'get',
-            `/jobs/${id}`,
-            {},
-            'json'
-        );
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>( 'get', `/jobs/${id}`, {}, 'json');
     }
 
     async getListOfJobs(limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
@@ -48,21 +38,12 @@ export class RevAiApiClient {
         }
 
         const query = `?${params.join('&')}`;
-        return await this.apiHandler.makeApiRequest<RevAiApiJob[]>(
-            'get',
-            `/jobs${params.length > 0 ? query : ''}`,
-            {},
-            'json'
-        );
+        return await this.apiHandler.makeApiRequest<RevAiApiJob[]>('get',
+            `/jobs${params.length > 0 ? query : ''}`, {}, 'json');
     }
 
     async deleteJob(id: string): Promise<void> {
-        return await this.apiHandler.makeApiRequest(
-            'delete',
-            `/jobs/${id}`,
-            {},
-            'text'
-        );
+        return await this.apiHandler.makeApiRequest('delete', `/jobs/${id}`, {}, 'text');
     }
 
     async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
@@ -72,13 +53,8 @@ export class RevAiApiClient {
             options = { 'media_url': mediaUrl };
         }
 
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>(
-            'post',
-            `/jobs`,
-            { 'Content-Type': 'application/json' },
-            'json',
-            options
-        );
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+            { 'Content-Type': 'application/json' }, 'json', options);
     }
 
     async submitJobLocalFile(filename: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
@@ -88,57 +64,32 @@ export class RevAiApiClient {
             payload.append('options', JSON.stringify(options));
         }
 
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>(
-            'post',
-            `/jobs`,
-            payload.getHeaders(),
-            'json',
-            payload
-        );
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+            payload.getHeaders(), 'json', payload);
     }
 
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
-        return await this.apiHandler.makeApiRequest<RevAiApiTranscript>(
-            'get',
-            `/jobs/${id}/transcript`,
-            { 'Accept': ContentTypes.JSON },
-            'json'
-        );
+        return await this.apiHandler.makeApiRequest<RevAiApiTranscript>('get', `/jobs/${id}/transcript`,
+            { 'Accept': ContentTypes.JSON }, 'json');
     }
 
     async getTranscriptObjectStream(id: string): Promise<Readable> {
-        return await this.apiHandler.makeApiRequest<Readable>(
-            'get',
-            `/jobs/${id}/transcript`,
-            { 'Accept': ContentTypes.JSON },
-            'stream'
-        );
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/transcript`, { 'Accept': ContentTypes.JSON }, 'stream');
     }
 
     async getTranscriptText(id: string): Promise<string> {
-        return await this.apiHandler.makeApiRequest<string>(
-            'get',
-            `/jobs/${id}/transcript`,
-            { 'Accept': ContentTypes.TEXT },
-            'text'
-        );
+        return await this.apiHandler.makeApiRequest<string>('get', `/jobs/${id}/transcript`,
+            { 'Accept': ContentTypes.TEXT }, 'text');
     }
 
     async getTranscriptTextStream(id: string): Promise<Readable> {
-        return await this.apiHandler.makeApiRequest<Readable>(
-            'get',
-            `/jobs/${id}/transcript`,
-            { 'Accept': ContentTypes.TEXT },
-            'stream'
-        );
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/transcript`, { 'Accept': ContentTypes.TEXT }, 'stream');
     }
 
     async getCaptions(id: string): Promise<Readable> {
-        return await this.apiHandler.makeApiRequest<Readable>(
-            'get',
-            `/jobs/${id}/captions`,
-            { 'Accept': ContentTypes.SRT },
-            'stream'
-        );
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/captions`, { 'Accept': ContentTypes.SRT }, 'stream');
     }
 }
