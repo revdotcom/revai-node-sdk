@@ -1,0 +1,29 @@
+{
+  "name": "integration-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for the Rev.ai node sdk",
+  "main": "index.js",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revdotcom/revai-node-sdk.git"
+  },
+  "author": "Rev Ai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/revdotcom/revai-node-sdk/issues"
+  },
+  "homepage": "https://github.com/revdotcom/revai-node-sdk#readme",
+  "devDependencies": {
+    "revai-node-sdk": "^2.0.1",
+    "dotenv": "^8.0.0",
+    "jest": "^24.8.0",
+    "@types/node": "^8.16.0",
+    "@types/jest": "^23.3.13"
+  }
+}
