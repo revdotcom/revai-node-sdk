@@ -14,7 +14,6 @@
   "license": "UNLICENSED",
   "homepage": "https://github.com/revdotcom/revai-node-sdk/test/integration",
   "devDependencies": {
-    "revai-node-sdk": "^2.0.1",
     "dotenv": "^8.0.0",
     "jest": "^24.8.0",
     "@types/node": "^8.16.0",
