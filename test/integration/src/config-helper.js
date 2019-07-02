@@ -1,13 +1,13 @@
 require('dotenv').config();
 
 module.exports = {
-    getApiKey: function() {
+    getApiKey: () => {
         return process.env.API_KEY;
     },
-    getUserEmail: function() {
+    getUserEmail: () => {
         return process.env.USER_EMAIL;
     },
-    getBaseUrl: function() {
+    getBaseUrl: () => {
         return process.env.BASE_URL;
     }
 }
