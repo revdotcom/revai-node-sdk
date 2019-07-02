@@ -6,13 +6,13 @@ import {
     setupFakeInsufficientCreditsError,
     setupFakeInvalidParametersError
 } from './testhelpers';
-import { ApiRequestHandler, HttpMethodTypes, AxiosResponseTypes } from '../src/api-request-handler';
+import { ApiRequestHandler, HttpMethodTypes, AxiosResponseTypes } from '../../src/api-request-handler';
 import {
     RevAiApiError,
     InvalidParameterError,
     InvalidStateError,
     InsufficientCreditsError
-} from '../src/models/RevAiApiError';
+} from '../../src/models/RevAiApiError';
 
 describe('api-request-handler', () => {
     let sut: ApiRequestHandler;
