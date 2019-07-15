@@ -1,6 +1,6 @@
 # Rev.ai Node SDK
 
-[![Build Status](https://img.shields.io/travis/revdotcom/revai-node-sdk.svg?branch=develop)](https://travis-ci.org/revdotcom/revai-node-sdk)
+[![Build Status](https://travis-ci.org/revdotcom/revai-node-sdk.svg?branch=develop)](https://travis-ci.org/revdotcom/revai-node-sdk)
 
 ## Documentation
 
