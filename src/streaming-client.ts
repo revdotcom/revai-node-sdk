@@ -22,35 +22,6 @@ import {
  *      close code and reason.
  * @event error emitted when an error occurs in the connection to the server. Contains the
  *      thrown error.
- *
- * @example
- * const audioConfig = new AudioConfig(<YOUR-CONTENT-TYPE-PARAMS>);
- * const token = <YOUR-ACCESS-TOKEN>;
- * var client = new RevAiStreamingClient(token, audioConfig);
- * client.on('close', (code, reason) => {
- *     console.log(`Connection closed, ${code}: ${reason}`);
- * });
- * client.on('httpResponse', code => {
- *     console.log(code);
- * })
- * client.on('connectFailed', error => {
- *     console.log(error);
- * })
- * client.on('connect', connectionMessage => {
- *     console.log(connectionMessage);
- * })
- *
- * var stream = client.start();
- *
- * var file = fs.createReadStream(<YOUR-AUDIO-FILE>);
- * stream.on('data', data => {
- *     console.log(data);
- * });
- * stream.on('end', function () {
- *     console.log("End of Stream");
- * });
- *
- * file.pipe(stream);
  */
 export class RevAiStreamingClient extends EventEmitter {
     baseUrl: string;
