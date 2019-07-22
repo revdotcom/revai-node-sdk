@@ -60,3 +60,9 @@ typings/
 
 # next.js build output
 .next
+
+# example config file
+examples/config/config.json
+
+# Example transcript output
+transcript.txt
