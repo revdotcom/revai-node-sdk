@@ -157,6 +157,19 @@ describe('streaming-client', () => {
         });
     });
 
+    describe('finish', () => {
+        it('Closes off input stream', () => {
+            // Setup
+            let duplex = sut.start();
+
+            // Act
+            sut.end();
+
+            // Assert
+            expect(() => { duplex.write("message"); }).toThrow();
+        });
+    });
+
     describe('end', () => {
         it('Aborts client connection', () => {
             // Act
