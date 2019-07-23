@@ -13,13 +13,20 @@ const token = require('../config/config.json').access_token;
 
     const jobOptions = {
         metadata: "InternalOrderNumber=123456789",
-        skip_diarization: true
+        callback_url: "https://jsonplaceholder.typicode.com/posts",
+        skip_diarization: true,
+        custom_vocabularies: [{
+            phrases: [
+                "add",
+                "custom",
+                "vocabularies",
+                "here"
+                ]
+            }]
     };
 
-    /* Media may be submitted from a local file or from a url by using:
-     * client.submitJobLocalFile("../resources/example.mp3", jobOptions);
-     */
-    var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
+    /* Media may be submitted from a url */
+    var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3", jobOptions);
 
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
@@ -42,9 +49,9 @@ const token = require('../config/config.json').access_token;
     // var transcriptObjectStream = await client.getTranscriptObjectStream(job.id);
     // var captionsStream = await client.getCaptions(job.id);
 
-    fs.writeFile("./transcript.txt", transcriptText, (err) => {
+    fs.writeFile("../outputs/async_url_transcript.txt", transcriptText, (err) => {
         if (err) throw err;
-        console.log("Success! Check you directory for the transcript.")
+        console.log("Success! Check the examples/outputs directory for the transcript.")
     });
 
     /* Delete a job */

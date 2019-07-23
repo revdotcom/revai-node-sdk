@@ -65,4 +65,4 @@ typings/
 examples/config/config.json
 
 # Example transcript output
-transcript.txt
+examples/outputs/*
