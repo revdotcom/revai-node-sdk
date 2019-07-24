@@ -1,6 +1,6 @@
 const revai = require('revai-node-sdk');
 const fs = require('fs');
-const token = require('../config/config.json').access_token;
+const token = require('./config.json').access_token;
 
 (async () => {  
     // Initialize your client with your revai access token
@@ -34,7 +34,9 @@ const token = require('../config/config.json').access_token;
 
     /**
      * Waits 5 seconds between each status check to see if job is complete.
-     * Waiting is done to reduce the load on the servers
+     * note: polling for job status is not recommended in a non-testing environment.
+     * Use the callback_url option (see: https://www.rev.ai/docs#section/Node-SDK)
+     * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == "in_progress")
     {  
@@ -58,7 +60,10 @@ const token = require('../config/config.json').access_token;
         console.log("Success! Check the examples/outputs/ directory for the transcript.")
     });
 
-    // Delete a job
+    /**
+     * Delete a job
+     * Job deletion will remove all information about the job from the servers
+     */
     // await client.deleteJob(job.id);
 })();
 

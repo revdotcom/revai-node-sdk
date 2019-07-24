@@ -1,6 +1,6 @@
 const revai = require('revai-node-sdk');
 const fs = require('fs');
-const token = require('../config/config.json').access_token;
+const token = require('./config.json').access_token;
 
 // Initialize your client with your audio configuration and access token
 const audioConfig = new revai.AudioConfig(

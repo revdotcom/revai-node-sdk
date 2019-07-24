@@ -8,7 +8,7 @@ See the [API docs](https://www.rev.ai/docs) for more information about the API.
 
 ## Examples
 
-Examples are in the [`examples/`](https://github.com/revdotcom/revai-node-sdk/tree/develop/samples) directory
+Examples can be found in the [`examples/`](https://github.com/revdotcom/revai-node-sdk/tree/develop/samples) directory
 
 ## Installation
 
