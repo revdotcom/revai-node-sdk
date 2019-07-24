@@ -64,5 +64,9 @@ typings/
 # example config file
 examples/config/config.json
 
-# Example transcript output
+# examples package lock
+examples/package-lock.json
+
+# examples output
 examples/outputs/*
+!examples/outputs/.gitkeep

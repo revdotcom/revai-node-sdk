@@ -1,6 +1,6 @@
 const revai = require('revai-node-sdk');
 const fs = require('fs');
-const token = require('./config.json').access_token;
+const token = require('./config/config.json').access_token;
 
 // Initialize your client with your audio configuration and access token
 const audioConfig = new revai.AudioConfig(
@@ -31,7 +31,7 @@ client.on('connect', connectionMessage => {
 var stream = client.start();
 
 // Read file from disk
-var inputFile = fs.createReadStream("../resources/example.raw");
+var file = fs.createReadStream("./resources/example.raw");
 
 stream.on('data', data => {
     console.log(data);
@@ -43,5 +43,5 @@ stream.on('end', function () {
 // Stream the file
 file.pipe(stream);
  
-// Ends the streaming session
+// Forcibly ends the streaming session
 // stream.end();
