@@ -42,7 +42,7 @@ stream.on('end', function () {
 
 // Once your file has been sent, signal to the API that you have finished sending audio
 file.on('end', () => {
-    client.stop();
+    client.end();
 });
 
 // Stream the file

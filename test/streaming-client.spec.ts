@@ -157,23 +157,24 @@ describe('streaming-client', () => {
         });
     });
 
-    describe('stop', () => {
+    describe('end', () => {
         it('Closes off input stream', () => {
             // Setup
+            const mockConnection = new WebSocketConnection();
             let duplex = sut.start();
 
             // Act
-            sut.stop();
+            sut.end();
 
             // Assert
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });
 
-    describe('kill', () => {
+    describe('unsafeEnd', () => {
         it('Aborts client connection', () => {
             // Act
-            sut.kill();
+            sut.unsafeEnd();
 
             // Assert
             expect(mockClient.abort).toBeCalledTimes(1);
@@ -184,7 +185,7 @@ describe('streaming-client', () => {
             let duplex = sut.start();
 
             // Act
-            sut.kill();
+            sut.unsafeEnd();
 
             // Assert
             expect(() => { duplex.write("message"); }).toThrow();
