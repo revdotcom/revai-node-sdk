@@ -68,14 +68,14 @@ export class RevAiStreamingClient extends EventEmitter {
     /**
      * Signals to the api that you have finished sending data.
      */
-    public finish(): void {
+    public stop(): void {
         this.requests.end('EOS', 'utf8');
     }
 
     /**
      * Ends the streaming connection and closes off the buffer returned from start()
      */
-    public end(): void {
+    public kill(): void {
         this.client.abort();
         this.requests.end();
         this.responses.push(null);

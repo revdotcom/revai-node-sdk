@@ -157,23 +157,23 @@ describe('streaming-client', () => {
         });
     });
 
-    describe('finish', () => {
+    describe('stop', () => {
         it('Closes off input stream', () => {
             // Setup
             let duplex = sut.start();
 
             // Act
-            sut.end();
+            sut.stop();
 
             // Assert
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });
 
-    describe('end', () => {
+    describe('kill', () => {
         it('Aborts client connection', () => {
             // Act
-            sut.end();
+            sut.kill();
 
             // Assert
             expect(mockClient.abort).toBeCalledTimes(1);
@@ -184,7 +184,7 @@ describe('streaming-client', () => {
             let duplex = sut.start();
 
             // Act
-            sut.end();
+            sut.kill();
 
             // Assert
             expect(() => { duplex.write("message"); }).toThrow();
