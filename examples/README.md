@@ -10,7 +10,7 @@ View the [asynchronous API documentation](https://www.rev.ai/docs)
 View the [source code](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples/async_transcribe_local_media_file.js).<br>
 **Run:**<br>
 `node async_transcribe_local_media_file.js`<br>
-The output can be found at `outputs/async_file_transcript.txt`
+The output can be found at `examples/outputs/async_file_transcript.txt`
 
 ### Transcription from a Media Url
 View the [source code](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples/async_transcribe_media_from_url.js).<br>

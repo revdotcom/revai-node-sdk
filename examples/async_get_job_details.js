@@ -16,9 +16,9 @@ const token = require('./config/config.json').access_token;
 
     /**
      * Retrieves a list of jobs in order from newest to oldest.
-     * The first parameter limits the number of jobs returned..
+     * The first parameter limits the number of jobs returned.
      * The second parameter allows for a job id to be set, indicating that only jobs
-     * submitted after that job will be returned
+     * submitted after that job will be returned.
      */
     var jobList = await client.getListOfJobs(5, null);
     console.log(jobList);
