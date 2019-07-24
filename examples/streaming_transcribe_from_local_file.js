@@ -2,7 +2,7 @@ const revai = require('revai-node-sdk');
 const fs = require('fs');
 const token = require('../config/config.json').access_token;
 
-/* Initialize your client with your audio configuration and access token */
+// Initialize your client with your audio configuration and access token
 const audioConfig = new revai.AudioConfig(
     /* contentType */ "audio/x-raw", 
     /* layout */      "interleaved", 
@@ -13,7 +13,7 @@ const audioConfig = new revai.AudioConfig(
 
 var client = new revai.RevAiStreamingClient(token, audioConfig);
 
-/* Create your event responses */
+// Create your event responses
 client.on('close', (code, reason) => {
     console.log(`Connection closed, ${code}: ${reason}`);
 });
@@ -27,10 +27,10 @@ client.on('connect', connectionMessage => {
     console.log(`Connected with message: ${connectionMessage}`);
 })
 
-/* Begin streaming session */
+// Begin streaming session
 var stream = client.start();
 
-/* Read file from disk */
+// Read file from disk
 var inputFile = fs.createReadStream("../resources/example.raw");
 
 stream.on('data', data => {
@@ -40,8 +40,8 @@ stream.on('end', function () {
     console.log("End of Stream");
 });
 
-/* Stream the file */
+// Stream the file
 file.pipe(stream);
  
-/* Ends the streaming session */
+// Ends the streaming session
 // stream.end();

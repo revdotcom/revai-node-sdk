@@ -3,10 +3,10 @@ const fs = require('fs');
 const token = require('../config/config.json').access_token;
 
 (async () => {  
-    /* Initialize your client with your revai access token */
+    // Initialize your client with your revai access token
     var client = new revai.RevAiApiClient(token);
 
-    /* Get account details */
+    // Get account details
     var account = await client.getAccount();
     console.log(`Account: ${account.email}`);
     console.log(`Balance: ${account.balance_seconds} seconds`);
@@ -25,14 +25,15 @@ const token = require('../config/config.json').access_token;
             }]
     };
 
-    /* Media may be submitted from a local file */
-    var job = await client.submitJobLocalFile("../resources/example.mp3", jobOptions);
+    // Media may be submitted from a url
+    var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3", jobOptions);
 
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
     console.log(`Created On: ${job.created_on}`);
 
-    /* Waits 5 seconds between each status check to see if job is complete.
+    /**
+     * Waits 5 seconds between each status check to see if job is complete.
      * Waiting is done to reduce the load on the servers
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == "in_progress")
@@ -41,7 +42,8 @@ const token = require('../config/config.json').access_token;
         await new Promise( resolve => setTimeout(resolve, 5000));
     }
 
-    /* Get transcript as plain text
+    /**
+     * Get transcript as plain text
      * Transcripts can also be gotten as Object, Text Stream, Object Stream,
      * or as captions
      */
@@ -51,12 +53,12 @@ const token = require('../config/config.json').access_token;
     // var transcriptObjectStream = await client.getTranscriptObjectStream(job.id);
     // var captionsStream = await client.getCaptions(job.id);
 
-    fs.writeFile("../outputs/async_file_transcript.txt", transcriptText, (err) => {
+    fs.writeFile("../outputs/async_url_transcript.txt", transcriptText, (err) => {
         if (err) throw err;
         console.log("Success! Check the examples/outputs/ directory for the transcript.")
     });
 
-    /* Delete a job */
+    // Delete a job
     // await client.deleteJob(job.id);
 })();
 
