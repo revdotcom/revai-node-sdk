@@ -51,7 +51,8 @@ export class ApiRequestHandler {
 
             return response.data;
         } catch (error) {
-            if (error.response === null) {
+            // tslint:disable-next-line
+            if (error.response == null) {
                 throw error;
             }
             switch (error.response.status) {

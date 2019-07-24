@@ -60,3 +60,13 @@ typings/
 
 # next.js build output
 .next
+
+# example config file
+examples/config/config.json
+
+# examples package lock
+examples/package-lock.json
+
+# examples output
+examples/outputs/*
+!examples/outputs/.gitkeep
