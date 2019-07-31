@@ -11,9 +11,8 @@ export interface StreamingResponse {
  * Represents a hypothesis response from the rev.ai streaming service. Both final and partial.
  */
 export interface StreamingHypothesis extends StreamingResponse {
-    transcript?: string;
-    ts?: number;
-    end_ts?: number;
+    ts?: Element;
+    end_ts?: Element;
     elements: Element[];
 }
 
