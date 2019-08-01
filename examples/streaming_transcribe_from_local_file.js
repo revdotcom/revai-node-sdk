@@ -49,4 +49,4 @@ file.on('end', () => {
 file.pipe(stream);
  
 // Forcibly ends the streaming session
-// stream.kill();
+// stream.unsafeEnd();
