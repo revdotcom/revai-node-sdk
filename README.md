@@ -24,6 +24,7 @@ given Access Token:
 
 ```javascript
 import { RevAiApiClient } from 'revai-node-sdk';
+
 // Initialize your client with your revai access token
 var accessToken = "Your Access Token";
 var client = new RevAiApiClient(accessToken);
@@ -42,6 +43,7 @@ Once you've set up your client with your Access Token sending a file is easy!
 ```javascript
 // you can submit a local file
 var job = await client.submitJobLocalFile("./path/to/file.mp4");
+
 // or submit via a public url
 var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 ```
@@ -68,8 +70,10 @@ You can retrieve a list of transcription jobs with optional parameters
 
 ```javascript
 var jobs = await client.getListOfJobs();
+
 // limit amount of retrieved jobs
 var jobs = await client.getListOfJobs(3);
+
 // get jobs starting after a certain job id
 var jobs = await client.getListOfJobs(undefined, 'Umx5c6F7pH7r');
 ```
@@ -96,6 +100,7 @@ Once your file is transcribed, you can get your transcript in a few different fo
 ```javascript
 // as plain text
 var transcriptText = await client.getTranscriptText(job.id);
+
 // or as an object
 var transcriptObject = await client.getTranscriptObject(job.id);
 ```
