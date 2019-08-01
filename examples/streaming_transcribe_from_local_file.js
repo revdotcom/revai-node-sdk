@@ -40,8 +40,13 @@ stream.on('end', function () {
     console.log("End of Stream");
 });
 
+// Once your file has been sent, signal to the API that you have finished sending audio
+file.on('end', () => {
+    client.end();
+});
+
 // Stream the file
 file.pipe(stream);
  
 // Forcibly ends the streaming session
-// stream.end();
+// stream.unsafeEnd();

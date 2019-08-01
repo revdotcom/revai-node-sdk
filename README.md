@@ -111,7 +111,6 @@ Any of these outputs can we retrieved as a stream for easy file writing:
 
 ```javascript
 var textStream = await client.getTranscriptTextStream(job.id);
-
 var transcriptStream = await client.getTranscriptObjectStream(job.id);
 ```
 

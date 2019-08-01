@@ -66,11 +66,19 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     /**
-     * Ends the streaming connection and closes off the buffer returned from start()
+     * Signals to the api that you have finished sending data.
      */
     public end(): void {
+        this.requests.end('EOS', 'utf8');
+    }
+
+    /**
+     * Immediately kills the streaming connection, no more results will be returned from the API
+     * after this is called.
+     */
+    public unsafeEnd(): void {
         this.client.abort();
-        this.requests.end('EOS');
+        this.requests.end();
         this.responses.push(null);
     }
 
@@ -117,6 +125,9 @@ export class RevAiStreamingClient extends EventEmitter {
             let value = buffer.read(buffer.readableLength);
             if (value !== null) {
                 connection.send(value);
+                if (value.includes('EOS') || value.includes(Buffer.from('EOS'))) {
+                    connection.sendUTF('EOS');
+                }
             }
             setTimeout(() => this.doSendLoop(connection, buffer), 100);
         }
