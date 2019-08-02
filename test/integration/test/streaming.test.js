@@ -24,8 +24,8 @@ test('Can stream raw audio file', async (done) => {
     var stream = client.start();
 
     var file = fs.createReadStream('./resources/english_test.raw');
-    stream.on('readable', function() {
-        console.log(this.read());
+    stream.on('data', data => {
+        console.log(data.toString());
     });
         
     stream.on('finish', () => {
@@ -34,6 +34,7 @@ test('Can stream raw audio file', async (done) => {
 
     stream.on('end', () => {
         console.log('End event triggered')
+        client.end();
     })
 
     file.pipe(stream);
