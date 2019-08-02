@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "revai-node-sdk": "latest"
+    }
+}

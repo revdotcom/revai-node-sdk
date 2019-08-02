@@ -1,11 +1,14 @@
 # Rev.ai Node SDK
 
-[![Build Status](https://img.shields.io/travis/revdotcom/revai-node-sdk.svg?branch=master)](https://travis-ci.org/revdotcom/revai-node-sdk)
+[![Build Status](https://travis-ci.org/revdotcom/revai-node-sdk.svg?branch=develop)](https://travis-ci.org/revdotcom/revai-node-sdk)
 
 ## Documentation
 
-See the [API docs](https://www.rev.ai/docs) for more information about the API and
-more examples.
+See the [API docs](https://www.rev.ai/docs) for more information about the API.
+
+## Examples
+
+Examples can be found in the [`examples/`](https://github.com/revdotcom/revai-node-sdk/tree/develop/samples) directory
 
 ## Installation
 
@@ -108,7 +111,6 @@ Any of these outputs can we retrieved as a stream for easy file writing:
 
 ```javascript
 var textStream = await client.getTranscriptTextStream(job.id);
-
 var transcriptStream = await client.getTranscriptObjectStream(job.id);
 ```
 

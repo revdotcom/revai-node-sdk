@@ -22,35 +22,6 @@ import {
  *      close code and reason.
  * @event error emitted when an error occurs in the connection to the server. Contains the
  *      thrown error.
- *
- * @example
- * const audioConfig = new AudioConfig(<YOUR-CONTENT-TYPE-PARAMS>);
- * const token = <YOUR-ACCESS-TOKEN>;
- * var client = new RevAiStreamingClient(token, audioConfig);
- * client.on('close', (code, reason) => {
- *     console.log(`Connection closed, ${code}: ${reason}`);
- * });
- * client.on('httpResponse', code => {
- *     console.log(code);
- * })
- * client.on('connectFailed', error => {
- *     console.log(error);
- * })
- * client.on('connect', connectionMessage => {
- *     console.log(connectionMessage);
- * })
- *
- * var stream = client.start();
- *
- * var file = fs.createReadStream(<YOUR-AUDIO-FILE>);
- * stream.on('data', data => {
- *     console.log(data);
- * });
- * stream.on('end', function () {
- *     console.log("End of Stream");
- * });
- *
- * file.pipe(stream);
  */
 export class RevAiStreamingClient extends EventEmitter {
     baseUrl: string;
@@ -95,11 +66,19 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     /**
-     * Ends the streaming connection and closes off the buffer returned from start()
+     * Signals to the api that you have finished sending data.
      */
     public end(): void {
+        this.requests.end('EOS', 'utf8');
+    }
+
+    /**
+     * Immediately kills the streaming connection, no more results will be returned from the API
+     * after this is called.
+     */
+    public unsafeEnd(): void {
         this.client.abort();
-        this.requests.end('EOS');
+        this.requests.end();
         this.responses.push(null);
     }
 
@@ -146,6 +125,9 @@ export class RevAiStreamingClient extends EventEmitter {
             let value = buffer.read(buffer.readableLength);
             if (value !== null) {
                 connection.send(value);
+                if (value.includes('EOS') || value.includes(Buffer.from('EOS'))) {
+                    connection.sendUTF('EOS');
+                }
             }
             setTimeout(() => this.doSendLoop(connection, buffer), 100);
         }
