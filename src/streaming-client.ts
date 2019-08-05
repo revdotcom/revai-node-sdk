@@ -78,8 +78,7 @@ export class RevAiStreamingClient extends EventEmitter {
      */
     public unsafeEnd(): void {
         this.client.abort();
-        this.requests.end();
-        this.responses.push(null);
+        this.closeStreams();
     }
 
     private setUpHttpResponseHandler(): void {
