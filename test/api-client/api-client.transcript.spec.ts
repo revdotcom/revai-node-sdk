@@ -117,7 +117,7 @@ describe('api-client', () => {
     });
 
     describe('getTranscriptTextStream', () => {
-        it('get transcript text', async () => {
+        it('get transcript text stream', async () => {
             const expectedTranscript = 'Speaker 0    00:00    Hello World.'
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
