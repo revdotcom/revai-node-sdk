@@ -11,7 +11,8 @@ import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 const enum ContentTypes {
     JSON = 'application/vnd.rev.transcript.v1.0+json',
     TEXT = 'text/plain',
-    SRT = 'application/x-subrip'
+    SRT = 'application/x-subrip',
+    VTT = 'text/vtt'
 }
 
 export class RevAiApiClient {
@@ -88,8 +89,18 @@ export class RevAiApiClient {
             `/jobs/${id}/transcript`, { 'Accept': ContentTypes.TEXT }, 'stream');
     }
 
-    async getCaptions(id: string): Promise<Readable> {
+    async getCaptions(id: string, contentType?: string): Promise<Readable> {
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/captions`, { 'Accept': contentType || ContentTypes.SRT }, 'stream');
+    }
+
+    async getSrtCaptions(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
             `/jobs/${id}/captions`, { 'Accept': ContentTypes.SRT }, 'stream');
+    }
+
+    async getVttCaptions(id: string): Promise<Readable> {
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/captions`, { 'Accept': ContentTypes.VTT }, 'stream');
     }
 }
