@@ -1,5 +1,6 @@
 import { RevAiApiClient } from '../../src/api-client';
 import { ApiRequestHandler } from '../../src/api-request-handler';
+import { CaptionTypes } from '../../src/models/async/CaptionTypes';
 import { objectToStream } from '../testhelpers';
 const fs = require('fs');
 const FormData = require('form-data');
@@ -30,7 +31,7 @@ describe('api-client', () => {
             expect(transcript.read().toString()).toEqual(expectedTranscript);
         });
 
-        it.each([['text/vtt', 'application/x-subrip']])('uses given content type', async (contentType) => {
+        it.each([['application/x-subrip', 'text/vtt']])('uses given content type', async (contentType) => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             
             await sut.getCaptions(jobId, contentType);
