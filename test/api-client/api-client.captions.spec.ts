@@ -40,35 +40,15 @@ describe('api-client', () => {
                 { 'Accept': contentType }, 'stream');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
         });
-    });
 
-    describe('getSrtCaptions', () => {
-        it('gets srt captions', async () => {
-            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
+        it('attaches channelId if given', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
             
-            const transcript = await sut.getSrtCaptions(jobId);
+            await sut.getCaptions(jobId, null, 1);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions`,
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions?speaker_channel=1`,
                 { 'Accept': 'application/x-subrip' }, 'stream');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
-            expect(transcript.read().toString()).toEqual(expectedTranscript);
-        });
-    });
-
-    describe('getVttCaptions', () => {
-        it('gets vtt captions', async () => {
-            const expectedTranscript = '1\n00:00:00,000 --> 00:00:05,000\nHello World.'
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
-            
-            const transcript = await sut.getVttCaptions(jobId);
-
-            expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions`,
-                { 'Accept': 'text/vtt' }, 'stream');
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
-            expect(transcript.read().toString()).toEqual(expectedTranscript);
         });
     });
 });

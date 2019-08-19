@@ -11,7 +11,7 @@ import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
 const enum TranscriptContentTypes {
     JSON = 'application/vnd.rev.transcript.v1.0+json',
-    TEXT = 'text/plain',
+    TEXT = 'text/plain'
 }
 
 export class RevAiApiClient {
@@ -88,18 +88,12 @@ export class RevAiApiClient {
             `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.TEXT }, 'stream');
     }
 
-    async getCaptions(id: string, contentType?: CaptionTypes): Promise<Readable> {
+    async getCaptions(id: string, contentType?: CaptionTypes, channelId?: number): Promise<Readable> {
+        let url = `/jobs/${id}/captions`;
+        if (channelId) {
+            url += `?speaker_channel=${channelId}`;
+        }
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/captions`, { 'Accept': contentType || CaptionTypes.SRT }, 'stream');
-    }
-
-    async getSrtCaptions(id: string): Promise<Readable> {
-        return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/captions`, { 'Accept': CaptionTypes.SRT }, 'stream');
-    }
-
-    async getVttCaptions(id: string): Promise<Readable> {
-        return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/captions`, { 'Accept': CaptionTypes.VTT }, 'stream');
+            url, { 'Accept': contentType || CaptionTypes.SRT }, 'stream');
     }
 }

@@ -116,8 +116,8 @@ var transcriptStream = await client.getTranscriptObjectStream(job.id);
 
 ### Getting captions output
 
-Another way to retrieve your file is captions output. We currently only support .srt output. A readable stream of your srt output can be retrieved as such:
+Another way to retrieve your file is captions output. We support both .srt and .vtt outputs. A readable stream of your desired captions output can be retrieved as shown below. If your job was submitted as a multichannel file you will be required to provide the id of the channel you would like captioned.
 
 ```javascript
-var captionsStream = await client.getCaptions(job.id);
+var captionsStream = await client.getCaptions(job.id, CaptionTypes.SRT, null);
 ```
