@@ -1,9 +1,9 @@
+import * as fs from 'fs';
+
 import { RevAiApiClient } from '../../src/api-client';
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { RevAiApiTranscript } from '../../src/models/RevAiApiTranscript';
 import { objectToStream } from '../testhelpers';
-const fs = require('fs');
-const FormData = require('form-data');
 
 jest.mock('../../src/api-request-handler');
 
