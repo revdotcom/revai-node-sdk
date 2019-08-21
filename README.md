@@ -51,7 +51,7 @@ var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 `job` will contain all the information normally found in a successful response from our
 [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, a boolean `skip_diarization`, and `custom_vocabularies` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, `skip_diarization`,`skip_punctuation`, `speaker_channels_count` and `custom_vocabularies` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
 ### Checking your job's status
 
@@ -116,8 +116,12 @@ var transcriptStream = await client.getTranscriptObjectStream(job.id);
 
 ### Getting captions output
 
-Another way to retrieve your file is captions output. We currently only support .srt output. A readable stream of your srt output can be retrieved as such:
+Another way to retrieve your file is captions output. We support both .srt and .vtt outputs. See below for an example showing how you can get captions as a readable stream. If your job was submitted with multiple speaker channels you are required to provide the id of the channel you would like captioned.
 
 ```javascript
-var captionsStream = await client.getCaptions(job.id);
+var captionsStream = await client.getCaptions(job.id, CaptionTypes.SRT);
+
+// with speaker channels
+const channelId = 1;
+var captionsStream = await client.getCaptions(job.id, CaptionTypes.VTT, channelId);
 ```

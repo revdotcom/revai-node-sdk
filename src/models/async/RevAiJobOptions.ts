@@ -5,5 +5,7 @@ export interface RevAiJobOptions {
     metadata?: string;
     callback_url?: string;
     skip_diarization?: boolean;
+    skip_punctuation?: boolean;
+    speaker_channels_count?: number;
     custom_vocabularies?: CustomVocabulary[];
 }
