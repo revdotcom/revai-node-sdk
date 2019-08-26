@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { ApiRequestHandler } from './api-request-handler';
-import CaptionType from './models/async/CaptionTypes';
+import { CaptionType } from './models/async/CaptionTypes';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
 import { RevAiApiJob } from './models/RevAiApiJob';
