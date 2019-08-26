@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { ApiRequestHandler } from './api-request-handler';
-import { CaptionTypes } from './models/async/CaptionTypes';
+import CaptionType from './models/async/CaptionTypes';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
 import { RevAiApiJob } from './models/RevAiApiJob';
@@ -88,12 +88,12 @@ export class RevAiApiClient {
             `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.TEXT }, 'stream');
     }
 
-    async getCaptions(id: string, contentType?: CaptionTypes, channelId?: number): Promise<Readable> {
+    async getCaptions(id: string, contentType?: CaptionType, channelId?: number): Promise<Readable> {
         let url = `/jobs/${id}/captions`;
         if (channelId) {
             url += `?speaker_channel=${channelId}`;
         }
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            url, { 'Accept': contentType || CaptionTypes.SRT }, 'stream');
+            url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 }
