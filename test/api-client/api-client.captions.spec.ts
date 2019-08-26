@@ -2,7 +2,7 @@ import * as fs from 'fs';
 
 import { RevAiApiClient } from '../../src/api-client';
 import { ApiRequestHandler } from '../../src/api-request-handler';
-import { CaptionTypes } from '../../src/models/async/CaptionTypes';
+import { CaptionType } from '../../src/models/async/CaptionType';
 import { objectToStream } from '../testhelpers';
 
 jest.mock('../../src/api-request-handler');
