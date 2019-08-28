@@ -2,8 +2,9 @@ language: node_js
 node_js:
   - "8"
   - "10"
+before_script:
+  - "node build_release_package_json.js"
 script:
   - "npm run build"
   - "npm run lint"
-  - "node build_release_package_json.js"
   - "npm run test"
