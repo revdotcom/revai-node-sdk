@@ -5,4 +5,5 @@ node_js:
 script:
   - "npm run build"
   - "npm run lint"
+  - "node build_release_package_json.js"
   - "npm run test"
