@@ -1,4 +1,5 @@
 module.exports = {
+  displayName: "Unit",
   preset: 'ts-jest',
   testEnvironment: 'node',
   setupFiles: ['./test/unit/setup.ts'],
@@ -7,4 +8,5 @@ module.exports = {
         diagnostics: false
     }
   },
+  testMatch: ["<rootDir>/test/unit/*.spec.*"]
 };

@@ -1,4 +1,5 @@
 module.exports = {
+  displayName: "Integration",
   preset: 'ts-jest',
   testEnvironment: 'node',
   timers: 'fake',
@@ -6,5 +7,5 @@ module.exports = {
     'ts-jest': {
         diagnostics: false
     }
-  }
+  },
 };

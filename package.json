@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest ; cd test/integration ; jest",
     "lint": "tslint --project \".\""
   },
   "repository": {
@@ -43,12 +43,7 @@
     "jest": "^23.6.0",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
-    "typescript": "^3.2.4"
-  },
-  "jest": {
-    "projects": [
-      "./jest.config.js",
-      "./test/integration/jest.config.js"
-     ]
+    "typescript": "^3.2.4",
+    "dotenv": "^8.0.0"
   }
 }
