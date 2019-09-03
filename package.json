@@ -49,8 +49,8 @@
   },
   "jest": {
     "projects": [
-      "./test/unit/jest.config.js",
-      "./test/integration/jest.config.js"
+      "./jest.config.unit.js",
+      "./jest.config.integration.js"
     ]
   }
 }
