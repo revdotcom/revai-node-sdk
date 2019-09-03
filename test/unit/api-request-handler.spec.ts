@@ -1,18 +1,19 @@
 import axios from 'axios';
+
+import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
+import {
+    InsufficientCreditsError,
+    InvalidParameterError,
+    InvalidStateError,
+    RevAiApiError
+} from '../../src/models/RevAiApiError';
 import {
     objectToStream,
     setupFakeApiError,
-    setupFakeInvalidStateError,
     setupFakeInsufficientCreditsError,
-    setupFakeInvalidParametersError
+    setupFakeInvalidParametersError,
+    setupFakeInvalidStateError
 } from './testhelpers';
-import { ApiRequestHandler, HttpMethodTypes, AxiosResponseTypes } from '../../src/api-request-handler';
-import {
-    RevAiApiError,
-    InvalidParameterError,
-    InvalidStateError,
-    InsufficientCreditsError
-} from '../../src/models/RevAiApiError';
 
 describe('api-request-handler', () => {
     let sut: ApiRequestHandler;

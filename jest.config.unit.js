@@ -8,5 +8,7 @@ module.exports = {
         diagnostics: false
     }
   },
-  testMatch: ["<rootDir>/test/unit/*.spec.*"]
+  testMatch: [
+    "***/test/unit/*.spec.ts"
+  ]
 };

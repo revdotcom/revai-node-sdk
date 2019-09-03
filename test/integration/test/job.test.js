@@ -5,7 +5,7 @@ test('Can submit local file', async () => {
     const client = clientHelper.getClient(configHelper.getApiKey());
     const options = new Object();
     options.metadata = 'Node sdk submit local file';
-    const job = await client.submitJobLocalFile('./resources/test_mp3.mp3', options);
+    const job = await client.submitJobLocalFile('./test/integration/resources/test_mp3.mp3', options);
     expect(job.status).toBe('in_progress');
     expect(job.id).not.toBeNull();
 });
