@@ -39,18 +39,18 @@
   },
   "devDependencies": {
     "@types/form-data": "^2.2.1",
-    "@types/node": "^10.12.18",
     "@types/jest": "^23.3.13",
+    "@types/node": "^10.12.18",
+    "dotenv": "^8.1.0",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",
-    "typescript": "^3.2.4",
-    "dotenv": "^8.0.0"
+    "typescript": "^3.2.4"
   },
   "jest": {
     "projects": [
       "./test/unit/jest.config.js",
       "./test/integration/jest.config.js"
-     ]
+    ]
   }
 }
