@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest -c ./jest.config.unit.js",
+    "integration": "jest -c ./jest.config.integration.js",
     "lint": "tslint --project \".\""
   },
   "repository": {
@@ -47,7 +48,7 @@
   },
   "jest": {
     "projects": [
-      "./jest.config.js",
+      "./test/unit/jest.config.js",
       "./test/integration/jest.config.js"
      ]
   }

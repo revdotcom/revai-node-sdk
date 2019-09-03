@@ -7,4 +7,7 @@ module.exports = {
         diagnostics: false
     }
   },
+  testMatch: [
+    "***/test/unit/*.spec.ts"
+  ]
 };

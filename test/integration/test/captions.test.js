@@ -8,7 +8,6 @@ test('Can get srt captions', async (done) => {
     expect(jobId).toBeDefined();
     const captionsStream = await client.getCaptions(jobId);
     var streamString = '';
-    console.log(streamString.length);
     captionsStream.on('data', data => {
         streamString += data.toString();
     })
