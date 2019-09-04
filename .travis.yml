@@ -3,14 +3,13 @@ node_js:
   - "8"
   - "10"
 
-script: npm run unit-test
+script:
+  - npm run build
+  - npm run lint 
+  - npm run unit-test
 
 jobs:
   include:
-    - stage: build
-      script: npm run build
-    - stage: lint
-      script: npm run lint
     - stage: Test Integration
       script:
         - node build_release_package_json.js
