@@ -61,6 +61,8 @@ typings/
 # next.js build output
 .next
 
+#IDE
+.vscode/*
 # example config file
 examples/config/config.json
 

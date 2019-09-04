@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 
-import { RevAiApiClient } from '../../src/api-client';
-import { ApiRequestHandler } from '../../src/api-request-handler';
+import { RevAiApiClient } from '../../../src/api-client';
+import { ApiRequestHandler } from '../../../src/api-request-handler';
 
-jest.mock('../../src/api-request-handler');
+jest.mock('../../../src/api-request-handler');
 
 let sut: RevAiApiClient;
 

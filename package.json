@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "unit-test": "jest -c ./jest.config.unit.js",
+    "integration-test": "jest -c ./jest.config.integration.js",
     "lint": "tslint --project \".\""
   },
   "repository": {
@@ -40,9 +41,16 @@
     "@types/form-data": "^2.2.1",
     "@types/jest": "^23.3.13",
     "@types/node": "^10.12.18",
+    "dotenv": "^8.1.0",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.12.1",
     "typescript": "^3.2.4"
+  },
+  "jest": {
+    "projects": [
+      "./jest.config.unit.js",
+      "./jest.config.integration.js"
+    ]
   }
 }
