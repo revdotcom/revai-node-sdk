@@ -8,7 +8,7 @@ test('Can return email and balance', async () => {
     expect(account.balance_seconds).not.toBeNull();
 });
 
-test('Cannot authenticate with fake token', async () => {
+test('Cannot authenticate with invalid token', async () => {
     const randomString = Math.random().toString(36).replace('0.', '');
     const client = clientHelper.getClient(randomString);
     try {

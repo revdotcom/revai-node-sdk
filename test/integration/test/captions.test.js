@@ -4,7 +4,7 @@ const configHelper = require('../src/config-helper');
 test('Can get srt captions', async (done) => {
     const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
-    const jobId = getTranscribedJobId(jobList);
+    const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
     const captionsStream = await client.getCaptions(jobId);
     var streamString = '';
@@ -16,13 +16,3 @@ test('Can get srt captions', async (done) => {
         done();
     })
 })
-
-function getTranscribedJobId(jobList) {
-    var completedJobId;
-    for(job of jobList) {
-        if(job.status === 'transcribed') {
-            completedJobId = job.id;
-        }
-    }
-    return completedJobId;
-}

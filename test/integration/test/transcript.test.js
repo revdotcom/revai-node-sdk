@@ -4,7 +4,7 @@ const configHelper = require('../src/config-helper');
 test('Can get JSON transcript', async (done) => {
     const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
-    const jobId = getTranscribedJobId(jobList);
+    const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
     const transcript = await client.getTranscriptObject(jobId);
     transcript.monologues.forEach( monologue => {
@@ -28,7 +28,7 @@ test('Can get JSON transcript', async (done) => {
 test('JSON stream is equivalent to JSON object', async (done) => {
     const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
-    const jobId = getTranscribedJobId(jobList);
+    const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
     const jsonObject = await client.getTranscriptObject(jobId);
     const jsonStream = await client.getTranscriptObjectStream(jobId);
@@ -46,7 +46,7 @@ test('JSON stream is equivalent to JSON object', async (done) => {
 test('Can get text transcript', async (done) => {
     const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
-    const jobId = getTranscribedJobId(jobList);
+    const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
     const transcript = await client.getTranscriptText(jobId);
     expect(transcript).toBeDefined();
@@ -57,7 +57,7 @@ test('Can get text transcript', async (done) => {
 test('Text stream is equivalent to text string', async (done) => {
     const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
-    const jobId = getTranscribedJobId(jobList);
+    const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
     const textString = await client.getTranscriptText(jobId);
     const textStream = await client.getTranscriptTextStream(jobId);
@@ -71,13 +71,3 @@ test('Text stream is equivalent to text string', async (done) => {
         done();
     })
 })
-
-function getTranscribedJobId(jobList) {
-    var completedJobId;
-    for(job of jobList) {
-        if(job.status === 'transcribed') {
-            completedJobId = job.id;
-        }
-    }
-    return completedJobId;
-}
