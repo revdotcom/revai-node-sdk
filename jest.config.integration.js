@@ -10,6 +10,6 @@ module.exports = {
     }
   },
   testMatch: [
-    "***/test/integration/test/*.test.js"
+    "**/test/integration/test/*.test.js"
   ]
 };
