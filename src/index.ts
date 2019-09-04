@@ -1,5 +1,6 @@
 export * from './api-client';
 export * from './streaming-client';
+export * from './models/async/CaptionType';
 export * from './models/async/RevAiAccount';
 export * from './models/async/RevAiJobOptions';
 export * from './models/async/CustomVocabulary';
