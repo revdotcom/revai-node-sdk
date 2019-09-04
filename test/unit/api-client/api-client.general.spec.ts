@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 
-import { RevAiApiClient } from '../../src/api-client';
-import { ApiRequestHandler } from '../../src/api-request-handler';
-import { RevAiApiTranscript } from '../../src/models/RevAiApiTranscript';
+import { RevAiApiClient } from '../../../src/api-client';
+import { ApiRequestHandler } from '../../../src/api-request-handler';
+import { RevAiApiTranscript } from '../../../src/models/RevAiApiTranscript';
 import { objectToStream } from '../testhelpers';
 
-jest.mock('../../src/api-request-handler');
+jest.mock('../../../src/api-request-handler');
 
 let sut: RevAiApiClient;
 

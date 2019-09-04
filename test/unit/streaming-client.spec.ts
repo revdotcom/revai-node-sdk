@@ -2,9 +2,9 @@ import * as events from 'events';
 import * as fs from 'fs';
 import { WebSocketClient, WebSocketConnection } from 'websocket';
 
-import { AudioConfig } from '../src/models/streaming/AudioConfig';
-import { BufferedDuplex } from '../src/models/streaming/BufferedDuplex';
-import { RevAiStreamingClient } from '../src/streaming-client';
+import { AudioConfig } from '../../src/models/streaming/AudioConfig';
+import { BufferedDuplex } from '../../src/models/streaming/BufferedDuplex';
+import { RevAiStreamingClient } from '../../src/streaming-client';
 
 jest.useFakeTimers();
 

@@ -9,6 +9,6 @@ module.exports = {
     }
   },
   testMatch: [
-    '**/test/unit/*.spec.ts'
+    '**/test/unit/**/*.spec.ts'
   ]
 };
