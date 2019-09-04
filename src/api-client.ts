@@ -3,15 +3,15 @@ import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { ApiRequestHandler } from './api-request-handler';
+import { CaptionType } from './models/async/CaptionType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
-const enum ContentTypes {
+const enum TranscriptContentTypes {
     JSON = 'application/vnd.rev.transcript.v1.0+json',
-    TEXT = 'text/plain',
-    SRT = 'application/x-subrip'
+    TEXT = 'text/plain'
 }
 
 export class RevAiApiClient {
@@ -70,26 +70,30 @@ export class RevAiApiClient {
 
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
         return await this.apiHandler.makeApiRequest<RevAiApiTranscript>('get', `/jobs/${id}/transcript`,
-            { 'Accept': ContentTypes.JSON }, 'json');
+            { 'Accept': TranscriptContentTypes.JSON }, 'json');
     }
 
     async getTranscriptObjectStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/transcript`, { 'Accept': ContentTypes.JSON }, 'stream');
+            `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.JSON }, 'stream');
     }
 
     async getTranscriptText(id: string): Promise<string> {
         return await this.apiHandler.makeApiRequest<string>('get', `/jobs/${id}/transcript`,
-            { 'Accept': ContentTypes.TEXT }, 'text');
+            { 'Accept': TranscriptContentTypes.TEXT }, 'text');
     }
 
     async getTranscriptTextStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/transcript`, { 'Accept': ContentTypes.TEXT }, 'stream');
+            `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.TEXT }, 'stream');
     }
 
-    async getCaptions(id: string): Promise<Readable> {
+    async getCaptions(id: string, contentType?: CaptionType, channelId?: number): Promise<Readable> {
+        let url = `/jobs/${id}/captions`;
+        if (channelId) {
+            url += `?speaker_channel=${channelId}`;
+        }
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/captions`, { 'Accept': ContentTypes.SRT }, 'stream');
+            url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 }

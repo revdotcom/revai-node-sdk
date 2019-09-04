@@ -78,21 +78,20 @@ export class RevAiStreamingClient extends EventEmitter {
      */
     public unsafeEnd(): void {
         this.client.abort();
-        this.requests.end();
-        this.responses.push(null);
+        this.closeStreams();
     }
 
     private setUpHttpResponseHandler(): void {
         this.client.on('httpResponse', (response: any) => {
             this.emit('httpResponse', response.statusCode);
-            this.end();
+            this.closeStreams();
         });
     }
 
     private setUpConnectionFailureHandler(): void {
         this.client.on('connectFailed', (error: Error) => {
             this.emit('connectFailed', error);
-            this.end();
+            this.closeStreams();
         });
     }
 
@@ -100,11 +99,11 @@ export class RevAiStreamingClient extends EventEmitter {
         this.client.on('connect', (connection: any) => {
             connection.on('error', (error: Error) => {
                 this.emit('error', error);
-                this.end();
+                this.closeStreams();
             });
             connection.on('close', (code: number, reason: string) => {
                 this.emit('close', code, reason);
-                this.end();
+                this.closeStreams();
             });
             connection.on('message', (message: any) => {
                 if (message.type === 'utf8') {
@@ -131,5 +130,10 @@ export class RevAiStreamingClient extends EventEmitter {
             }
             setTimeout(() => this.doSendLoop(connection, buffer), 100);
         }
+    }
+
+    private closeStreams(): void {
+        this.requests.end();
+        this.responses.push(null);
     }
 }
