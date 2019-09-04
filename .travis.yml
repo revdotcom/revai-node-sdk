@@ -9,6 +9,10 @@ jobs:
   include:
     - stage: build
       script: npm run build
+      node: "8"
+    - stage: build
+      script: npm run build
+      node: "10"
     - stage: lint
       script: npm run lint
     - stage: Test Integration
