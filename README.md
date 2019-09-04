@@ -114,7 +114,7 @@ var textStream = await client.getTranscriptTextStream(job.id);
 var transcriptStream = await client.getTranscriptObjectStream(job.id);
 ```
 
-### Getting captions output
+### Getting captions output 
 
 Another way to retrieve your file is captions output. We support both .srt and .vtt outputs. See below for an example showing how you can get captions as a readable stream. If your job was submitted with multiple speaker channels you are required to provide the id of the channel you would like captioned.
 
