@@ -10,6 +10,9 @@ import {
     StreamingResponse
 } from './models/streaming/StreamingResponses';
 
+// tslint:disable-next-line
+const sdkVersion = require('../package.json').version;
+
 /**
  * Client which handles a streaming connection to the Rev.ai API.
  * @event httpResponse emitted when the client fails to start a websocket connection and
@@ -53,14 +56,20 @@ export class RevAiStreamingClient extends EventEmitter {
      * Begins a streaming connection. Returns a duplex
      * from which the user can read responses from the api and to which the user
      * should write their audio data
+     * @param metadata (optional) Metadata to be associated with the streaming job
      *
      * @returns BufferedDuplex. Data written to this buffer will be sent to the api
      * Data received from the api can be read from this duplex
      */
-    public start(): Duplex {
+    public start(metadata?: string): Duplex {
         let url = this.baseUrl +
             `?access_token=${this.accessToken}` +
-            `&content_type=${this.config.getContentTypeString()}`;
+            `&content_type=${this.config.getContentTypeString()}` +
+            `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`;
+        if (metadata) {
+            url += `&metadata=${encodeURIComponent(metadata)}`;
+        }
+
         this.client.connect(url);
         return new BufferedDuplex(this.requests, this.responses, { readableObjectMode: true });
     }

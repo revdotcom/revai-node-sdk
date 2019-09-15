@@ -11,8 +11,11 @@ jest.useFakeTimers();
 let sut: RevAiStreamingClient;
 let mockClient: WebSocketClient;
 
-const audioConfig = new AudioConfig("audio/x-wav");
-const token = "testToken";
+const audioConfig = new AudioConfig('audio/x-wav');
+const token = 'testToken';
+
+// tslint:disable-next-line
+const sdkVersion = require('../../package.json').version;
 
 describe('streaming-client', () => {
     beforeEach(() => {
@@ -22,13 +25,31 @@ describe('streaming-client', () => {
 
     describe('start', () => {
         it('Connects to api with parameters', () => {
+            // Arrange
+            const metadata = 'my metadata';
+
+            // Act
+            const res = sut.start(metadata);
+
+            // Assert
+            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
+                `access_token=${token}` +
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}` +
+                `&metadata=${encodeURIComponent(metadata)}`
+            );
+            expect(mockClient.connect).toBeCalledTimes(1);
+        });
+
+        it ('does not add metadata param if not provided', () => {
             // Act
             const res = sut.start();
 
             // Assert
             expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
                 `access_token=${token}` +
-                `&content_type=${audioConfig.getContentTypeString()}`
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
         });
