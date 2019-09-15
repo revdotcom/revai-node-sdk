@@ -4,6 +4,7 @@ import { client } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
+import { SessionConfig } from './models/streaming/SessionConfig';
 import {
     StreamingConnected,
     StreamingHypothesis,
@@ -56,18 +57,18 @@ export class RevAiStreamingClient extends EventEmitter {
      * Begins a streaming connection. Returns a duplex
      * from which the user can read responses from the api and to which the user
      * should write their audio data
-     * @param metadata (optional) Metadata to be associated with the streaming job
+     * @param config (Optional) Optional configuration for the streaming session
      *
      * @returns BufferedDuplex. Data written to this buffer will be sent to the api
      * Data received from the api can be read from this duplex
      */
-    public start(metadata?: string): Duplex {
+    public start(config?: SessionConfig): Duplex {
         let url = this.baseUrl +
             `?access_token=${this.accessToken}` +
             `&content_type=${this.config.getContentTypeString()}` +
             `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`;
-        if (metadata) {
-            url += `&metadata=${encodeURIComponent(metadata)}`;
+        if (config && config.metadata) {
+            url += `&metadata=${encodeURIComponent(config.metadata)}`;
         }
 
         this.client.connect(url);

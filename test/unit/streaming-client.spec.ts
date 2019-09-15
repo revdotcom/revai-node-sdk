@@ -4,6 +4,7 @@ import { WebSocketClient, WebSocketConnection } from 'websocket';
 
 import { AudioConfig } from '../../src/models/streaming/AudioConfig';
 import { BufferedDuplex } from '../../src/models/streaming/BufferedDuplex';
+import { SessionConfig } from '../../src/models/streaming/SessionConfig';
 import { RevAiStreamingClient } from '../../src/streaming-client';
 
 jest.useFakeTimers();
@@ -26,24 +27,39 @@ describe('streaming-client', () => {
     describe('start', () => {
         it('Connects to api with parameters', () => {
             // Arrange
-            const metadata = 'my metadata';
+            const config = new SessionConfig('my metadata');
 
             // Act
-            const res = sut.start(metadata);
+            const res = sut.start(config);
 
             // Assert
             expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
                 `access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}` +
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}` +
-                `&metadata=${encodeURIComponent(metadata)}`
+                `&metadata=${encodeURIComponent(config.metadata)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
         });
 
-        it ('does not add metadata param if not provided', () => {
+        it ('does not add metadata if no config provided', () => {
             // Act
             const res = sut.start();
+
+            // Assert
+            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
+                `access_token=${token}` +
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
+            );
+            expect(mockClient.connect).toBeCalledTimes(1);
+        });
+
+        it ('does not add metadata if empty in config', () => {
+            const config = new SessionConfig();
+
+            // Act
+            const res = sut.start(config);
 
             // Assert
             expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
