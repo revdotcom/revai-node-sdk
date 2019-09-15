@@ -10,7 +10,7 @@ module.exports = {
     getTranscribedJobId: (jobList) => {
         var completedJobId;
         for(job of jobList) {
-            if(job.status === 'transcribed') {
+            if(job.status === 'transcribed' && job.type != 'stream') {
                 completedJobId = job.id;
             }
         }
