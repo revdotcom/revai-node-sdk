@@ -1,6 +1,6 @@
 const configUtil = require('./config-helper');
 const revai = require('../../../dist/src/api-client');
-const JobStatus = require('../../../dist/src/models/async/JobStatus').JobStatus;
+const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
 const JobType = require('../../../dist/src/models/JobType').JobType;
 
 module.exports = {

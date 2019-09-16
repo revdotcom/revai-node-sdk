@@ -1,4 +1,4 @@
-import { JobStatus } from './async/JobStatus';
+import { JobStatus } from './JobStatus';
 import { JobType } from './JobType';
 
 export interface RevAiApiJob {

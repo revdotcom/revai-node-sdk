@@ -14,6 +14,7 @@ let mockClient: WebSocketClient;
 
 const audioConfig = new AudioConfig('audio/x-wav');
 const token = 'testToken';
+const baseUrl = 'wss://api.rev.ai/speechtotext/v1alpha/stream';
 
 // tslint:disable-next-line
 const sdkVersion = require('../../package.json').version;
@@ -33,8 +34,8 @@ describe('streaming-client', () => {
             const res = sut.start(config);
 
             // Assert
-            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
-                `access_token=${token}` +
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}` +
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}` +
                 `&metadata=${encodeURIComponent(config.metadata)}`
@@ -47,8 +48,8 @@ describe('streaming-client', () => {
             const res = sut.start();
 
             // Assert
-            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
-                `access_token=${token}` +
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}` +
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
@@ -62,8 +63,8 @@ describe('streaming-client', () => {
             const res = sut.start(config);
 
             // Assert
-            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
-                `access_token=${token}` +
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}` +
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
