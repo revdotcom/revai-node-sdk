@@ -24,7 +24,7 @@ client.on('connectFailed', error => {
     console.log(`Connection failed with error: ${error}`);
 })
 client.on('connect', connectionMessage => {
-    console.log(`Connected with message: ${connectionMessage}`);
+    console.log(`Connected with job id: ${connectionMessage.id}`);
 })
 
 // Begin streaming session
