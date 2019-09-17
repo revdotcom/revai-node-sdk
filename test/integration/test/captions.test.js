@@ -11,7 +11,7 @@ test('Can get srt captions', async (done) => {
     try {
         captionsStream = await client.getCaptions(jobId);
     }
-    catch (error){
+    catch (error) {
         if (error instanceof InvalidStateError){
             captionsStream = await client.getCaptions(jobId, undefined, 0);
         }
