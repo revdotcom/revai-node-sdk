@@ -1,6 +1,10 @@
+import { JobStatus } from './JobStatus';
+import { JobType } from './JobType';
+
 export interface RevAiApiJob {
     id: string;
-    status: string;
+    status: JobStatus;
+    type: JobType;
     created_on: string;
     completed_on?: string;
     metadata?: string;

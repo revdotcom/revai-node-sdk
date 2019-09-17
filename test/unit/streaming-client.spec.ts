@@ -4,6 +4,7 @@ import { WebSocketClient, WebSocketConnection } from 'websocket';
 
 import { AudioConfig } from '../../src/models/streaming/AudioConfig';
 import { BufferedDuplex } from '../../src/models/streaming/BufferedDuplex';
+import { SessionConfig } from '../../src/models/streaming/SessionConfig';
 import { RevAiStreamingClient } from '../../src/streaming-client';
 
 jest.useFakeTimers();
@@ -11,8 +12,12 @@ jest.useFakeTimers();
 let sut: RevAiStreamingClient;
 let mockClient: WebSocketClient;
 
-const audioConfig = new AudioConfig("audio/x-wav");
-const token = "testToken";
+const audioConfig = new AudioConfig('audio/x-wav');
+const token = 'testToken';
+const baseUrl = 'wss://api.rev.ai/speechtotext/v1alpha/stream';
+
+// tslint:disable-next-line
+const sdkVersion = require('../../package.json').version;
 
 describe('streaming-client', () => {
     beforeEach(() => {
@@ -22,13 +27,46 @@ describe('streaming-client', () => {
 
     describe('start', () => {
         it('Connects to api with parameters', () => {
+            // Arrange
+            const config = new SessionConfig('my metadata');
+
+            // Act
+            const res = sut.start(config);
+
+            // Assert
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}` +
+                `&metadata=${encodeURIComponent(config.metadata)}`
+            );
+            expect(mockClient.connect).toBeCalledTimes(1);
+        });
+
+        it ('does not add metadata if no config provided', () => {
             // Act
             const res = sut.start();
 
             // Assert
-            expect(mockClient.connect).toBeCalledWith(`wss://api.rev.ai/speechtotext/v1alpha/stream?` +
-                `access_token=${token}` +
-                `&content_type=${audioConfig.getContentTypeString()}`
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
+            );
+            expect(mockClient.connect).toBeCalledTimes(1);
+        });
+
+        it ('does not add metadata if empty in config', () => {
+            const config = new SessionConfig();
+
+            // Act
+            const res = sut.start(config);
+
+            // Assert
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
         });

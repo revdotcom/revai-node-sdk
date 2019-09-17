@@ -38,7 +38,7 @@ const token = require('./config/config.json').access_token;
      * Use the callback_url option (see: https://www.rev.ai/docs#section/Node-SDK)
      * to receive the response asynchronously on job completion
      */
-    while((jobStatus = (await client.getJobDetails(job.id)).status) == "in_progress")
+    while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
     {  
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
