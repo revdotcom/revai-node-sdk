@@ -1,9 +1,33 @@
 const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
+const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
+const client = clientHelper.getClient(configHelper.getApiKey());
 const InstanceStateError = require('../../../src/models/RevAiApiError').InvalidStateError;
 
+beforeAll(async (done) => {
+    const jobList = await client.getListOfJobs();
+    var jobId;
+    if(jobList != undefined) {
+        jobId = clientHelper.getTranscribedJobId(jobList);
+    }
+    if(jobId == undefined) {
+        const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
+        jobId = job.id;
+    }
+    var count = 0;
+    var intervalObject = setInterval(function(){ 
+        count++;
+        (async () => {
+            const jobDetails = await client.getJobDetails(jobId);
+            if (jobDetails.status == JobStatus.Transcribed || count >= 40) { 
+                clearInterval(intervalObject);
+                done();
+            }
+        })()
+    }, 15000);
+}, 600000)
+
 test('Can get srt captions', async (done) => {
-    const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
     const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();

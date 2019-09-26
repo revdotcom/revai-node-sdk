@@ -1,8 +1,32 @@
 const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
+const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
+const client = clientHelper.getClient(configHelper.getApiKey());
+
+beforeAll(async (done) => {
+    const jobList = await client.getListOfJobs();
+    var jobId;
+    if(jobList != undefined) {
+        jobId = clientHelper.getTranscribedJobId(jobList);
+    }
+    if(jobId == undefined) {
+        const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
+        jobId = job.id;
+    }
+    var count = 0;
+    var intervalObject = setInterval(function(){ 
+        count++;
+        (async () => {
+            const jobDetails = await client.getJobDetails(jobId);
+            if (jobDetails.status == JobStatus.Transcribed || count >= 40) { 
+                clearInterval(intervalObject);
+                done();
+            }
+        })()
+    }, 15000);
+}, 600000)
 
 test('Can get JSON transcript', async (done) => {
-    const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
     const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
@@ -26,7 +50,6 @@ test('Can get JSON transcript', async (done) => {
 });
 
 test('JSON stream is equivalent to JSON object', async (done) => {
-    const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
     const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
@@ -44,7 +67,6 @@ test('JSON stream is equivalent to JSON object', async (done) => {
 })
 
 test('Can get text transcript', async (done) => {
-    const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
     const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
@@ -55,13 +77,11 @@ test('Can get text transcript', async (done) => {
 })
 
 test('Text stream is equivalent to text string', async (done) => {
-    const client = clientHelper.getClient(configHelper.getApiKey());
     const jobList = await client.getListOfJobs();
     const jobId = clientHelper.getTranscribedJobId(jobList);
     expect(jobId).toBeDefined();
     const textString = await client.getTranscriptText(jobId);
     const textStream = await client.getTranscriptTextStream(jobId);
-    //console.log('String: ' + textString);
     var streamString = '';
     textStream.on('data', data => {
         streamString += data.toString();
