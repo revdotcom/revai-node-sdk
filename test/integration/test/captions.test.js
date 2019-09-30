@@ -7,19 +7,18 @@ const InstanceStateError = require('../../../src/models/RevAiApiError').InvalidS
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
     var jobId;
-    if(jobList != undefined) {
+    if(jobList !== undefined) {
         jobId = clientHelper.getTranscribedJobId(jobList);
     }
-    if(jobId == undefined) {
+    if(jobId === undefined) {
         const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
         jobId = job.id;
     }
-    var count = 0;
-    var intervalObject = setInterval(function(){ 
-        count++;
+
+    var intervalObject = setInterval(function() { 
         (async () => {
             const jobDetails = await client.getJobDetails(jobId);
-            if (jobDetails.status == JobStatus.Transcribed || count >= 40) { 
+            if (jobDetails.status == JobStatus.Transcribed) { 
                 clearInterval(intervalObject);
                 done();
             }

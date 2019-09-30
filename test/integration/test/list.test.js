@@ -5,10 +5,9 @@ const client = clientHelper.getClient(configHelper.getApiKey());
 
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
-    if(jobList == undefined || jobList.length < 2) {
-        for(var i = 0; i < 2; i++) {
-            await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
-        }
+    if(jobList === undefined || jobList.length < 2) {
+        await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
+        await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
     }
     done();
 }, 10000)
