@@ -11,8 +11,8 @@ const assert = require('assert');
         
     client.on('close', (code, reason) => {
         console.log(`Connection closed, ${code}: ${reason}`);
-        assert.equal(code, 1000, `Expected close code to be [1000] but was ${code}`);
-        assert.equal(reason, 'End of input. Closing', `Expected close reason to be [End of input. Closing] but was ${reason}`)
+        assertCloseCodeAndReason(code, reason);
+        console.log('Streaming test PASS');
         return;
     });
     client.on('httpResponse', code => {
@@ -28,7 +28,7 @@ const assert = require('assert');
     var stream = client.start();
 
     stream.on('data', data => {
-        if(data.type === 'partial') {
+        if (data.type === 'partial') {
             assertPartialHypothesis(data);
         } else if (data.type === 'final') {
             assertFinalHypothesis(data);
@@ -39,7 +39,7 @@ const assert = require('assert');
         console.log(`Streaming error occurred: ${error}`);
     });
 
-    var file = fs.createReadStream('../resources/english_test.raw');
+    var file = fs.createReadStream('./test/integration/resources/english_test.raw');
 
     file.on('end', () => {
         client.end();
@@ -61,13 +61,18 @@ function assertPartialHypothesis(partial) {
 function assertFinalHypothesis(final) {
     assert.ok(final.ts < final.end_ts);
     final.elements.forEach(element => {
-        if(element.type === 'punct') {
+        if (element.type === 'punct') {
             assert.notEqual(element.value, 'undefined', 'Expected element value to not be [undefined]: ' + JSON.stringify(element));
         } else {
             assert.equal(element.type, 'text', 'Expected element type to be [text]: ' + JSON.stringify(element));
             assert.notEqual(element.value, 'undefined', 'Expected element value to not be [undefined]: ' + JSON.stringify(element));
             assert.ok(element.ts < element.end_ts, 'Expected starting timestamp value is not less than ending timestamp: ' + JSON.stringify(element));
-            assert.equal(element.confidence, 1, 'Expected confidence to be [1]:' + JSON.stringify(element));
+            assert.notEqual(element.confidence, 'undefined', 'Expected confidence to not be [undefined]:' + JSON.stringify(element));
         }
     });
+}
+
+function assertCloseCodeAndReason(code, reason) {
+    assert.equal(code, 1000, `Expected close code to be [1000] but was ${code}`);
+    assert.equal(reason, 'End of input. Closing', `Expected close reason to be [End of input. Closing] but was ${reason}`);
 }
