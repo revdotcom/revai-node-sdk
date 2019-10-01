@@ -3,7 +3,6 @@ const {RevAiStreamingClient} = require('../../../dist/src/streaming-client');
 const configHelper = require('../src/config-helper');
 const fs = require('fs');
 const assert = require('assert');
-const colors = require('colors');
 
 (async () => {
     const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
