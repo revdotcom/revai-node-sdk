@@ -1,4 +1,4 @@
-const configUtil = require('./config-helper');
+const configHelper = require('./config-helper');
 const revai = require('../../../dist/src/api-client');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
 const JobType = require('../../../dist/src/models/JobType').JobType;
@@ -6,7 +6,7 @@ const JobType = require('../../../dist/src/models/JobType').JobType;
 module.exports = {
     getClient: (apiKey) => {
         const client = new revai.RevAiApiClient(apiKey);
-        client.apiHandler.instance.defaults.baseURL = `https://${configUtil.getBaseUrl()}/revspeech/v1/`;
+        client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/revspeech/v1/`;
         return client;
     },
     getTranscribedJobId: (jobList) => {
