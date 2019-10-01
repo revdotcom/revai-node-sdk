@@ -3,6 +3,7 @@ const {RevAiStreamingClient} = require('../../../dist/src/streaming-client');
 const configHelper = require('../src/config-helper');
 const fs = require('fs');
 const assert = require('assert');
+const colors = require('colors');
 
 (async (done) => {
     const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
@@ -12,7 +13,7 @@ const assert = require('assert');
     client.on('close', (code, reason) => {
         console.log(`Connection closed, ${code}: ${reason}`);
         assertCloseCodeAndReason(code, reason);
-        console.log('Streaming test PASS');
+        printPassStatement();
         return;
     });
     client.on('httpResponse', code => {
@@ -48,7 +49,6 @@ const assert = require('assert');
     file.once('readable', () => {
         file.pipe(stream);
     });
-
 })()
 
 function assertPartialHypothesis(partial) {
@@ -75,4 +75,8 @@ function assertFinalHypothesis(final) {
 function assertCloseCodeAndReason(code, reason) {
     assert.equal(code, 1000, `Expected close code to be [1000] but was ${code}`);
     assert.equal(reason, 'End of input. Closing', `Expected close reason to be [End of input. Closing] but was ${reason}`);
+}
+
+function printPassStatement() {
+    console.log(colors.bgGreen.black(' PASS ') + ' ' + colors.bgWhite.black(' Integration ') + ' ' + colors.gray('test/integration/test/') + colors.bold('stream.js'));
 }
