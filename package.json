@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "unit-test": "jest -c ./jest.config.unit.js",
-    "integration-test": "jest -c ./jest.config.integration.js",
+    "integration-test": "jest -c ./jest.config.integration.js && node ./test/integration/test/stream.js",
     "lint": "tslint --project \".\""
   },
   "repository": {
