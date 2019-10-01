@@ -11,16 +11,15 @@ const colors = require('colors');
     client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1alpha/stream`;
         
     client.on('close', (code, reason) => {
-        console.log(`Connection closed, ${code}: ${reason}`);
         assertCloseCodeAndReason(code, reason);
         printPassStatement();
         return;
     });
     client.on('httpResponse', code => {
-        console.log(`Streaming client received http response with code: ${code}`);
+        throw new Error(`Streaming client received http response with code: ${code}`);
     });
     client.on('connectFailed', error => {
-        console.log(`Connection failed with error: ${error}`);
+        throw new Error(`Connection failed with error: ${error}`);
     });
     client.on('connect', connectionMessage => {
         console.log(`Connected with job id: ${connectionMessage.id}`);
@@ -33,11 +32,13 @@ const colors = require('colors');
             assertPartialHypothesis(data);
         } else if (data.type === 'final') {
             assertFinalHypothesis(data);
+        } else {
+            throw new Error('Type not recognized: ' + JSON.stringify(data));
         }
     });
 
     stream.on('error', (error) => {
-        console.log(`Streaming error occurred: ${error}`);
+        throw new Error(`Streaming error occurred: ${error}`);
     });
 
     var file = fs.createReadStream('./test/integration/resources/english_test.raw');
