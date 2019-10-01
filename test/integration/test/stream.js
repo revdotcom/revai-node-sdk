@@ -5,7 +5,7 @@ const fs = require('fs');
 const assert = require('assert');
 const colors = require('colors');
 
-(async (done) => {
+(async () => {
     const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
     const client = new RevAiStreamingClient(configHelper.getApiKey(), audioConfig);
     client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1alpha/stream`;
@@ -79,5 +79,5 @@ function assertCloseCodeAndReason(code, reason) {
 }
 
 function printPassStatement() {
-    console.log(colors.bgGreen.black(' PASS ') + ' ' + colors.bgWhite.black(' Integration ') + ' ' + colors.gray('test/integration/test/') + colors.bold('stream.js'));
+    console.log('PASS Integration test/integration/test/stream.js');
 }
