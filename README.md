@@ -47,7 +47,7 @@ var job = await client.submitJobLocalFile("./path/to/file.mp4");
 // or submit via a public url
 var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 
-// or from audio data, this requires that you also provide a filename
+// or from audio data, the filename is optional
 const stream = fs.createReadStream("./path/to/file.mp3");
 var job = await client.submitJobAudioData(stream, "file.mp3");
 ```
