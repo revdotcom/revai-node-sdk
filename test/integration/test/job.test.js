@@ -41,7 +41,6 @@ test('Can submit buffer with filename', async (done) => {
         const job = await client.submitJobAudioData(data, "test_file.mp3", options);
         expect(job.status).toBe('in_progress');
         expect(job.id).not.toBeNull();
-        console.log(job.id);
         done();
     });
 });
