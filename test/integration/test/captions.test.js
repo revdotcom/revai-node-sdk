@@ -2,7 +2,7 @@ const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getClient(configHelper.getApiKey());
-const InstanceStateError = require('../../../src/models/RevAiApiError').InvalidStateError;
+const InvalidParameterError = require('../../../src/models/RevAiApiError').InvalidParameterError;
 
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
@@ -35,7 +35,7 @@ test('Can get srt captions', async (done) => {
         captionsStream = await client.getCaptions(jobId);
     }
     catch (error) {
-        if (error instanceof InvalidStateError){
+        if (error instanceof InvalidParameterError){
             captionsStream = await client.getCaptions(jobId, undefined, 0);
         }
         else {

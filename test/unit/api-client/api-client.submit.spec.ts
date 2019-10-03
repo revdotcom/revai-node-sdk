@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { Readable } from 'stream';
 
 import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
@@ -42,12 +43,107 @@ describe('api-client job submission', () => {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}]
-            }
+            };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', options);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+    });
+
+    describe('submitJobFileStream', () => {
+        it('submit job with Readable', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            let fakeStream = new Readable();
+
+            const job = await sut.submitJobAudioData(fakeStream);
+
+            const expectedPayload = expect.objectContaining({
+                '_boundary': expect.anything(),
+                '_streams': expect.arrayContaining([expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"')])
+            });
+            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with Buffer', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            let fakeStream = new Buffer(10);
+
+            const job = await sut.submitJobAudioData(fakeStream);
+
+            const expectedPayload = expect.objectContaining({
+                '_boundary': expect.anything(),
+                '_streams': expect.arrayContaining([expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"')])
+            });
+            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with name', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            let fakeStream = new Buffer(10);
+
+            const job = await sut.submitJobAudioData(fakeStream, 'example.mp3');
+
+            const expectedPayload = expect.objectContaining({
+                '_boundary': expect.anything(),
+                '_streams': expect.arrayContaining([expect.anything(),
+                expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"')])
+            });
+            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with options', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            let mockStream = new Buffer(10);
+            const options = {
+                metadata: 'This is a sample submit jobs option',
+                callback_url: 'https://www.example.com/callback',
+                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                skip_punctuation: true,
+                skip_diarization: true,
+                speaker_channel_count: 1
+            };
+
+            const job = await sut.submitJobAudioData(mockStream, 'example.mp3', options);
+
+            const expectedPayload = expect.objectContaining({
+                '_boundary': expect.anything(),
+                '_streams': expect.arrayContaining([expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"'),
+                    '{' +
+                        '"metadata":"This is a sample submit jobs option",' +
+                        '"callback_url":"https://www.example.com/callback",' +
+                        '"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],' +
+                        '"skip_punctuation":true,' +
+                        '"skip_diarization":true,' +
+                        '"speaker_channel_count":1' +
+                    '}'
+            ])
+            });
+            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -78,7 +174,7 @@ describe('api-client job submission', () => {
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}]
+                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channel_count: 1
