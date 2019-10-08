@@ -14,6 +14,7 @@ import {
     setupFakeInvalidParametersError,
     setupFakeInvalidStateError
 } from './testhelpers';
+import { Readable, Writable, Transform } from 'stream';
 
 describe('api-request-handler', () => {
     let sut: ApiRequestHandler;
@@ -36,7 +37,7 @@ describe('api-request-handler', () => {
             const response = 'testResponse';
             axios.request.mockResolvedValue({ data : response });
 
-            var res = await sut.makeApiRequest(method, endpoint, headers, responseType);
+            let res = await sut.makeApiRequest(method, endpoint, headers, responseType);
 
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
@@ -57,7 +58,7 @@ describe('api-request-handler', () => {
             const params = { data : 'stuff' };
             axios.request.mockResolvedValue({ data : response });
 
-            var res = await sut.makeApiRequest('post', endpoint, headers, responseType, params);
+            let res = await sut.makeApiRequest('post', endpoint, headers, responseType, params);
 
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
@@ -78,7 +79,7 @@ describe('api-request-handler', () => {
             const params = { data : 'stuff' };
             axios.request.mockResolvedValue({ data : response });
 
-            var res = await sut.makeApiRequest(method, endpoint, headers, responseType, params);
+            let res = await sut.makeApiRequest(method, endpoint, headers, responseType, params);
 
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
@@ -96,14 +97,12 @@ describe('api-request-handler', () => {
             const endpoint = '/test';
             const headers = { 'Header1' : 'test' };
             const responseType = 'text';
-            const fakeError = setupFakeApiError(401, "Unauthorized");
+            const fakeError = setupFakeApiError(401, 'Unauthorized');
             axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
 
             try {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
-            }
-
-            catch (e) {
+            } catch (e) {
                 expect(e).toEqual(new RevAiApiError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
@@ -121,14 +120,12 @@ describe('api-request-handler', () => {
             const endpoint = '/test';
             const headers = { 'Header1' : 'test' };
             const responseType = 'text';
-            const fakeError = setupFakeApiError(404, "not found");
+            const fakeError = setupFakeApiError(404, 'not found');
             axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
 
             try {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
-            }
-
-            catch (e) {
+            } catch (e) {
                 expect(e).toEqual(new RevAiApiError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
@@ -151,9 +148,7 @@ describe('api-request-handler', () => {
 
             try {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
-            }
-
-            catch (e) {
+            } catch (e) {
                 expect(e).toEqual(new InvalidParameterError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
@@ -176,9 +171,7 @@ describe('api-request-handler', () => {
 
             try {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
-            }
-
-            catch (e) {
+            } catch (e) {
                 expect(e).toEqual(new InvalidStateError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
@@ -201,10 +194,44 @@ describe('api-request-handler', () => {
 
             try {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
-            }
-
-            catch (e) {
+            } catch (e) {
                 expect(e).toEqual(new InsufficientCreditsError(fakeError));
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        it('reads error response body when error is thrown from stream request', async () => {
+            const responseType = 'stream';
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const fakeError = setupFakeInvalidParametersError();
+            const fakeData = {
+                title: 'fakeTitle',
+                type: 'fakeType',
+                detail: 'fakeDetail',
+                parameters: {
+                    'media_url': [
+                        'The media_url field is required'
+                    ]
+                }
+            };
+            let responseStream = new Transform({ objectMode: true });
+            responseStream.push(JSON.stringify(fakeData));
+            fakeError.response.data = responseStream;
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(new InvalidParameterError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
