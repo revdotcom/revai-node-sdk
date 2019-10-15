@@ -56,6 +56,9 @@ export class ApiRequestHandler {
             if (error.response == null) {
                 throw error;
             }
+            if (responseType === 'stream') {
+                error.response.data = JSON.parse(error.response.data.read());
+            }
             switch (error.response.status) {
                 case 400:
                     throw new InvalidParameterError(error);
