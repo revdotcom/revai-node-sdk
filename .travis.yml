@@ -26,6 +26,11 @@ jobs:
       env:
         - secure: "XJ6KFdEoEqcajZjMhJBT5UxFA6i/W0U0eUi61eeEv4MdF2fKg6kOgLmiPMoEJ+PQsAj2hT6FUJdFNS2HmTXWA5olSXlAMn9g7WLIjehRnKrdnpaYLWj+SQNN5a+DtFg5w1jfnR+jhuNK7zq1jUy0a1d6MRxrFJkfv222aapSvIfvp84UGQA12edz08JUP1c+8x5NA5rs+4qKTYwoCsMQwZ4wCpOXD7+CG6d87OOufLrYNSJ2LxIvj/rgPdlLZaMkwaWvTy6c+kkrDuL5nQ48mLZae0zmUiBR8EjIfKxN7+8Bn2EsTcWYx4re46hka+qc+wEcGYSA/SwPuToSkXUfPg06/qYgCmUm+kVoFe5ywiPGPA3rvU42Em2EJuW18sFaZKzbZI8fRfoPwZhFdFd3K7mzrYzXLUyNqTwvrX1jskQcbUn6ZRGHKXPnAXur9YtvIZ7XrIZo6CnAvQdm86HkGfYWKtt+CY9c5jRORKuDctr/BE3vgMa3hrGQXrDEe1l+iewhARX0rDZmSvcbZ/dYd81f4XudgIpA4FzE8OkduUDE9gngH96PcglrozoHMMTidflVRCAlh7Z5FprTuYkDMnMxn85U457x8YsXUf4A3nhtZQGqu6B5fsqIk4Z1k5jYjOBzHvar1ubhcVa8Cu7eBneOM36ChhSTmLCJKBB7FmI="
         - secure: "rMIaZbjPW6vevo5f550j+N3fN313oOo94SCL15zzwqiNWjctIPCXW7wr1XST/oEU/+YM+UvhGZ12aXQf/Bh+ptxbvqQ7N6II64qbYRGqKBQqt6lbaUYQvoKJHbxXV8wBMxXkfzrpwgHiVZ3Yp6SCsa7OaHTasa+H19svsIdyA6WgHWDGpAxe0gFnMlAX0bHk/T8Kbke3gP9k+V0rEzIrqihgHZtldJfd4dcAZGB/XC6+AyNrYHKdMjFTft3YZODcb5xXvBsaUhFCDylqNA997GtKHQbzcF5imFGxTHRzBXDceAKL6cs3pF604K5oy3WgDiU5JJMihO0jbSLbpv2VLj+CDAPSL97pKJmOFn0R/HKOn1uxjO5r31q+73EZwZu9uE6dCgj06tv5NLQ9TrcP3G0EA2l7yaCnm/tPwnYXdLab0qtCShnAFJIjaf0tQcqhM9BpAWNVuRIQjYsHOADn3GHUgRiWWg1MYl6EN8ORemenkvWTzIq6/5LZ+ycrjFqb1+paRBRauud97kMoR6AwHJnjayviCgEvY+51sDDZl9NBR6bH4WcJfQcWbvj9JWWBOnjrjGdeOsj2wTCY1IDAAtL/jXDJ73vN9hhJtZ35xegBY66D7g53ApTkdFLhWdQ7E0ngkoCHbTmU8Z5WeGSInnsdTOz7GbjmgOWqG6T5vOM="
+      node_js: "8"
+    - <<:
+      node_js: "10"
+    - <<:
+      node_js: "12"
     - stage: Stage Integration
       script:
         - npm run build
