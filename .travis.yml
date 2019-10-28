@@ -6,17 +6,10 @@ node_js:
 
 script: npm run unit-test
 
-jobs:
+matrix:
   include:
     - stage: build
       script: npm run build
-      node_js: "8"
-    - stage: build
-      script: npm run build
-      node_js: "10"
-    - stage: build
-      script: npm run build
-      node_js: "12"
     - stage: lint
       script: npm run lint
     - stage: Test Integration

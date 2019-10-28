@@ -16,6 +16,10 @@ To install the package, run:
 
     npm install revai-node-sdk
 
+## Support
+
+We support Node 8, 10, and 12.
+
 ## Usage
 
 All you need to get started is your Access Token, which can be generated on
