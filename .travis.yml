@@ -18,31 +18,48 @@ jobs:
       node_js: "12"
     - stage: lint
       script: npm run lint
-    - stage: Test Integration
+    - &test-integration
+      stage: test integration
       script:
         - npm run build
         - node build_release_package_json.js
         - npm run integration-test
+      node_js: "8"
       if: branch =~ /^feature/
       env:
         - secure: "XJ6KFdEoEqcajZjMhJBT5UxFA6i/W0U0eUi61eeEv4MdF2fKg6kOgLmiPMoEJ+PQsAj2hT6FUJdFNS2HmTXWA5olSXlAMn9g7WLIjehRnKrdnpaYLWj+SQNN5a+DtFg5w1jfnR+jhuNK7zq1jUy0a1d6MRxrFJkfv222aapSvIfvp84UGQA12edz08JUP1c+8x5NA5rs+4qKTYwoCsMQwZ4wCpOXD7+CG6d87OOufLrYNSJ2LxIvj/rgPdlLZaMkwaWvTy6c+kkrDuL5nQ48mLZae0zmUiBR8EjIfKxN7+8Bn2EsTcWYx4re46hka+qc+wEcGYSA/SwPuToSkXUfPg06/qYgCmUm+kVoFe5ywiPGPA3rvU42Em2EJuW18sFaZKzbZI8fRfoPwZhFdFd3K7mzrYzXLUyNqTwvrX1jskQcbUn6ZRGHKXPnAXur9YtvIZ7XrIZo6CnAvQdm86HkGfYWKtt+CY9c5jRORKuDctr/BE3vgMa3hrGQXrDEe1l+iewhARX0rDZmSvcbZ/dYd81f4XudgIpA4FzE8OkduUDE9gngH96PcglrozoHMMTidflVRCAlh7Z5FprTuYkDMnMxn85U457x8YsXUf4A3nhtZQGqu6B5fsqIk4Z1k5jYjOBzHvar1ubhcVa8Cu7eBneOM36ChhSTmLCJKBB7FmI="
         - secure: "rMIaZbjPW6vevo5f550j+N3fN313oOo94SCL15zzwqiNWjctIPCXW7wr1XST/oEU/+YM+UvhGZ12aXQf/Bh+ptxbvqQ7N6II64qbYRGqKBQqt6lbaUYQvoKJHbxXV8wBMxXkfzrpwgHiVZ3Yp6SCsa7OaHTasa+H19svsIdyA6WgHWDGpAxe0gFnMlAX0bHk/T8Kbke3gP9k+V0rEzIrqihgHZtldJfd4dcAZGB/XC6+AyNrYHKdMjFTft3YZODcb5xXvBsaUhFCDylqNA997GtKHQbzcF5imFGxTHRzBXDceAKL6cs3pF604K5oy3WgDiU5JJMihO0jbSLbpv2VLj+CDAPSL97pKJmOFn0R/HKOn1uxjO5r31q+73EZwZu9uE6dCgj06tv5NLQ9TrcP3G0EA2l7yaCnm/tPwnYXdLab0qtCShnAFJIjaf0tQcqhM9BpAWNVuRIQjYsHOADn3GHUgRiWWg1MYl6EN8ORemenkvWTzIq6/5LZ+ycrjFqb1+paRBRauud97kMoR6AwHJnjayviCgEvY+51sDDZl9NBR6bH4WcJfQcWbvj9JWWBOnjrjGdeOsj2wTCY1IDAAtL/jXDJ73vN9hhJtZ35xegBY66D7g53ApTkdFLhWdQ7E0ngkoCHbTmU8Z5WeGSInnsdTOz7GbjmgOWqG6T5vOM="
-      node_js: "8"
-    - stage: Stage Integration
+    - <<: *test-integration
+      node_js: "10"
+    - <<: *test-integration
+      node_js: "12"
+    - &stage-integration
+      stage: stage integration
       script:
         - npm run build
         - node build_release_package_json.js
         - npm run integration-test
+      node_js: "8"
       if: (branch = develop) AND (NOT (tag IS present))
       env:
         - secure: "OnHyd3y9vkplLTXBThCg0eTxcRzp3CauzDAUYmcnF9MlTnhtNAm9quISP4zAQSlyEuiHe6plPYFFIKDHnmMAV/2YXcMiWpCJpW4miykZJJIpPbIuMJxF46izds0hNntVh9ummcwAZuYBWsHwzgmfBUsn/60AjZrUYMw9C/Mb7jr8sI7binJvU92tSt1pIxZi3m18vqIu7SZFzzWj9TKoGCRGZ1qBS60KPI6KV8vEaKFvDCOFN0rs5xOC2ahi/jRosOqbn0uCsr7QgNZ3FdTpVjiidMnOWSAn5bED55qThBdFCNozJxtTlF2pRZtVaIjbF45kF2pS/3glvHRaZbB4T0DQS7wwfAhFDgQhAl8Ggxc4T23gMaT60U8RJK32CQlNo0YwFO1eJlvf8axEvpyTQJv/QIaZ4LvK7dNv4DPTn5vq3MLMOndyG4cY5yr3r3xW+UwwJFob4Jj1fsJ7agrM2GfVadK8PRpp35/N6B/9d919aRwOlzYErkT3DZBTbNd/2B867UiwH0HKEdb3F+F16lai4s0qukN1B2Lz0UkwxdJ6Fhjqruy5mxH6jNDh2gX8En7jqeDs+u+q3yZRU4ymRHZFE46Xp2OjfRAWnRX/fv1u5ZSIaSGFvM2B3La08oOfCD3XNKVs8yZOeQ0sPIcnWru15/XbIt33krhCKXoBqlY="
         - secure: "Wl6dUEMeU0O34XrsJE04CysZhb4o8d/2taFGAgEBGfIpeS9mlqQJKFOIeXbbBqZsdK0WKVLPpi6IINfnag8kcymyShfLZUvGxzOpqhIWL4TGDOa1YwwiirDgQhhuRob+V13BURNdCWDwaNMVpHvZW45ickTVVaz8m7h9FTlxrljkSa+8KPxBGDgsBzTpA9/xplHxj+UZpBAN1o3fbS+jmexp3QCdPBMax3Atuu1PA2Qh9hmjnXU1KuzwsIPJq985rcmHllbLeRKk90smPJuDui7a+n2u9ujNY0GbsERqXRh7U/wBMpqdGfcMzvBolzLfNOOjalO0mlzM9VgGDBkIvaIJE5HSf0bR0ah6C9KP97ZRSJ49WWPcpsLvBZDELHUn2pUysVx+OKtTwelBl8d5AiqpliUjLxStREvnM//mOEjO/9cM4Dr3Vqev88vmQr3QDdmoqVymTASRotBRiTpSu9lso9ODC5xSi+O+XgvJoRq9yWnbc9a1iW7oFJCLjzkdwHTP5T7Y3IU95/Z6ESfL534mZv2SG43+s0AzjJG5+RsAfuQYmMf6Q5lFgDVDmXo11Q/nBY5XUPPQZtQyEenJLV1uM/aEj302/d6nwA7PTjjKOi8NnwMkrywbxqbUvMe50yxap3rpW+3uI8cwVLJHG0oxUsMXvy+j/ZP5ijaL91U="
-    - stage: Prod Integration
+    - <<: *stage-integration
+      node_js: "10"
+    - <<: *stage-integration
+      node_js: "12"    
+    - &prod-integration
+      stage: prod integration
       script:
         - npm run build
         - node build_release_package_json.js
         - npm run integration-test
+      node_js: "8"
       if: tag =~ /[0-9]+\.[0-9]+\.[0-9]/
       env:
         - secure: "gctP3Aer7xgCk9hhBRiD/I5rI9Zvp+b+G81rv0aYvLfliwJxCO32jZfYCU8vVGzIbOZbw3x6rAOugLw6niyT+sK9S+oK1A7kDq520/hlOFfda0XN93paO6crCpZd3D0LZmK+T3tc6TYsrtyghf2O9l3S098gpPfvLxghBvBMeviGKQGap3CJ/LnPi/Cu87AEYJjVNEFZQIMxwS99J22DE3gfBWvPQpflFHgobl2utuEJlKOXo37McO48GOtU9FYCvUOrI0gB9JMD0B+/ItFU5qviKiAOJw8kUhRy8II7FnPU2JIGPrQWFcPHXZrzowKdW+0sFIXq9cPRxe83c5eG9RcieU0ohOGjGxRZ8YCta7ZcZz9QfzGfYrozPTr9Yr/iNxpiNftNIdF0FqHdK6Fm4gFSmvS5sDPGsqVjTTtQ4i0bwIMCTmArz5bTXCjfafqskv0/1rVtMvb5GmFBHI0Uk9uzefOjaYaL/I2hMkuOIXp4HJCdOAY15VCaBqTi0YGm1F5aaj4mSJ4YCHDcY5+dd9f7A6iB1xk8dm+hzMQBSxuy/cuZsU68HhvEsdtG/nAF/ETF3dMgFiT5iLsqSsT3azuG3JG4Av2SiZRIlaUVBTcNLYe2+jkRaZHRr/GwAJGvLThVcIa5ER+DcYofu175QZV2iaZpS+IOYIWsU54OPqo="
         - secure: "ExErbWSJNpnCSh8NGczBfCY+8O0kGrCyXFf16lufioVWQVUT3uUNQ7Th/FCq84ReYSWGHnEeLKGMTPq8B+wfvWADOb1Lnu2Sz3ADXPpeGurdRmveBYrxmh7jrXeCCb8Qil2E+kNn9MDnxDUoCXDxw4c/hLLiV9MpTj9+22gc846ti4E/tWJrZaGfJnO3zPfJmar19mwQRi8sx98Hm3M/565rdDGDCOgrZSaZYsdF+/MCZt9mM9Da1OZi2IGDdCbgrJ0ERoP+v/b3KqLP9H+7G1CafPoRPAgHur2OBcXXk+dtsid+yymcc/ZQKsIpWt9TnVj0BlKM0cVG79q7h2RG4qQsPkgaSX5JzZngatm7QKeWkQtqXNWvVuihNkA3XbxtJPUaBvsHH/GleKutQ7I8elBhY4BYHM7l4aALUgONFibE3EeF9VU/oGHDxGoD/je2GTxBk4XiuKpn9Wtj7Fy9sZ+fvqL1YSSWjWEHvR1vKYF3GPu5VLMs5a1y/DkTvipY86RFAh6HOAuvOD0sLGYdc/f50okJ5HJiUoC5w/m2K0z7/mw8s9sPuU/UmzUlOfQjtdpupDwgGpOAPRL7uyyEWrgDZZimLTeNdf7qIYdycrh9ODNRAeishdT4ewhLLsmQrbOqIFloL+oJ1Ca0EueqLRLbkVHc39Frw4apyman8EA="
+    - <<: *prod-integration
+      node_js: "10"
+    - <<: *prod-integration
+      node_js: "12"
