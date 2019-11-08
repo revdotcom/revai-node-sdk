@@ -1,4 +1,5 @@
 export * from './api-client';
+export * from './custom-vocabularies-client';
 export * from './streaming-client';
 export * from './models/async/CaptionType';
 export * from './models/async/RevAiAccount';
