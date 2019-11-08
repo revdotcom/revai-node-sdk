@@ -63,6 +63,9 @@ typings/
 
 #IDE
 .vscode/*
+*.sublime-workspace
+*.sublime-project
+
 # example config file
 examples/config/config.json
 
