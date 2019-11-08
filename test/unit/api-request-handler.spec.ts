@@ -30,7 +30,7 @@ describe('api-request-handler', () => {
             axios.request.mockReset();
         });
 
-        it.each([['get', 'post','delete']])('sends request', async (method) => {
+        it.each([['get', 'post', 'delete']])('sends request', async (method) => {
             const endpoint = '/test';
             const headers = { 'Header1' : 'test' };
             const responseType = 'text';
