@@ -3,7 +3,7 @@ export * from './streaming-client';
 export * from './models/async/CaptionType';
 export * from './models/async/RevAiAccount';
 export * from './models/async/RevAiJobOptions';
-export * from './models/async/CustomVocabulary';
+export * from './models/CustomVocabulary';
 export * from './models/JobStatus';
 export * from './models/JobType';
 export * from './models/RevAiApiError';
