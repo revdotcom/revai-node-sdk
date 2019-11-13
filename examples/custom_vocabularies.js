@@ -18,10 +18,11 @@ const token = require('./config/config.json').access_token;
     console.log(`Status: ${cv_submission.status}`);
     console.log(`Created On: ${cv_submission.created_on}`);
     /**
-     * Waits 5 seconds between each status check to see if job is complete.
-     * note: polling for job status is not recommended in a non-testing environment.
-     * Use the callback_url option (see: https://www.rev.ai/docs#section/Node-SDK)
-     * to receive the response asynchronously on job completion
+     * Waits 5 seconds between each status check to see if the custom vocabulary
+     * is complete. note: polling for custom vocabulary status is not recommended in a
+     * non-testing environment. Use the callback_url option
+     * (see: https://www.rev.ai/docs#section/Node-SDK) to receive the response
+     * asynchronously on custom vocabulary completion.
      */
     while((cv_submission = await client.getCustomVocabularyInformation(cv_submission.id)).status == revai.CustomVocabularyStatus.InProgress)
     {
