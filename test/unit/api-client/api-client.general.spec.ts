@@ -16,7 +16,7 @@ describe('api-client', () => {
         id: jobId,
         status: 'in_progress',
         created_on: '2018-05-05T23:23:22.29Z'
-    }
+    };
 
     beforeEach(() => {
         ApiRequestHandler.mockClear();
