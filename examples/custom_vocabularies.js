@@ -26,7 +26,7 @@ const token = require('./config/config.json').access_token;
     while((cv_submission = await client.getCustomVocabularyInformation(cv_submission.id)).status == revai.CustomVocabularyStatus.InProgress)
     {
         console.log(`Job ${cv_submission.id} is ${cv_submission.status}`);
-        await new Promise( resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 5000));
         cv_submission = await client.getCustomVocabularyInformation(cv_submission.id);
     }
 
