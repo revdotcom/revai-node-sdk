@@ -13,10 +13,10 @@ beforeAll(async (done) => {
         const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
         jobId = job.id;
     }
-    var intervalObject = setInterval(function(){ 
+    var intervalObject = setInterval(function(){
         (async () => {
             const jobDetails = await client.getJobDetails(jobId);
-            if (jobDetails.status == JobStatus.Transcribed) { 
+            if (jobDetails.status == JobStatus.Transcribed) {
                 clearInterval(intervalObject);
                 done();
             }
