@@ -4,8 +4,8 @@ import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
 import { RevAiApiCustomVocabulary } from './models/RevAiApiCustomVocabulary';
 
 /**
-* Client which handles communication with custom vocabularies
-* Rev.ai api
+* Client to submit and retreive status of custom vocabularies
+* from the rev.ai api. Check rev.ai/docs for more information.
 */
 export class RevAiCustomVocabulariesClient {
     apiHandler: ApiRequestHandler;
@@ -18,6 +18,16 @@ export class RevAiCustomVocabulariesClient {
         this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/speechtotext/${version}/vocabularies`, accessToken);
     }
 
+    /**
+    * Submit custom vocabularies to be built. This is primarily
+    * useful for using the custom vocabulary with streaming jobs.
+    * @param customVocabularies array of CustomVocabulary objects.
+    *                           For more information visit rev.ai/docs
+    * @param callbackUrl optional string url to be called when custom
+    *                    vocabulary submission is completed
+    * @param metadata optional string to include with this custom
+    *                 vocabulary submission
+    */
     public async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
         callbackUrl: string = undefined,
@@ -44,6 +54,11 @@ export class RevAiCustomVocabulariesClient {
         );
     }
 
+    /**
+    * Retreive the information of a submitted custom vocabulary.
+    * @param id string id of the custom vocabulary submission whose
+    *           information is to be retreived.
+    */
     public async getCustomVocabularyInformation(id: string): Promise<RevAiApiCustomVocabulary> {
         if (!id) {
             throw Error('id is a required parameter');

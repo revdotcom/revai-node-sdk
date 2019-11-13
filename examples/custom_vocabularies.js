@@ -38,7 +38,8 @@ const token = require('./config/config.json').access_token;
 
     if (cv_submission.status == revai.CustomVocabularyStatus.Failed)
     {
-        console.log(`Job: ${cv_submission.id} failed due to: ${cv_submission.failure_detail}`)
+        console.log(`Job: ${cv_submission.id} failed due to: ${cv_submission.failure}
+            , details: ${cv_submission.failure_detail}`)
     }
 })();
 
