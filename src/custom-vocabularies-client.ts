@@ -1,7 +1,3 @@
-import * as FormData from 'form-data';
-import * as fs from 'fs';
-import { Readable } from 'stream';
-
 import { ApiRequestHandler } from './api-request-handler';
 import { CustomVocabulary } from './models/CustomVocabulary';
 import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
@@ -19,7 +15,7 @@ export class RevAiCustomVocabulariesClient {
     * @param version (optional) version of the API to be used
     */
     constructor(accessToken: string, version: string = 'v1') {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/revspeech/${version}/vocabularies`, accessToken);
+        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/speechtotext/${version}/vocabularies`, accessToken);
     }
 
     public async submitCustomVocabularies(
@@ -28,7 +24,7 @@ export class RevAiCustomVocabulariesClient {
         metadata: string = undefined
     ): Promise<RevAiApiCustomVocabulary> {
         if (!customVocabularies) {
-            throw Error('Custom Vocabularies not provided');
+            throw Error('customVocabularies is a required parameter');
         }
 
         let options: CustomVocabularyOptions = {custom_vocabularies: customVocabularies};
@@ -48,10 +44,10 @@ export class RevAiCustomVocabulariesClient {
         );
     }
 
-    public async getCustomVocabulary(id: string): Promise<RevAiApiCustomVocabulary> {
+    public async getCustomVocabularyInformation(id: string): Promise<RevAiApiCustomVocabulary> {
         if (!id) {
-            throw Error('Custom Vocabulary ID not provided');
+            throw Error('id is a required parameter');
         }
-        return this.apiHandler.makeApiRequest('get', '', {}, 'json', { 'id': id });
+        return await this.apiHandler.makeApiRequest('get', `/${id}`, {}, 'json');
     }
 }

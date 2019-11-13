@@ -5,6 +5,8 @@ export * from './models/async/CaptionType';
 export * from './models/async/RevAiAccount';
 export * from './models/async/RevAiJobOptions';
 export * from './models/CustomVocabulary';
+export * from './models/CustomVocabularyOptions';
+export * from './models/CustomVocabularyStatus';
 export * from './models/JobStatus';
 export * from './models/JobType';
 export * from './models/RevAiApiError';

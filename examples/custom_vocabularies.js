@@ -5,39 +5,39 @@ const token = require('./config/config.json').access_token;
     // Initialize your client with your revai access token
     var client = new revai.RevAiCustomVocabulariesClient(token);
 
-    cv_job = client.submitCustomVocabularies([{
+    cv_submission = await client.submitCustomVocabularies([{
             phrases: [
-                "add",
-                "custom",
+                "enter",
+                "your",
                 "vocabularies",
                 "here"
             ]
         }])
 
-    console.log(`Job Id: ${cv_job.id}`);
-    console.log(`Status: ${cv_job.status}`);
-    console.log(`Created On: ${cv_job.created_on}`);
-
+    console.log(`Job Id: ${cv_submission.id}`);
+    console.log(`Status: ${cv_submission.status}`);
+    console.log(`Created On: ${cv_submission.created_on}`);
     /**
      * Waits 5 seconds between each status check to see if job is complete.
      * note: polling for job status is not recommended in a non-testing environment.
      * Use the callback_url option (see: https://www.rev.ai/docs#section/Node-SDK)
      * to receive the response asynchronously on job completion
      */
-    while((job = (await client.getCustomVocabulary(cv_job.id))).status == revai.CustomVocabularyStatus.InProgress)
+    while((cv_submission = await client.getCustomVocabularyInformation(cv_submission.id)).status == revai.CustomVocabularyStatus.InProgress)
     {
-        console.log(`Job ${cv_job.id} is ${jobStatus}`);
+        console.log(`Job ${cv_submission.id} is ${cv_submission.status}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
+        cv_submission = await client.getCustomVocabularyInformation(cv_submission.id);
     }
 
-    if (job.status == revai.CustomVocabularyStatus.Failed)
+    if (cv_submission.status == revai.CustomVocabularyStatus.Complete)
     {
-        console.log(`Job: ${cv_job.id} successfully completed!`)
+        console.log(`Job: ${cv_submission.id} successfully completed!`)
     }
 
-    if (job.status == revai.CustomVocabularyStatus.Complete)
+    if (cv_submission.status == revai.CustomVocabularyStatus.Failed)
     {
-        console.log(`Job: ${cv_job.id} failed due to: ${job.failure_detail}`)
+        console.log(`Job: ${cv_submission.id} failed due to: ${cv_submission.failure_detail}`)
     }
 })();
 
