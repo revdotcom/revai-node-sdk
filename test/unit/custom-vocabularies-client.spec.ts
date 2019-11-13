@@ -8,11 +8,11 @@ jest.mock('../../src/api-request-handler');
 
 let sut: RevAiCustomVocabulariesClient;
 
-describe('api-client', () => {
+describe('custom-vocabularies-client', () => {
     const customVocabularies = [
         {phrases: ['my', 'test', 'custom', 'vocabularies']}
     ];
-    const callbackUrl = 'dummy.dummy';
+    const callbackUrl = 'example.com';
     const metadata = 'my metadata';
     const customVocabularyOptions = {
         custom_vocabularies: customVocabularies,
@@ -20,7 +20,7 @@ describe('api-client', () => {
         metadata: metadata
     };
 
-    const customVocabularyId = 'Umx5c6F7pH7r';
+    const customVocabularyId = 'myUniqueID';
     const customVocabularyDetails = {
         id: customVocabularyId,
         status: 'in_progress',
@@ -37,7 +37,7 @@ describe('api-client', () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
 
-            const customVocabularySubmission = await sut.submitCustomVocabularies(
+            const customVocabularyInformation = await sut.submitCustomVocabularies(
                 customVocabularies,
                 callbackUrl,
                 metadata
@@ -51,7 +51,7 @@ describe('api-client', () => {
                 customVocabularyOptions
             );
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
-            expect(customVocabularySubmission).toEqual(customVocabularyDetails);
+            expect(customVocabularyInformation).toEqual(customVocabularyDetails);
         });
     });
 
@@ -60,11 +60,11 @@ describe('api-client', () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
 
-            const customVocabularySubmission = await sut.getCustomVocabularyInformation(customVocabularyId);
+            const customVocabularyInformation = await sut.getCustomVocabularyInformation(customVocabularyId);
 
             expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/${customVocabularyDetails.id}`, {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
-            expect(customVocabularySubmission).toEqual(customVocabularyDetails);
+            expect(customVocabularyInformation).toEqual(customVocabularyDetails);
         });
     });
 });

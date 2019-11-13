@@ -15,7 +15,10 @@ export class RevAiCustomVocabulariesClient {
     * @param version (optional) version of the API to be used
     */
     constructor(accessToken: string, version: string = 'v1') {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/speechtotext/${version}/vocabularies`, accessToken);
+        this.apiHandler = new ApiRequestHandler(
+            `https://api.rev.ai/speechtotext/${version}/vocabularies`,
+            accessToken
+        );
     }
 
     /**

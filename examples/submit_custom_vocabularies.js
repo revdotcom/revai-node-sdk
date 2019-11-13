@@ -24,7 +24,10 @@ const token = require('./config/config.json').access_token;
      * (see: https://www.rev.ai/docs#section/Node-SDK) to receive the response
      * asynchronously on custom vocabulary completion.
      */
-    while((cv_submission = await client.getCustomVocabularyInformation(cv_submission.id)).status == revai.CustomVocabularyStatus.InProgress)
+    while(
+        (cv_submission = await client.getCustomVocabularyInformation(cv_submission.id)).status
+            == revai.CustomVocabularyStatus.InProgress
+    )
     {
         console.log(`Job ${cv_submission.id} is ${cv_submission.status}`);
         await new Promise(resolve => setTimeout(resolve, 5000));
