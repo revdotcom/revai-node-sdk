@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Readable, Transform, Writable } from 'stream';
 
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {
@@ -7,6 +8,7 @@ import {
     InvalidStateError,
     RevAiApiError
 } from '../../src/models/RevAiApiError';
+
 import {
     objectToStream,
     setupFakeApiError,
@@ -14,7 +16,6 @@ import {
     setupFakeInvalidParametersError,
     setupFakeInvalidStateError
 } from './testhelpers';
-import { Readable, Writable, Transform } from 'stream';
 
 describe('api-request-handler', () => {
     let sut: ApiRequestHandler;
