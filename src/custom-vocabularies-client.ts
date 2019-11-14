@@ -1,7 +1,7 @@
 import { ApiRequestHandler } from './api-request-handler';
 import { CustomVocabulary } from './models/CustomVocabulary';
-import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
 import { CustomVocabularyInformation } from './models/CustomVocabularyInformation';
+import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
 
 /**
 * Client to submit and retreive status of custom vocabularies
