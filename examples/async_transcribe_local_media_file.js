@@ -2,7 +2,7 @@ const revai = require('revai-node-sdk');
 const fs = require('fs');
 const token = require('./config/config.json').access_token;
 
-(async () => {  
+(async () => {
     // Initialize your client with your revai access token
     var client = new revai.RevAiApiClient(token);
 
@@ -39,12 +39,12 @@ const token = require('./config/config.json').access_token;
      * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
-    {  
+    {
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
     }
 
-    /** 
+    /**
      * Get transcript as plain text
      * Transcripts can also be gotten as Object, Text Stream, Object Stream,
      * or as captions

@@ -1,4 +1,4 @@
-import { CustomVocabulary } from './CustomVocabulary';
+import { CustomVocabulary } from '../CustomVocabulary';
 
 export interface RevAiJobOptions {
     media_url?: string;

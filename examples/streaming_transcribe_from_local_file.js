@@ -4,8 +4,8 @@ const token = require('./config/config.json').access_token;
 
 // Initialize your client with your audio configuration and access token
 const audioConfig = new revai.AudioConfig(
-    /* contentType */ "audio/x-raw", 
-    /* layout */      "interleaved", 
+    /* contentType */ "audio/x-raw",
+    /* layout */      "interleaved",
     /* sample rate */ 16000,
     /* format */      "S16LE",
     /* channels */    1
@@ -47,6 +47,6 @@ file.on('end', () => {
 
 // Stream the file
 file.pipe(stream);
- 
+
 // Forcibly ends the streaming session
 // stream.unsafeEnd();

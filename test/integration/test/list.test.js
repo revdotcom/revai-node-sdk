@@ -1,7 +1,7 @@
 const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
 const RevAiApiJob = require('../../../dist/src/models/RevAiApiJob')
-const client = clientHelper.getClient(configHelper.getApiKey());
+const client = clientHelper.getAsyncClient(configHelper.getApiKey());
 
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();

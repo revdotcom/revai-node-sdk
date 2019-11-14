@@ -1,7 +1,7 @@
 const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
-const client = clientHelper.getClient(configHelper.getApiKey());
+const client = clientHelper.getAsyncClient(configHelper.getApiKey());
 
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
@@ -13,10 +13,10 @@ beforeAll(async (done) => {
         const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
         jobId = job.id;
     }
-    var intervalObject = setInterval(function(){ 
+    var intervalObject = setInterval(function(){
         (async () => {
             const jobDetails = await client.getJobDetails(jobId);
-            if (jobDetails.status == JobStatus.Transcribed) { 
+            if (jobDetails.status == JobStatus.Transcribed) {
                 clearInterval(intervalObject);
                 done();
             }

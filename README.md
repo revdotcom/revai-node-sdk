@@ -133,3 +133,25 @@ var captionsStream = await client.getCaptions(job.id, CaptionType.SRT);
 const channelId = 1;
 var captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channelId);
 ```
+
+### Submitting Custom Vocabularies
+
+You can now submit any custom vocabularies independently through the new CustomVocabularies client! The main benefit is that users of the SDK can now submit their custom vocabularies for preprocessing and then include these processed custom vocabularies in their streaming jobs.
+
+Below you can see an example of how to create and submit as well as check on the status and other associated information of your submittied custom vocabulary!
+
+For more information check out our [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples)
+```javascript
+import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
+
+// Initialize your client with your revai access token
+var accessToken = "Your Access Token";
+var client = new RevAiCustomVocabulariesClient(accessToken);
+
+// Construct Custom Vocabularies object and submit it through the client
+var customVocabularies = [{phrases: ["Noam Chomsky", "Robert Berwick", "Patrick Winston"]}];
+var customVocabularySubmission = await client.submitCustomVocabularies(customVocabularies);
+
+// Get information regarding the Custom Vocabulary submission and its progress
+var customVocabularyInformation = await client.getCustomVocabularyInformation(customVocabularySubmission.id)
+```

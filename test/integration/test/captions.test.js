@@ -1,7 +1,7 @@
 const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
-const client = clientHelper.getClient(configHelper.getApiKey());
+const client = clientHelper.getAsyncClient(configHelper.getApiKey());
 const InvalidParameterError = require('../../../src/models/RevAiApiError').InvalidParameterError;
 
 beforeAll(async (done) => {

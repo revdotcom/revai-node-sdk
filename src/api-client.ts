@@ -25,7 +25,7 @@ export class RevAiApiClient {
      * @param version (optional) version of the API to be used
      */
     constructor (accessToken: string, version = 'v1') {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/revspeech/${version}/`, accessToken);
+        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/speechtotext/${version}/`, accessToken);
     }
 
     /**
