@@ -14,7 +14,7 @@ const token = require('./config/config.json').access_token;
             ]
         }])
 
-    console.log(`Job Id: ${cv_submission.id}`);
+    console.log(`Custom Vocabulary Id: ${cv_submission.id}`);
     console.log(`Status: ${cv_submission.status}`);
     console.log(`Created On: ${cv_submission.created_on}`);
     /**
@@ -29,19 +29,19 @@ const token = require('./config/config.json').access_token;
             == revai.CustomVocabularyStatus.InProgress
     )
     {
-        console.log(`Custom Vocab ${cv_submission.id} is ${cv_submission.status}`);
+        console.log(`Custom Vocabulary ${cv_submission.id} is ${cv_submission.status}`);
         await new Promise(resolve => setTimeout(resolve, 5000));
         cv_submission = await client.getCustomVocabularyInformation(cv_submission.id);
     }
 
     if (cv_submission.status == revai.CustomVocabularyStatus.Complete)
     {
-        console.log(`Job: ${cv_submission.id} successfully completed!`)
+        console.log(`Custom Vocabulary: ${cv_submission.id} successfully completed!`)
     }
 
     if (cv_submission.status == revai.CustomVocabularyStatus.Failed)
     {
-        console.log(`Job: ${cv_submission.id} failed due to: ${cv_submission.failure}
+        console.log(`Custom Vocabulary: ${cv_submission.id} failed due to: ${cv_submission.failure}
             , details: ${cv_submission.failure_detail}`)
     }
 })();
