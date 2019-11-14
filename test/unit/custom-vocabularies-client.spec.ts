@@ -1,6 +1,5 @@
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { RevAiCustomVocabulariesClient } from '../../src/custom-vocabularies-client';
-// import { RevAiApiTranscript } from '../../src/models/RevAiApiTranscript';
 
 import { objectToStream } from './testhelpers';
 
