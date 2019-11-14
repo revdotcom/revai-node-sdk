@@ -7,7 +7,7 @@ const JobType = require('../../../dist/src/models/JobType').JobType;
 module.exports = {
     getAsyncClient: (apiKey) => {
         const client = new revaiAsync.RevAiApiClient(apiKey);
-        client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/revspeech/v1/`;
+        client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/speechtotext/v1/`;
         return client;
     },
     getCustomVocabulariesClient: (apiKey) => {
