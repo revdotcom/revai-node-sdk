@@ -30,4 +30,4 @@ test('Can retreive submitted custom vocabulary', async (done) => {
             }
         })()
     }, 15000);
-}, 600000);
+}, 120000);
