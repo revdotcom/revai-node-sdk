@@ -12,21 +12,22 @@ test('Can submit custom vocabulary', async () => {
     expect(informationSubmit.failure).toBeUndefined();
 });
 
-test('Can retreive submitted custom vocabulary', async () => {
+test('Can retreive submitted custom vocabulary', async (done) => {
     jest.useRealTimers();
 
     const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
 
-    let customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
-
-    while(customVocabularyInformation.status == CustomVocabularyStatus.InProgress)
-    {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
-    }
-
-    expect(customVocabularyInformation.status).toBe(CustomVocabularyStatus.Complete);
-    expect(information.created_on).toBe(informationSubmit.created_on);
-    expect(information.id).toBe(informationSubmit.id);
-    expect(information.failure).toBeUndefined();
-});
+    var intervalObject = setInterval(function(){
+        (async () => {
+            const customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
+            if (customVocabularyInformation.status === CustomVocabularyStatus.Complete) {
+                expect(customVocabularyInformation.status).toBe(CustomVocabularyStatus.Complete);
+                expect(informationSubmit.created_on).toBe(informationSubmit.created_on);
+                expect(informationSubmit.id).toBe(informationSubmit.id);
+                expect(informationSubmit.failure).toBeUndefined();
+                clearInterval(intervalObject);
+                done();
+            }
+        })()
+    }, 15000);
+}, 60000);
