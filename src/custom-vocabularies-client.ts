@@ -1,7 +1,7 @@
 import { ApiRequestHandler } from './api-request-handler';
 import { CustomVocabulary } from './models/CustomVocabulary';
 import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
-import { RevAiApiCustomVocabulary } from './models/RevAiApiCustomVocabulary';
+import { CustomVocabularyInformation } from './models/CustomVocabularyInformation';
 
 /**
 * Client to submit and retreive status of custom vocabularies
@@ -35,7 +35,7 @@ export class RevAiCustomVocabulariesClient {
         customVocabularies: CustomVocabulary[],
         callbackUrl: string = undefined,
         metadata: string = undefined
-    ): Promise<RevAiApiCustomVocabulary> {
+    ): Promise<CustomVocabularyInformation> {
         if (!customVocabularies) {
             throw Error('customVocabularies is a required parameter');
         }
@@ -62,7 +62,7 @@ export class RevAiCustomVocabulariesClient {
     * @param id string id of the custom vocabulary submission whose
     *           information is to be retreived.
     */
-    public async getCustomVocabularyInformation(id: string): Promise<RevAiApiCustomVocabulary> {
+    public async getCustomVocabularyInformation(id: string): Promise<CustomVocabularyInformation> {
         if (!id) {
             throw Error('id is a required parameter');
         }

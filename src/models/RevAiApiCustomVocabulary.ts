@@ -1,6 +1,6 @@
 import {CustomVocabularyStatus} from './CustomVocabularyStatus';
 
-export interface RevAiApiCustomVocabulary {
+export interface CustomVocabularyInformation {
     id: string;
     status: CustomVocabularyStatus;
     created_on: string;
