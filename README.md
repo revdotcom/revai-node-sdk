@@ -134,6 +134,39 @@ const channelId = 1;
 var captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channelId);
 ```
 
+## Streaming Audio
+
+In order to stream audio, you will need to setup a streaming client and a media configuration for the audio you will be sending.
+
+```javascript
+import { RevAiStreamingClient } from 'revai-node-sdk';
+
+var audioConfig = new AudioConfig() // Initialize audio configuration for the streaming client
+var streamingClient = new RevAiStreamingClient("ACCESS TOKEN", audioConfig);
+```
+
+You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting! Look at the [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples) for more details.
+
+```javascript
+streamingClient.on('close', (code, reason) => {
+    console.log(`Connection closed, ${code}: ${reason}`);
+});
+
+streamingClient.on('connect', connectionMessage => {
+    console.log(`Connected with job id: ${connectionMessage.id}`);
+})
+```
+
+Now you will be able to start the streaming session by simply calling the `streamingClient.start()` method! You can supply an optional `SessionConfig` object to the function as well in order to provide additional information for that session, such as metadata, or a Custom Vocabulary's ID to be used with your streaming session.
+
+```javascript
+const sessionConfig = new SessionConfig('my metadata', 'myCustomVocabularyID');
+
+var stream = streamingClient.start(sessionConfig);
+```
+
+You can then stream data to this `stream` from a local file or other sources of your choosing and the session will end when the data stream to the `stream` session ends or when you would like to end it, by calling `streamingClient.end()`. For more details, take a look at our [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples).
+
 ### Submitting Custom Vocabularies
 
 You can now submit any custom vocabularies independently through the new CustomVocabularies client! The main benefit is that users of the SDK can now submit their custom vocabularies for preprocessing and then include these processed custom vocabularies in their streaming jobs.
