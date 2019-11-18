@@ -67,8 +67,13 @@ export class RevAiStreamingClient extends EventEmitter {
             `?access_token=${this.accessToken}` +
             `&content_type=${this.config.getContentTypeString()}` +
             `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`;
-        if (config && config.metadata) {
-            url += `&metadata=${encodeURIComponent(config.metadata)}`;
+        if (config) {
+            if (config.metadata) {
+                url += `&metadata=${encodeURIComponent(config.metadata)}`;
+            }
+            if (config.customVocabularyID) {
+                url += `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}`;
+            }
         }
 
         this.client.connect(url);

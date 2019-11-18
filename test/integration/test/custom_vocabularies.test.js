@@ -22,9 +22,9 @@ test('Can retreive submitted custom vocabulary', async (done) => {
             const customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
             if (customVocabularyInformation.status === CustomVocabularyStatus.Complete) {
                 expect(customVocabularyInformation.status).toBe(CustomVocabularyStatus.Complete);
-                expect(informationSubmit.created_on).toBe(informationSubmit.created_on);
-                expect(informationSubmit.id).toBe(informationSubmit.id);
-                expect(informationSubmit.failure).toBeUndefined();
+                expect(customVocabularyInformation.created_on).toBe(informationSubmit.created_on);
+                expect(customVocabularyInformation.id).toBe(informationSubmit.id);
+                expect(customVocabularyInformation.failure).toBeUndefined();
                 clearInterval(intervalObject);
                 done();
             }
