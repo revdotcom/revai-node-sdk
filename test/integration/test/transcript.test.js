@@ -45,7 +45,7 @@ test('Can get JSON transcript', async (done) => {
         })
     })
     done();
-}, 15000);
+}, 30000);
 
 test('JSON stream is equivalent to JSON object', async (done) => {
     const jobList = await client.getListOfJobs();
@@ -62,7 +62,7 @@ test('JSON stream is equivalent to JSON object', async (done) => {
         expect(jsonObject).toStrictEqual(streamObject);
         done();
     });
-}, 15000);
+}, 30000);
 
 test('Can get text transcript', async (done) => {
     const jobList = await client.getListOfJobs();
@@ -72,7 +72,7 @@ test('Can get text transcript', async (done) => {
     expect(transcript).toBeDefined();
     expect(transcript.length).toBeGreaterThan(0);
     done();
-}, 15000);
+}, 30000);
 
 test('Text stream is equivalent to text string', async (done) => {
     const jobList = await client.getListOfJobs();
@@ -88,4 +88,4 @@ test('Text stream is equivalent to text string', async (done) => {
         expect(textString).toBe(streamString);
         done();
     })
-}, 15000);
+}, 30000);
