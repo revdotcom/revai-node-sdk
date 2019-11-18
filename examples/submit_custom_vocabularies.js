@@ -45,4 +45,3 @@ const token = require('./config/config.json').access_token;
             , details: ${cv_submission.failure_detail}`)
     }
 })();
-
