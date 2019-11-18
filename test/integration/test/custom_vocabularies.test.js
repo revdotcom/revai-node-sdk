@@ -16,7 +16,7 @@ test('Can retreive submitted custom vocabulary', async (done) => {
     jest.useRealTimers();
 
     const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
-    console.log(informationSubmit.id)
+
     var intervalObject = setInterval(function(){
         (async () => {
             const customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
