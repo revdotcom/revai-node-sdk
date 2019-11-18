@@ -26,7 +26,7 @@ const assert = require('assert');
         console.log(`Connected with job id: ${connectionMessage.id}`);
     });
 
-    var stream = client.start();
+    var stream = client.start(sessionConfig);
 
     stream.on('data', data => {
         if (data.type === 'partial') {

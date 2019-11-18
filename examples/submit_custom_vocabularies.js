@@ -12,7 +12,7 @@ const token = require('./config/config.json').access_token;
                 "vocabularies",
                 "here"
             ]
-        }])
+        }]);
 
     console.log(`Custom Vocabulary Id: ${cv_submission.id}`);
     console.log(`Status: ${cv_submission.status}`);
