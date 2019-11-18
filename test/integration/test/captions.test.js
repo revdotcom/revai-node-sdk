@@ -15,16 +15,16 @@ beforeAll(async (done) => {
         jobId = job.id;
     }
 
-    var intervalObject = setInterval(function() { 
+    var intervalObject = setInterval(function() {
         (async () => {
             const jobDetails = await client.getJobDetails(jobId);
-            if (jobDetails.status == JobStatus.Transcribed) { 
+            if (jobDetails.status == JobStatus.Transcribed) {
                 clearInterval(intervalObject);
                 done();
             }
         })()
     }, 15000);
-}, 600000)
+}, 600000);
 
 test('Can get srt captions', async (done) => {
     const jobList = await client.getListOfJobs();
@@ -50,4 +50,4 @@ test('Can get srt captions', async (done) => {
         expect(streamString.length).toBeGreaterThan(0)
         done();
     })
-})
+}, 30000);

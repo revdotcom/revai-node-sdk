@@ -10,7 +10,7 @@ test('Can submit custom vocabulary', async () => {
     expect(informationSubmit.created_on).not.toBeNull();
     expect(informationSubmit.id).not.toBeNull();
     expect(informationSubmit.failure).toBeUndefined();
-});
+}, 30000);
 
 test('Can retreive submitted custom vocabulary', async (done) => {
     jest.useRealTimers();
@@ -30,4 +30,4 @@ test('Can retreive submitted custom vocabulary', async (done) => {
             }
         })()
     }, 15000);
-}, 120000);
+}, 300000);
