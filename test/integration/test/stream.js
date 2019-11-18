@@ -64,7 +64,7 @@ const assert = require('assert');
 
     client.on('close', (code, reason) => {
         assertCloseCodeAndReason(code, reason);
-        printPassStatement();
+        printPassStatement('Stream with Custom Vocabulary');
         return;
     });
     client.on('httpResponse', code => {
@@ -73,14 +73,10 @@ const assert = require('assert');
     client.on('connectFailed', error => {
         throw new Error(`Connection failed with error: ${error}`);
     });
-    client.on('connect', connectionMessage => {
-        console.log(`Connected with job id: ${connectionMessage.id} and CustomVocabulary id: ${cv_submission.id}`);
-    });
 
     const cv_client = new RevAiCustomVocabulariesClient(configHelper.getApiKey());
 
-    console.log("Submitted Custom Vocabularies")
-    let cv_submission = await cv_client.submitCustomVocabularies([{
+    var cv_submission = await cv_client.submitCustomVocabularies([{
             phrases: [
                 "test",
                 "vocabularies"
@@ -95,10 +91,14 @@ const assert = require('assert');
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
-    console.('Custom Vocabulary Processed with status: ', cv_submission.status);
+    console.log('Custom Vocabulary Processed with status: ', cv_submission.status);
     assertCustomVocabulariesCompleted(cv_submission.status);
 
     const sessionConfig = new SessionConfig(customVocabularyID=cv_submission.id);
+
+    client.on('connect', connectionMessage => {
+        console.log(`Connected with job id: ${connectionMessage.id} and CustomVocabulary id: ${cv_submission.id}`);
+    });
 
     var stream = client.start(sessionConfig);
 
@@ -154,9 +154,9 @@ function assertCloseCodeAndReason(code, reason) {
 }
 
 function assertCustomVocabulariesCompleted(status) {
-    assert.equal(status, CustomVocabularyStatus.complete);
+    assert.equal(status, CustomVocabularyStatus.Complete);
 }
 
-function printPassStatement() {
-    console.log('PASS Integration test/integration/test/stream.js');
+function printPassStatement(testName='') {
+    console.log(`PASS Integration ${testName} test/integration/test/stream.js`);
 }
