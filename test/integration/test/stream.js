@@ -1,4 +1,5 @@
 const {AudioConfig} = require('../../../dist/src/models/streaming/AudioConfig');
+const {SessionConfig} = require('../../../dist/src/models/streaming/SessionConfig');
 const {RevAiStreamingClient} = require('../../../dist/src/streaming-client');
 const configHelper = require('../src/config-helper');
 const fs = require('fs');
