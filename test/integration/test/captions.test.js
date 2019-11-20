@@ -50,4 +50,4 @@ test('Can get srt captions', async (done) => {
         expect(streamString.length).toBeGreaterThan(0)
         done();
     })
-}, 30000);
+}, 60000);

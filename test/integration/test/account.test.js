@@ -6,7 +6,7 @@ test('Can return email and balance', async () => {
     const account = await client.getAccount();
     expect(account.email).toBe(configHelper.getUserEmail());
     expect(account.balance_seconds).not.toBeNull();
-});
+}, 15000);
 
 test('Cannot authenticate with invalid token', async () => {
     const randomString = Math.random().toString(36).replace('0.', '');
@@ -19,4 +19,4 @@ test('Cannot authenticate with invalid token', async () => {
         expect(revAiError.statusCode).toEqual(401);
         expect(revAiError.title).toBe('Authorization has been denied for this request.');
     }
-})
+}, 15000);

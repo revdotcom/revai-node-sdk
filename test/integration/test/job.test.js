@@ -9,7 +9,7 @@ test('Can submit local file', async () => {
     const job = await client.submitJobLocalFile('./test/integration/resources/test_mp3.mp3', options);
     expect(job.status).toBe('in_progress');
     expect(job.id).not.toBeNull();
-});
+}, 30000);
 
 test('Can submit url', async () => {
     const client = clientHelper.getAsyncClient(configHelper.getApiKey());
@@ -18,7 +18,7 @@ test('Can submit url', async () => {
     const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', options);
     expect(job.status).toBe('in_progress');
     expect(job.id).not.toBeNull();
-});
+}, 30000);
 
 test('Can submit buffer', async (done) => {
     const client = clientHelper.getAsyncClient(configHelper.getApiKey());
@@ -31,7 +31,7 @@ test('Can submit buffer', async (done) => {
         console.log(job.id);
         done();
     });
-});
+}, 30000);
 
 test('Can submit buffer with filename', async (done) => {
     const client = clientHelper.getAsyncClient(configHelper.getApiKey());
@@ -43,7 +43,7 @@ test('Can submit buffer with filename', async (done) => {
         expect(job.id).not.toBeNull();
         done();
     });
-});
+}, 30000);
 
 test('Can submit ReadableStream', async () => {
     const client = clientHelper.getAsyncClient(configHelper.getApiKey());
@@ -53,4 +53,4 @@ test('Can submit ReadableStream', async () => {
     const job = await client.submitJobAudioData(fileStream, 'test_mp3.mp3', options);
     expect(job.status).toBe('in_progress');
     expect(job.id).not.toBeNull();
-});
+}, 30000);
