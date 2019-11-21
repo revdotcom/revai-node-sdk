@@ -12,4 +12,4 @@ test('Job not found', async() => {
         expect(revAiError.statusCode).toEqual(404);
         expect(revAiError.title).toBe('could not find job');
     }
-});
+}, 30000);

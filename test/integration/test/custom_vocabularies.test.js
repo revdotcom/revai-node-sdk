@@ -13,8 +13,6 @@ test('Can submit custom vocabulary', async () => {
 }, 30000);
 
 test('Can retreive submitted custom vocabulary', async (done) => {
-    jest.useRealTimers();
-
     const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
 
     var intervalObject = setInterval(function(){
