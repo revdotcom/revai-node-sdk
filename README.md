@@ -8,7 +8,7 @@ See the [API docs](https://www.rev.ai/docs) for more information about the API.
 
 ## Examples
 
-Examples can be found in the [`examples/`](https://github.com/revdotcom/revai-node-sdk/tree/develop/samples) directory
+Examples can be found in the [`examples/`](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples) directory
 
 ## Installation
 
@@ -23,7 +23,7 @@ We support Node 8, 10, and 12.
 ## Usage
 
 All you need to get started is your Access Token, which can be generated on
-your [Settings Page](https://www.rev.ai/settings). Create a client with the
+your [Settings Page](https://www.rev.ai/access_token). Create a client with the
 given Access Token:
 
 ```javascript
