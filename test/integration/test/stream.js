@@ -11,7 +11,7 @@ const assert = require('assert');
 (async () => {
     const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
     const client = new RevAiStreamingClient(configHelper.getApiKey(), audioConfig);
-    client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1alpha/stream`;
+    client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1/stream`;
 
     client.on('close', (code, reason) => {
         assertCloseCodeAndReason(code, reason);
@@ -60,7 +60,7 @@ const assert = require('assert');
 (async () => {
     const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
     const client = new RevAiStreamingClient(configHelper.getApiKey(), audioConfig);
-    client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1alpha/stream`;
+    client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1/stream`;
 
     client.on('close', (code, reason) => {
         assertCloseCodeAndReason(code, reason);

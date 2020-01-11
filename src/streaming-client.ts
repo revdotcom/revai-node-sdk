@@ -40,7 +40,7 @@ export class RevAiStreamingClient extends EventEmitter {
      * @param config Configuration of the audio the user will send from this client
      * @param version (optional) Version of the Rev.ai API the user wants to use
      */
-    constructor(accessToken: string, config: AudioConfig, version = 'v1alpha') {
+    constructor(accessToken: string, config: AudioConfig, version = 'v1') {
         super();
         this.accessToken = accessToken;
         this.config = config;
