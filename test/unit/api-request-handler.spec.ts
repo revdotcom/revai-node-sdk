@@ -40,7 +40,7 @@ describe('api-request-handler', () => {
 
             let res = await sut.makeApiRequest(method, endpoint, headers, responseType);
 
-            expect(axios.request).toBeCalledTimes(3);
+            expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
                 method: method,
                 url: endpoint,
