@@ -178,6 +178,15 @@ describe('api-client job submission', () => {
         it('submit job with local file with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            const options = {
+                metadata: 'This is a sample submit jobs option',
+                callback_url: 'https://www.example.com/callback',
+                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                skip_punctuation: true,
+                skip_diarization: true,
+                speaker_channels_count: 1,
+                filter_profanity: true           
+            };
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
@@ -194,15 +203,6 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            const options = {
-                metadata: 'This is a sample submit jobs option',
-                callback_url: 'https://www.example.com/callback',
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
-                skip_punctuation: true,
-                skip_diarization: true,
-                speaker_channels_count: 1,
-                filter_profanity: true           
-            };
 
             const job = await sut.submitJobLocalFile(filename, options);
 
