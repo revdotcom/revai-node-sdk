@@ -28,7 +28,7 @@ describe('streaming-client', () => {
     describe('start', () => {
         it('Connects to api with parameters', () => {
             // Arrange
-            const config = new SessionConfig('my metadata');
+            const config = new SessionConfig('my metadata', 'my custom vocab id', true);
 
             // Act
             const res = sut.start(config);
@@ -38,12 +38,14 @@ describe('streaming-client', () => {
                 `?access_token=${token}` +
                 `&content_type=${audioConfig.getContentTypeString()}` +
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}` +
-                `&metadata=${encodeURIComponent(config.metadata)}`
+                `&metadata=${encodeURIComponent(config.metadata)}` +
+                `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}` +
+                `&filter_profanity=${encodeURIComponent(config.filterProfanity)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
         });
 
-        it ('does not add metadata if no config provided', () => {
+        it ('does not add optional parameters if no config provided', () => {
             // Act
             const res = sut.start();
 
@@ -56,7 +58,7 @@ describe('streaming-client', () => {
             expect(mockClient.connect).toBeCalledTimes(1);
         });
 
-        it ('does not add metadata if empty in config', () => {
+        it ('does not add optional parameters if empty in config', () => {
             const config = new SessionConfig();
 
             // Act

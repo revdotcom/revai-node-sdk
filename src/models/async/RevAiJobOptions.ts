@@ -8,4 +8,5 @@ export interface RevAiJobOptions {
     skip_punctuation?: boolean;
     speaker_channels_count?: number;
     custom_vocabularies?: CustomVocabulary[];
+    filter_profanity?: boolean;
 }

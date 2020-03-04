@@ -27,8 +27,15 @@ client.on('connect', connectionMessage => {
     console.log(`Connected with job id: ${connectionMessage.id}`);
 })
 
+// Optional config to be provided.
+const sessionConfig = new revai.SessionConfig(
+    /* (optional) metadata */ "this is an example", 
+    /* (optional) custom_vocabulary_id */ null, 
+    /* (optional) filter_profanity */ true
+);
+
 // Begin streaming session
-var stream = client.start();
+var stream = client.start(/* sessionConfig */);
 
 // Read file from disk
 var file = fs.createReadStream("./resources/example.raw");
