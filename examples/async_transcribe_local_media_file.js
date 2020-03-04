@@ -16,7 +16,7 @@ const token = require('./config/config.json').access_token;
         callback_url: "https://jsonplaceholder.typicode.com/posts",
         skip_diarization: false,
         skip_punctuation: false,
-        speaker_channels_count: 1,
+        speaker_channels_count: null,
         custom_vocabularies: [{
             phrases: [
                 "add",

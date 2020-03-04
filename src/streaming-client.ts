@@ -75,7 +75,7 @@ export class RevAiStreamingClient extends EventEmitter {
                 url += `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}`;
             }
             if (config.filterProfanity) {
-                url += `&filter_profanity=${encodeURIComponent(config.filterProfanity.toString())}`;
+                url += `&filter_profanity=true`;
             }
         }
 
