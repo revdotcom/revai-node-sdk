@@ -73,6 +73,21 @@ describe('streaming-client', () => {
             expect(mockClient.connect).toBeCalledTimes(1);
         });
 
+        it ('does not add optional parameters if null in config', () => {
+            const config = new SessionConfig(null, null, null);
+
+            // Act
+            const res = sut.start(config);
+
+            // Assert
+            expect(mockClient.connect).toBeCalledWith(`${baseUrl}` +
+                `?access_token=${token}` +
+                `&content_type=${audioConfig.getContentTypeString()}` +
+                `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
+            );
+            expect(mockClient.connect).toBeCalledTimes(1);
+        });
+
         it('Returns duplex stream', () => {
             // Act
             const res = sut.start();

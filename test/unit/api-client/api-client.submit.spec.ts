@@ -36,6 +36,27 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
+        it('submit job with media url with null options', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            const options = {
+                metadata: null,
+                callback_url: null,
+                custom_vocabularies: null,
+                skip_punctuation: null,
+                skip_diarization: null,
+                speaker_channels_count: null,
+                filter_profanity: null
+            };
+
+            const job = await sut.submitJobUrl(mediaUrl, null);
+
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
         it('submit job with media url with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
@@ -116,6 +137,34 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
+        it('submit job with null options', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            let fakeStream = new Buffer(10);
+            const options = {
+                metadata: null,
+                callback_url: null,
+                custom_vocabularies: null,
+                skip_punctuation: null,
+                skip_diarization: null,
+                speaker_channels_count: null,
+                filter_profanity: null
+            };
+
+            const job = await sut.submitJobAudioData(fakeStream, null, options);
+
+            const expectedPayload = expect.objectContaining({
+                '_boundary': expect.anything(),
+                '_streams': expect.arrayContaining([expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"')])
+            });
+            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
         it('submit job with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
@@ -162,6 +211,33 @@ describe('api-client job submission', () => {
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
 
             const job = await sut.submitJobLocalFile(filename);
+
+            const expectedPayload = expect.objectContaining({
+                '_boundary': expect.anything(),
+                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
+            });
+            const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                expectedHeader, 'json', expectedPayload);
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with local file with null options', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+            const options = {
+                metadata: null,
+                callback_url: null,
+                custom_vocabularies: null,
+                skip_punctuation: null,
+                skip_diarization: null,
+                speaker_channels_count: null,
+                filter_profanity: null
+            };
+
+            const job = await sut.submitJobLocalFile(filename, options);
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
