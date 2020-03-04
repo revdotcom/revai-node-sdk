@@ -29,13 +29,13 @@ client.on('connect', connectionMessage => {
 
 // Optional config to be provided.
 const sessionConfig = new revai.SessionConfig(
-    /* (optional) metadata */ "this is an example", 
-    /* (optional) custom_vocabulary_id */ null, 
-    /* (optional) filter_profanity */ true
+    "my example metadata",  /* (optional) metadata */
+    null,  /* (optional) custom_vocabulary_id */
+    false /* (optional) filter_profanity */
 );
 
 // Begin streaming session
-var stream = client.start(/* sessionConfig */);
+var stream = client.start(sessionConfig);
 
 // Read file from disk
 var file = fs.createReadStream("./resources/example.raw");
