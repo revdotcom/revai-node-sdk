@@ -39,7 +39,7 @@ describe('api-client job submission', () => {
         it('submit job with media url with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            const jobOptions = {
+            const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
@@ -49,10 +49,10 @@ describe('api-client job submission', () => {
                 filter_profanity: true           
             };
 
-            const job = await sut.submitJobUrl(mediaUrl, jobOptions);
+            const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', jobOptions);
+                { 'Content-Type': 'application/json' }, 'json', options);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -66,7 +66,7 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobAudioData(fakeStream);
 
-            let expectedPayload = expect.objectContaining({
+            const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([expect.anything(),
                     expect.stringContaining('Content-Disposition: form-data; name="media"')])
@@ -85,7 +85,7 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobAudioData(fakeStream);
 
-            let expectedPayload = expect.objectContaining({
+            const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([expect.anything(),
                     expect.stringContaining('Content-Disposition: form-data; name="media"')])
@@ -104,7 +104,7 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobAudioData(fakeStream, 'example.mp3');
 
-            let expectedPayload = expect.objectContaining({
+            const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([expect.anything(),
                 expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"')])
@@ -120,7 +120,7 @@ describe('api-client job submission', () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             let mockStream = new Buffer(10);
-            const jobOptions = {
+            const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
@@ -130,9 +130,9 @@ describe('api-client job submission', () => {
                 filter_profanity: true           
             };
 
-            const job = await sut.submitJobAudioData(mockStream, 'example.mp3', jobOptions);
+            const job = await sut.submitJobAudioData(mockStream, 'example.mp3', options);
 
-            let expectedPayload = expect.objectContaining({
+            const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([
                     expect.anything(),
@@ -163,7 +163,7 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobLocalFile(filename);
 
-            let expectedPayload = expect.objectContaining({
+            const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
@@ -178,7 +178,7 @@ describe('api-client job submission', () => {
         it('submit job with local file with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let expectedPayload = expect.objectContaining({
+            const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
@@ -194,7 +194,7 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            const jobOptions = {
+            const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
@@ -204,7 +204,7 @@ describe('api-client job submission', () => {
                 filter_profanity: true           
             };
 
-            const job = await sut.submitJobLocalFile(filename, jobOptions);
+            const job = await sut.submitJobLocalFile(filename, options);
 
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload);
