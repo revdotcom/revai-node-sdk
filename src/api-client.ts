@@ -90,7 +90,7 @@ export class RevAiApiClient {
      */
     async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         if (options) {
-            options = this.FilterNullOptions(options);
+            options = this.filterNullOptions(options);
             options.media_url = mediaUrl;
         } else {
             options = { 'media_url': mediaUrl };
@@ -117,7 +117,7 @@ export class RevAiApiClient {
         let payload = new FormData();
         payload.append('media', audioData, { filename: filename || 'audio_file' });
         if (options) {
-            options = this.FilterNullOptions(options);
+            options = this.filterNullOptions(options);
             payload.append('options', JSON.stringify(options));
         }
 
@@ -137,7 +137,7 @@ export class RevAiApiClient {
         let payload = new FormData();
         payload.append('media', fs.createReadStream(filepath));
         if (options) {
-            options = this.FilterNullOptions(options);
+            options = this.filterNullOptions(options);
             payload.append('options', JSON.stringify(options));
         }
 
@@ -211,7 +211,7 @@ export class RevAiApiClient {
             url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 
-    private FilterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
+    private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
         let filteredOptions: RevAiJobOptions = {};
         Object.keys(options).forEach((option) => {
             if (options[option]) { filteredOptions[option] = options[option]; }
