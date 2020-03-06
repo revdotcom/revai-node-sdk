@@ -36,7 +36,7 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with null options', async () => {
+        it('submit job with media url with all options null', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
@@ -137,7 +137,7 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with null options', async () => {
+        it('submit job with all options null', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             let fakeStream = new Buffer(10);
@@ -224,7 +224,7 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with local file with null options', async () => {
+        it('submit job with local file with all options null', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
