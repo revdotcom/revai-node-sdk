@@ -15,8 +15,6 @@ const token = require('./config/config.json').access_token;
         metadata: "InternalOrderNumber=123456789",
         callback_url: "https://jsonplaceholder.typicode.com/posts",
         skip_diarization: false,
-        skip_punctuation: false,
-        speaker_channels_count: null,
         custom_vocabularies: [{
             phrases: [
                 "add",
@@ -24,8 +22,7 @@ const token = require('./config/config.json').access_token;
                 "vocabularies",
                 "here"
             ]
-        }],
-        filter_profanity: false
+        }]
     };
 
     // Media may be submitted from a url
