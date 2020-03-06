@@ -36,6 +36,18 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
+        it('submit job with media url with null options', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
+
+            const job = await sut.submitJobUrl(mediaUrl, null);
+
+            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+        
         it('submit job with media url with all options null', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
@@ -49,14 +61,14 @@ describe('api-client job submission', () => {
                 filter_profanity: null
             };
 
-            const job = await sut.submitJobUrl(mediaUrl, null);
+            const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
-
+            
         it('submit job with media url with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
@@ -67,7 +79,8 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
-                filter_profanity: true           
+                filter_profanity: true,
+                media_url: mediaUrl
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -89,8 +102,10 @@ describe('api-client job submission', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.anything(),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"')])
+                '_streams': expect.arrayContaining([
+                    expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"')
+                ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
@@ -108,8 +123,10 @@ describe('api-client job submission', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.anything(),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"')])
+                '_streams': expect.arrayContaining([
+                    expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"')
+                ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
@@ -127,8 +144,10 @@ describe('api-client job submission', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.anything(),
-                expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"')])
+                '_streams': expect.arrayContaining([
+                    expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"')
+                ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
@@ -150,13 +169,23 @@ describe('api-client job submission', () => {
                 speaker_channels_count: null,
                 filter_profanity: null
             };
-
             const job = await sut.submitJobAudioData(fakeStream, null, options);
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.anything(),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"')])
+                '_streams': expect.arrayContaining([
+                    expect.anything(),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename=\"audio_file\"'),
+                    expect.stringContaining('Content-Type: application/octet-stream'),
+                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.not.stringContaining('metadata'),
+                    expect.not.stringContaining('callback_url'),
+                    expect.not.stringContaining('custom_vocabularies'),
+                    expect.not.stringContaining('skip_punctuation'),
+                    expect.not.stringContaining('skip_diarization'),
+                    expect.not.stringContaining('speaker_channels_count'),
+                    expect.not.stringContaining('filter_profanity')
+                ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
@@ -176,7 +205,7 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
-                filter_profanity: true           
+                filter_profanity: true
             };
 
             const job = await sut.submitJobAudioData(mockStream, 'example.mp3', options);
@@ -186,15 +215,14 @@ describe('api-client job submission', () => {
                 '_streams': expect.arrayContaining([
                     expect.anything(),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"'),
-                    '{' +
-                        '"metadata":"This is a sample submit jobs option",' +
-                        '"callback_url":"https://www.example.com/callback",' +
-                        '"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],' +
-                        '"skip_punctuation":true,' +
-                        '"skip_diarization":true,' +
-                        '"speaker_channels_count":1,' +
-                        '"filter_profanity":true' +
-                    '}'
+                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('"metadata":"This is a sample submit jobs option",'),
+                    expect.stringContaining('"callback_url":"https://www.example.com/callback",'),
+                    expect.stringContaining('"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],'),
+                    expect.stringContaining('"skip_punctuation":true,'),
+                    expect.stringContaining('"skip_diarization":true,'),
+                    expect.stringContaining('"speaker_channels_count":1,'),
+                    expect.stringContaining('"filter_profanity":true')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -241,8 +269,17 @@ describe('api-client job submission', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
+                '_streams': expect.arrayContaining([
+                    expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
+                    expect.not.stringContaining('metadata'),
+                    expect.not.stringContaining('callback_url'),
+                    expect.not.stringContaining('custom_vocabularies'),
+                    expect.not.stringContaining('skip_punctuation'),
+                    expect.not.stringContaining('skip_diarization'),
+                    expect.not.stringContaining('speaker_channels_count'),
+                    expect.not.stringContaining('filter_profanity')
+                ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
@@ -261,21 +298,21 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
-                filter_profanity: true           
+                filter_profanity: true
             };
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
-                    '{' +
-                        '"metadata":"This is a sample submit jobs option",' +
-                        '"callback_url":"https://www.example.com/callback",' +
-                        '"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],' +
-                        '"skip_punctuation":true,' +
-                        '"skip_diarization":true,' +
-                        '"speaker_channels_count":1,' +
-                        '"filter_profanity":true' +
-                    '}'
+                '_streams': expect.arrayContaining([
+                    expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('"metadata":"This is a sample submit jobs option",'),
+                    expect.stringContaining('"callback_url":"https://www.example.com/callback",'),
+                    expect.stringContaining('"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],'),
+                    expect.stringContaining('"skip_punctuation":true,'),
+                    expect.stringContaining('"skip_diarization":true,'),
+                    expect.stringContaining('"speaker_channels_count":1,'),
+                    expect.stringContaining('"filter_profanity":true')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
