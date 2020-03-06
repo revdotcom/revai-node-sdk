@@ -242,8 +242,10 @@ describe('api-client job submission', () => {
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
-                '_streams': expect.arrayContaining([expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')])
+                '_streams': expect.arrayContaining([
+                    expect.stringContaining('Content-Type: audio/mpeg'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"')
+                ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
