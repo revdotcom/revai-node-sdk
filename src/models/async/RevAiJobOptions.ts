@@ -9,4 +9,5 @@ export interface RevAiJobOptions {
     speaker_channels_count?: number;
     custom_vocabularies?: CustomVocabulary[];
     filter_profanity?: boolean;
+    remove_disfluencies?: boolean;
 }
