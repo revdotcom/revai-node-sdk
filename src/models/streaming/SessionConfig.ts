@@ -4,6 +4,7 @@
 export class SessionConfig {
     metadata?: string;
     customVocabularyID?: string;
+    filterProfanity?: boolean;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -12,9 +13,11 @@ export class SessionConfig {
      */
     constructor(
         metadata?: string,
-        customVocabularyID?: string
+        customVocabularyID?: string,
+        filterProfanity?: boolean
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
+        this.filterProfanity = filterProfanity;
     }
 }
