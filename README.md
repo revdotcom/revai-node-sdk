@@ -199,6 +199,6 @@ After cloning and installing required npm modules, you should follow these pract
     3. `unit-test` runs our unit tests which live in the [unit test directory](https://github.com/revdotcom/revai-node-sdk/tree/develop/test/unit).
     * Note that `integration-test` is currently configured to work with a certain account specified in our continuous integration build environment, as such for now you can check the automated continuous integration checks to pass the integration tests. This will change in the future.
 2. Add any relevant test logic if you add or modify any features in the source code and check that the tests pass using the scripts mentioned above.
-3. Update the examples provided to illustrate any relevant changes you made, and check that they work properly.
-    * Note that you will have to copy the output of the `build` script into the `examples/node_modules/revai-node-sdk` directory in order to use your changes in the examples. On Unix, this can be simply done with the following command when in the root directory: `$ cp -r dist/src examples/node_modules/revai-node-sdk/`.
+3. Update the examples provided to illustrate any relevant changes you made, and check that they work properly with your changed local `revai-node-sdk`.
+    * One way to use your changed local package in the examples is to copy the output of the `build` script into the `examples/node_modules/revai-node-sdk`. On Unix, this can be simply done with the following command when in the root directory: `$ cp -r dist/src examples/node_modules/revai-node-sdk/`.
 4. Update the documentation to reflect any relevant changes and improve the development section.
