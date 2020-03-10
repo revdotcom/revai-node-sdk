@@ -189,7 +189,7 @@ var customVocabularySubmission = await client.submitCustomVocabularies(customVoc
 var customVocabularyInformation = await client.getCustomVocabularyInformation(customVocabularySubmission.id)
 ```
 
-# For Rev.ai NodeSDK Developers
+# For Rev.ai Node SDK Developers
 
 After cloning and installing required npm modules, you should follow these practices when developing:
 
