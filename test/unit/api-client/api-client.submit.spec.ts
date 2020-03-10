@@ -58,7 +58,8 @@ describe('api-client job submission', () => {
                 skip_punctuation: null,
                 skip_diarization: null,
                 speaker_channels_count: null,
-                filter_profanity: null
+                filter_profanity: null,
+                remove_disfluencies: null
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -80,7 +81,8 @@ describe('api-client job submission', () => {
                 skip_diarization: true,
                 speaker_channels_count: 1,
                 filter_profanity: true,
-                media_url: mediaUrl
+                media_url: mediaUrl,
+                remove_disfluencies: true
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -167,7 +169,8 @@ describe('api-client job submission', () => {
                 skip_punctuation: null,
                 skip_diarization: null,
                 speaker_channels_count: null,
-                filter_profanity: null
+                filter_profanity: null,
+                remove_disfluencies: null
             };
             const job = await sut.submitJobAudioData(fakeStream, null, options);
 
@@ -184,7 +187,8 @@ describe('api-client job submission', () => {
                     expect.not.stringContaining('skip_punctuation'),
                     expect.not.stringContaining('skip_diarization'),
                     expect.not.stringContaining('speaker_channels_count'),
-                    expect.not.stringContaining('filter_profanity')
+                    expect.not.stringContaining('filter_profanity'),
+                    expect.not.stringContaining('remove_disfluencies')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -205,7 +209,8 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
-                filter_profanity: true
+                filter_profanity: true,
+                remove_disfluencies: true
             };
 
             const job = await sut.submitJobAudioData(mockStream, 'example.mp3', options);
@@ -222,7 +227,8 @@ describe('api-client job submission', () => {
                     expect.stringContaining('"skip_punctuation":true,'),
                     expect.stringContaining('"skip_diarization":true,'),
                     expect.stringContaining('"speaker_channels_count":1,'),
-                    expect.stringContaining('"filter_profanity":true')
+                    expect.stringContaining('"filter_profanity":true'),
+                    expect.stringContaining('"remove_disfluencies":true')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -264,7 +270,8 @@ describe('api-client job submission', () => {
                 skip_punctuation: null,
                 skip_diarization: null,
                 speaker_channels_count: null,
-                filter_profanity: null
+                filter_profanity: null,
+                remove_disfluencies: null
             };
 
             const job = await sut.submitJobLocalFile(filename, options);
@@ -280,7 +287,8 @@ describe('api-client job submission', () => {
                     expect.not.stringContaining('skip_punctuation'),
                     expect.not.stringContaining('skip_diarization'),
                     expect.not.stringContaining('speaker_channels_count'),
-                    expect.not.stringContaining('filter_profanity')
+                    expect.not.stringContaining('filter_profanity'),
+                    expect.not.stringContaining('remove_disfluencies')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -300,7 +308,8 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
-                filter_profanity: true
+                filter_profanity: true,
+                remove_disfluencies: true
             };
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
@@ -314,7 +323,8 @@ describe('api-client job submission', () => {
                     expect.stringContaining('"skip_punctuation":true,'),
                     expect.stringContaining('"skip_diarization":true,'),
                     expect.stringContaining('"speaker_channels_count":1,'),
-                    expect.stringContaining('"filter_profanity":true')
+                    expect.stringContaining('"filter_profanity":true'),
+                    expect.stringContaining('"remove_disfluencies":true')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };

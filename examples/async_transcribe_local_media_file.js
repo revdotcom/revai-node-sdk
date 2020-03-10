@@ -25,7 +25,8 @@ const token = require('./config/config.json').access_token;
                 "here"
             ]
         }],
-        filter_profanity: false
+        filter_profanity: false,
+        remove_disfluencies: false
     };
 
     // Media may be submitted from a local file
