@@ -34,7 +34,7 @@ var accessToken = "Your Access Token";
 var client = new RevAiApiClient(accessToken);
 ```
 
-### Checking balance
+### Checking credits remaining
 
 ```javascript
 var accountInfo = await client.getAccount();
