@@ -1,15 +1,13 @@
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { RevAiCustomVocabulariesClient } from '../../src/custom-vocabularies-client';
 
-import { objectToStream } from './testhelpers';
-
 jest.mock('../../src/api-request-handler');
 
 let sut: RevAiCustomVocabulariesClient;
 
 describe('custom-vocabularies-client', () => {
     const customVocabularies = [
-        {phrases: ['my', 'test', 'custom', 'vocabularies']}
+        { phrases: ['my', 'test', 'custom', 'vocabularies'] }
     ];
     const callbackUrl = 'example.com';
     const metadata = 'my metadata';
@@ -32,7 +30,7 @@ describe('custom-vocabularies-client', () => {
     });
 
     describe('submitCustomVocabularies', () => {
-        it('submit customVocabularies', async () => {
+        it('submit custom vocabularies', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
 
@@ -55,7 +53,7 @@ describe('custom-vocabularies-client', () => {
     });
 
     describe('getCustomVocabularyInformation', () => {
-        it('get customVocabulary by id', async () => {
+        it('get custom vocabulary by id', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
 
@@ -64,6 +62,19 @@ describe('custom-vocabularies-client', () => {
             expect(mockHandler.makeApiRequest).toBeCalledWith('get', `/${customVocabularyDetails.id}`, {}, 'json');
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(customVocabularyInformation).toEqual(customVocabularyDetails);
+        });
+    });
+
+    describe('deleteCustomVocabulary', () => {
+        it('delete custom vocabulary by id', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(null);
+
+            const res = await sut.deleteCustomVocabulary(customVocabularyId);
+
+            expect(mockHandler.makeApiRequest).toBeCalledWith('delete', `/${customVocabularyDetails.id}`, {}, 'text');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(res).toBe(null);
         });
     });
 });

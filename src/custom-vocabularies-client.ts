@@ -11,9 +11,9 @@ export class RevAiCustomVocabulariesClient {
     apiHandler: ApiRequestHandler;
 
     /**
-    * @param accessToken Access token used to authenticate API requests
-    * @param version (optional) version of the API to be used
-    */
+     * @param accessToken Access token used to authenticate API requests
+     * @param version (optional) version of the API to be used
+     */
     constructor(accessToken: string, version: string = 'v1') {
         this.apiHandler = new ApiRequestHandler(
             `https://api.rev.ai/speechtotext/${version}/vocabularies`,
@@ -22,16 +22,17 @@ export class RevAiCustomVocabulariesClient {
     }
 
     /**
-    * Submit custom vocabularies to be built. This is primarily
-    * useful for using the custom vocabulary with streaming jobs.
-    * @param customVocabularies array of CustomVocabulary objects.
-    *                           For more information visit rev.ai/docs
-    * @param callbackUrl (optional) string url to be called when custom
-    *                    vocabulary submission is completed
-    * @param metadata (optional) string to include with this custom
-    *                 vocabulary submission
-    */
-    public async submitCustomVocabularies(
+     * See https://www.rev.ai/docs/streaming#operation/SubmitCustomVocabulary
+     * Submit custom vocabularies to be built. This is primarily
+     * useful for using the custom vocabulary with streaming jobs.
+     * @param customVocabularies array of CustomVocabulary objects.
+     *                           For more information visit rev.ai/docs
+     * @param callbackUrl (optional) string url to be called when custom
+     *                    vocabulary submission is completed
+     * @param metadata (optional) string to include with this custom
+     *                 vocabulary submission
+     */
+    async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
         callbackUrl: string = undefined,
         metadata: string = undefined
@@ -58,14 +59,29 @@ export class RevAiCustomVocabulariesClient {
     }
 
     /**
-    * Retreive the information of a submitted custom vocabulary.
-    * @param id string id of the custom vocabulary submission whose
-    *           information is to be retreived.
-    */
-    public async getCustomVocabularyInformation(id: string): Promise<CustomVocabularyInformation> {
+     * See https://www.rev.ai/docs/streaming#operation/GetCustomVocabulary
+     * Retreive the information of a submitted custom vocabulary.
+     * @param id string id of the custom vocabulary submission whose
+     *           information is to be retreived.
+     */
+    async getCustomVocabularyInformation(id: string): Promise<CustomVocabularyInformation> {
         if (!id) {
             throw Error('id is a required parameter');
         }
+
         return await this.apiHandler.makeApiRequest('get', `/${id}`, {}, 'json');
+    }
+
+    /**
+     * See https://www.rev.ai/docs/streaming#operation/DeleteCustomVocabulary
+     * Delete a submitted custom vocabulary.
+     * @param id string id of the custom vocabulary to be deleted
+     */
+    async deleteCustomVocabulary(id: string): Promise<void> {
+        if (!id) {
+            throw Error('id is a required parameter');
+        }
+
+        return await this.apiHandler.makeApiRequest('delete', `/${id}`, {}, 'text');
     }
 }

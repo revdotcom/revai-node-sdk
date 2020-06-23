@@ -29,3 +29,17 @@ test('Can retreive submitted custom vocabulary', async (done) => {
         })()
     }, 15000);
 }, 300000);
+
+test('Can delete submitted custom vocabulary', async (done) => {
+    const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
+
+    var intervalObject = setInterval(function(){
+        (async () => {
+            const res = await client.deleteCustomVocabulary(informationSubmit.id);
+            if (res === null) {
+                clearInterval(intervalObject);
+                done();
+            }
+        })()
+    }, 15000);
+}, 300000);
