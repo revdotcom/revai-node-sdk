@@ -17,6 +17,7 @@ const token = require('./config/config.json').access_token;
     console.log(`Custom Vocabulary Id: ${cv_submission.id}`);
     console.log(`Status: ${cv_submission.status}`);
     console.log(`Created On: ${cv_submission.created_on}`);
+
     /**
      * Waits 5 seconds between each status check to see if the custom vocabulary
      * is complete. note: polling for custom vocabulary status is not recommended in a
@@ -44,4 +45,7 @@ const token = require('./config/config.json').access_token;
         console.log(`Custom Vocabulary: ${cv_submission.id} failed due to: ${cv_submission.failure}
             , details: ${cv_submission.failure_detail}`)
     }
+
+    await client.deleteCustomVocabulary(cv_submission.id);
+    console.log(`Custom Vocabulary: ${cv_submission.id} deleted!`)
 })();

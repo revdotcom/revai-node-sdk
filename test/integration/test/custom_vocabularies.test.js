@@ -29,3 +29,19 @@ test('Can retreive submitted custom vocabulary', async (done) => {
         })()
     }, 15000);
 }, 300000);
+
+test('Can delete submitted custom vocabulary', async (done) => {
+    const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
+
+    var intervalObject = setInterval(function(){
+        (async () => {
+            const customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
+            if (customVocabularyInformation.status === CustomVocabularyStatus.Complete) {
+                const res = await client.deleteCustomVocabulary(informationSubmit.id);
+                expect(res).toBeFalsy();
+                clearInterval(intervalObject);
+                done();
+            }
+        })()
+    }, 15000);
+}, 300000);

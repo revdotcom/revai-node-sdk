@@ -44,7 +44,7 @@ export class RevAiApiClient {
      * @returns Job details
      */
     async getJobDetails(id: string): Promise<RevAiApiJob> {
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>( 'get', `/jobs/${id}`, {}, 'json');
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('get', `/jobs/${id}`, {}, 'json');
     }
 
     /**
