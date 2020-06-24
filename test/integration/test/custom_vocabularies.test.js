@@ -35,8 +35,10 @@ test('Can delete submitted custom vocabulary', async (done) => {
 
     var intervalObject = setInterval(function(){
         (async () => {
-            const res = await client.deleteCustomVocabulary(informationSubmit.id);
-            if (res === null) {
+            const customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
+            if (customVocabularyInformation.status === CustomVocabularyStatus.Complete) {
+                const res = await client.deleteCustomVocabulary(informationSubmit.id);
+                expect(res).toBe(null);
                 clearInterval(intervalObject);
                 done();
             }
