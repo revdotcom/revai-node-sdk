@@ -31,6 +31,7 @@ export class RevAiCustomVocabulariesClient {
      *                    vocabulary submission is completed
      * @param metadata (optional) string to include with this custom
      *                 vocabulary submission
+     * @returns Submitted custom vocabulary information
      */
     async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
@@ -63,6 +64,7 @@ export class RevAiCustomVocabulariesClient {
      * Retreive the information of a submitted custom vocabulary.
      * @param id string id of the custom vocabulary submission whose
      *           information is to be retreived.
+     * @returns Custom vocabulary information
      */
     async getCustomVocabularyInformation(id: string): Promise<CustomVocabularyInformation> {
         if (!id) {
@@ -70,6 +72,17 @@ export class RevAiCustomVocabulariesClient {
         }
 
         return await this.apiHandler.makeApiRequest('get', `/${id}`, {}, 'json');
+    }
+
+    /**
+     * See https://www.rev.ai/docs/streaming#operation/GetCustomVocabularies
+     * Gets a list of most recent custom vocabularies' processing information
+     * @param limit (optional) maximum number of jobs to retrieve, default is 100, maximum is 1000
+     * @returns List of custom vocabulary informations
+     */
+    async getListOfCustomVocabularyInformations(limit?: number): Promise<CustomVocabularyInformation[]> {
+        let url = limit ? `?limit=${limit}` : '';
+        return await this.apiHandler.makeApiRequest<CustomVocabularyInformation[]>('get', url, {}, 'json');
     }
 
     /**

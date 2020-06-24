@@ -6,13 +6,13 @@ const token = require('./config/config.json').access_token;
     var client = new revai.RevAiCustomVocabulariesClient(token);
 
     cv_submission = await client.submitCustomVocabularies([{
-            phrases: [
-                "enter",
-                "your",
-                "vocabularies",
-                "here"
-            ]
-        }]);
+        phrases: [
+            "enter",
+            "your",
+            "vocabularies",
+            "here"
+        ]
+    }]);
 
     console.log(`Custom Vocabulary Id: ${cv_submission.id}`);
     console.log(`Status: ${cv_submission.status}`);
@@ -25,7 +25,7 @@ const token = require('./config/config.json').access_token;
      * (see: https://www.rev.ai/docs#section/Node-SDK) to receive the response
      * asynchronously on custom vocabulary completion.
      */
-    while(
+    while (
         (cv_submission = await client.getCustomVocabularyInformation(cv_submission.id)).status
             == revai.CustomVocabularyStatus.InProgress
     )
@@ -46,6 +46,9 @@ const token = require('./config/config.json').access_token;
             , details: ${cv_submission.failure_detail}`)
     }
 
-    await client.deleteCustomVocabulary(cv_submission.id);
-    console.log(`Custom Vocabulary: ${cv_submission.id} deleted!`)
+    /**
+     * Deletes the custom vocabulary
+     */
+    // await client.deleteCustomVocabulary(cv_submission.id);
+    // console.log(`Custom Vocabulary: ${cv_submission.id} deleted!`)
 })();
