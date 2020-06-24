@@ -38,7 +38,7 @@ test('Can delete submitted custom vocabulary', async (done) => {
             const customVocabularyInformation = await client.getCustomVocabularyInformation(informationSubmit.id);
             if (customVocabularyInformation.status === CustomVocabularyStatus.Complete) {
                 const res = await client.deleteCustomVocabulary(informationSubmit.id);
-                expect(res).toBe(null);
+                expect(res).toBeFalsy();
                 clearInterval(intervalObject);
                 done();
             }
