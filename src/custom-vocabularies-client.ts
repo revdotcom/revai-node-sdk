@@ -81,7 +81,7 @@ export class RevAiCustomVocabulariesClient {
      * @returns List of custom vocabulary informations
      */
     async getListOfCustomVocabularyInformations(limit?: number): Promise<CustomVocabularyInformation[]> {
-        let url = limit ? `?limit=${limit}` : '';
+        const url = limit ? `?limit=${limit}` : '';
         return await this.apiHandler.makeApiRequest<CustomVocabularyInformation[]>('get', url, {}, 'json');
     }
 
