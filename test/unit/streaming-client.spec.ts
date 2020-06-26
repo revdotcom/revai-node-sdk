@@ -28,7 +28,7 @@ describe('streaming-client', () => {
     describe('start', () => {
         it('Connects to api with parameters', () => {
             // Arrange
-            const config = new SessionConfig('my metadata', 'my custom vocab id', true);
+            const config = new SessionConfig('my metadata', 'my custom vocab id', true, true);
 
             // Act
             const res = sut.start(config);
@@ -40,7 +40,8 @@ describe('streaming-client', () => {
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}` +
                 `&metadata=${encodeURIComponent(config.metadata)}` +
                 `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}` +
-                `&filter_profanity=${encodeURIComponent(config.filterProfanity)}`
+                `&filter_profanity=${encodeURIComponent(config.filterProfanity)}` + 
+                `&remove_disfluencies=${encodeURIComponent(config.remove_disfluencies)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
         });

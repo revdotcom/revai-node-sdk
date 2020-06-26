@@ -77,6 +77,9 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.filterProfanity) {
                 url += `&filter_profanity=true`;
             }
+            if (config.remove_disfluencies) {
+                url += `&remove_disfluencies=true`;
+            }
         }
 
         this.client.connect(url);

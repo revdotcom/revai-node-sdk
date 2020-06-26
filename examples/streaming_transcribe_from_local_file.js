@@ -31,7 +31,8 @@ client.on('connect', connectionMessage => {
 const sessionConfig = new revai.SessionConfig(
     "my example metadata",  /* (optional) metadata */
     null,  /* (optional) custom_vocabulary_id */
-    false /* (optional) filter_profanity */
+    false, /* (optional) filter_profanity */
+    false /* (optional) remove_disfluencies */
 );
 
 // Begin streaming session
