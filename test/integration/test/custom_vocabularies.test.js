@@ -30,6 +30,22 @@ test('Can retreive submitted custom vocabulary', async (done) => {
     }, 15000);
 }, 300000);
 
+test('Can retreive list of custom vocabularies', async (done) => {
+    const information1 = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
+    const information2 = await client.submitCustomVocabularies([{phrases:['more','custom','vocabularies']}]);
+
+    var intervalObject = setInterval(function(){
+        (async () => {
+            const vocabularies = await client.getListOfCustomVocabularyInformations();
+            const ids = vocabularies.map(vocab => vocab.id);
+            expect(ids).toContainEqual(information1.id);
+            expect(ids).toContainEqual(information2.id);
+            clearInterval(intervalObject);
+            done();
+        })()
+    }, 15000);
+}, 300000);
+
 test('Can delete submitted custom vocabulary', async (done) => {
     const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
 

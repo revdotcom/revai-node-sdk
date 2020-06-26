@@ -167,13 +167,13 @@ var stream = streamingClient.start(sessionConfig);
 
 You can then stream data to this `stream` from a local file or other sources of your choosing and the session will end when the data stream to the `stream` session ends or when you would like to end it, by calling `streamingClient.end()`. For more details, take a look at our [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples).
 
-### Submitting Custom Vocabularies
+### Submitting custom vocabularies
 
 You can now submit any custom vocabularies independently through the new CustomVocabularies client! The main benefit is that users of the SDK can now submit their custom vocabularies for preprocessing and then include these processed custom vocabularies in their streaming jobs.
 
-Below you can see an example of how to create and submit as well as check on the status and other associated information of your submittied custom vocabulary!
+Below you can see an example of how to create, submit and check on the status and other associated information of your submitted custom vocabulary!
 
-For more information check out our [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples)
+For more information, check out our [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples).
 ```javascript
 import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
 
@@ -181,12 +181,18 @@ import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
 var accessToken = "Your Access Token";
 var client = new RevAiCustomVocabulariesClient(accessToken);
 
-// Construct Custom Vocabularies object and submit it through the client
+// Construct custom vocabularies object and submit it through the client
 var customVocabularies = [{phrases: ["Noam Chomsky", "Robert Berwick", "Patrick Winston"]}];
 var customVocabularySubmission = await client.submitCustomVocabularies(customVocabularies);
 
-// Get information regarding the Custom Vocabulary submission and its progress
+// Get information regarding the custom vocabulary submission and its progress
 var customVocabularyInformation = await client.getCustomVocabularyInformation(customVocabularySubmission.id)
+
+// Get a list of information on previously submitted custom vocabularies
+var customVocabularyInformations = await client.getListOfCustomVocabularyInformations()
+
+// Delete a custom vocabulary
+await client.deleteCustomVocabulary(customVocabularySubmission.id)
 ```
 
 # For Rev.ai Node SDK Developers

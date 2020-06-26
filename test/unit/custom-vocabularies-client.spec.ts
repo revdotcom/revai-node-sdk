@@ -65,6 +65,35 @@ describe('custom-vocabularies-client', () => {
         });
     });
 
+    describe('getListOfCustomVocabularyInformations', () => {
+        it('get list of custom vocabulary informations', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([customVocabularyDetails]);
+
+            const informations = await sut.getListOfCustomVocabularyInformations();
+
+            expect(informations).toEqual([customVocabularyDetails]);
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', '', {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+        });
+
+        it('get list of custom vocabulary informations with limit of 5', async () => {
+            const customVocabularyDetails2 = {
+                id: 'myUniqueId2',
+                status: 'complete',
+                created_on: '2018-05-05T23:23:22.29Z'
+            };
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue([customVocabularyDetails, customVocabularyDetails2]);
+
+            const informations = await sut.getListOfCustomVocabularyInformations(5);
+
+            expect(informations).toEqual([customVocabularyDetails, customVocabularyDetails2]);
+            expect(mockHandler.makeApiRequest).toBeCalledWith('get', '?limit=5', {}, 'json');
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+        });
+    });
+
     describe('deleteCustomVocabulary', () => {
         it('delete custom vocabulary by id', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
