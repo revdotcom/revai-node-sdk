@@ -5,7 +5,7 @@ export class SessionConfig {
     metadata?: string;
     customVocabularyID?: string;
     filterProfanity?: boolean;
-    remove_disfluencies?: boolean;
+    removeDisfluencies?: boolean;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -25,6 +25,6 @@ export class SessionConfig {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
         this.filterProfanity = filterProfanity;
-        this.remove_disfluencies = removeDisfluencies;
+        this.removeDisfluencies = removeDisfluencies;
     }
 }

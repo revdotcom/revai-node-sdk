@@ -41,7 +41,7 @@ describe('streaming-client', () => {
                 `&metadata=${encodeURIComponent(config.metadata)}` +
                 `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}` +
                 `&filter_profanity=${encodeURIComponent(config.filterProfanity)}` + 
-                `&remove_disfluencies=${encodeURIComponent(config.remove_disfluencies)}`
+                `&remove_disfluencies=${encodeURIComponent(config.removeDisfluencies)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
         });
