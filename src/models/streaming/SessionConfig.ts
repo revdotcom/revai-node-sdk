@@ -9,11 +9,11 @@ export class SessionConfig {
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
-     * @param customVocabularyID (Optional) id of custom vocabulary to be used for 
+     * @param customVocabularyID (Optional) id of custom vocabulary to be used for
      *      this session
-     * @param filterProfanity (Optional) whether to remove profanity from the 
+     * @param filterProfanity (Optional) whether to remove profanity from the
      *      transcript
-     * @param removeDisfluencies (Optional) whether to remove disfluencies 
+     * @param removeDisfluencies (Optional) whether to remove disfluencies
      *      (ums, ahs) from transcript
      */
     constructor(
