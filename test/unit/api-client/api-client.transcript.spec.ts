@@ -2,7 +2,6 @@ import * as fs from 'fs';
 
 import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
-import { RevAiApiTranscript } from '../../../src/models/RevAiApiTranscript';
 import { objectToStream } from '../testhelpers';
 
 jest.mock('../../../src/api-request-handler');
@@ -11,7 +10,7 @@ let sut: RevAiApiClient;
 
 describe('api-client', () => {
     const jobId = 'Umx5c6F7pH7r';
-    
+
     beforeEach(() => {
         ApiRequestHandler.mockClear();
         sut = new RevAiApiClient('testtoken');
@@ -19,32 +18,30 @@ describe('api-client', () => {
 
     describe('getTranscriptObject', () => {
         const expectedTranscript = {
-                "monologues": [
+            "monologues": [{
+                "speaker": 1,
+                "elements": [
                     {
-                        "speaker": 1,
-                        "elements": [
-                            {
-                            "type": "text",
-                            "value": "Hello",
-                            "ts": 0.5,
-                            "end_ts": 1.5,
-                            "confidence": 1
-                            },
-                            {
-                            "type": "text",
-                            "value": "World",
-                            "ts": 1.75,
-                            "end_ts": 2.85,
-                            "confidence": 0.8
-                            },
-                            {
-                            "type": "punct",
-                            "value": "."
-                            }
-                        ]
+                        "type": "text",
+                        "value": "Hello",
+                        "ts": 0.5,
+                        "end_ts": 1.5,
+                        "confidence": 1
+                    },
+                    {
+                        "type": "text",
+                        "value": "World",
+                        "ts": 1.75,
+                        "end_ts": 2.85,
+                        "confidence": 0.8
+                    },
+                    {
+                        "type": "punct",
+                        "value": "."
                     }
                 ]
-            };
+            }]
+        };
 
         it('get transcript object', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
@@ -58,35 +55,33 @@ describe('api-client', () => {
             expect(transcript).toEqual(expectedTranscript);
         });
     });
-    
+
     describe('getTranscriptObjectStream', () => {
         const expectedTranscript = {
-                "monologues": [
+            "monologues": [{
+                "speaker": 1,
+                "elements": [
                     {
-                        "speaker": 1,
-                        "elements": [
-                            {
-                            "type": "text",
-                            "value": "Hello",
-                            "ts": 0.5,
-                            "end_ts": 1.5,
-                            "confidence": 1
-                            },
-                            {
-                            "type": "text",
-                            "value": "World",
-                            "ts": 1.75,
-                            "end_ts": 2.85,
-                            "confidence": 0.8
-                            },
-                            {
-                            "type": "punct",
-                            "value": "."
-                            }
-                        ]
+                        "type": "text",
+                        "value": "Hello",
+                        "ts": 0.5,
+                        "end_ts": 1.5,
+                        "confidence": 1
+                    },
+                    {
+                        "type": "text",
+                        "value": "World",
+                        "ts": 1.75,
+                        "end_ts": 2.85,
+                        "confidence": 0.8
+                    },
+                    {
+                        "type": "punct",
+                        "value": "."
                     }
                 ]
-            };
+            }]
+        };
 
         it('get transcript object', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
@@ -103,7 +98,7 @@ describe('api-client', () => {
 
     describe('getTranscriptText', () => {
         it('get transcript text', async () => {
-            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
+            const expectedTranscript = 'Speaker 0    00:00:00    Hello World.'
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(expectedTranscript);
 
@@ -118,7 +113,7 @@ describe('api-client', () => {
 
     describe('getTranscriptTextStream', () => {
         it('get transcript text stream', async () => {
-            const expectedTranscript = 'Speaker 0    00:00    Hello World.'
+            const expectedTranscript = 'Speaker 0    00:00:00    Hello World.'
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(objectToStream(expectedTranscript));
 
