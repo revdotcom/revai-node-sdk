@@ -5,7 +5,7 @@ const token = require('./config/config.json').access_token;
     // Initialize your client with your revai access token
     var client = new revai.RevAiCustomVocabulariesClient(token);
 
-    cv_submission = await client.submitCustomVocabularies([{
+    var cv_submission = await client.submitCustomVocabularies([{
         phrases: [
             "enter",
             "your",
@@ -45,6 +45,12 @@ const token = require('./config/config.json').access_token;
         console.log(`Custom Vocabulary: ${cv_submission.id} failed due to: ${cv_submission.failure}
             , details: ${cv_submission.failure_detail}`)
     }
+
+    /**
+     * Gets list of custom vocabularies
+     */
+    console.log("Getting list of submitted custom vocabularies.");
+    var listCustomVocabularieInformations = await client.getListOfCustomVocabularyInformations();
 
     /**
      * Deletes the custom vocabulary
