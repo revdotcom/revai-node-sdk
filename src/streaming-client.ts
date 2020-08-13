@@ -47,7 +47,7 @@ export class RevAiStreamingClient extends EventEmitter {
         this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
         this.requests = new PassThrough();
         this.responses = new PassThrough({ objectMode: true });
-        this.client = new client();
+        this.client = new client({ keepalive: true, keepaliveInterval: 30000 });
         this.setUpHttpResponseHandler();
         this.setUpConnectionFailureHandler();
         this.setUpConnectedHandlers();
