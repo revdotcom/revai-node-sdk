@@ -27,7 +27,6 @@ test('Can submit buffer', async (done) => {
         const job = await client.submitJobAudioData(data, undefined, options);
         expect(job.status).toBe('in_progress');
         expect(job.id).not.toBeNull();
-        console.log(job.id);
         done();
     });
 }, 30000);

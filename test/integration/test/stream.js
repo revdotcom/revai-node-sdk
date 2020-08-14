@@ -33,7 +33,7 @@ const handleStreamError = (error) => {
     client.on('httpResponse', handleHttpResponse);
     client.on('connectFailed', handleConnectFailed);
     client.on('connect', connectionMessage => {
-        console.log(`Connected with job id: ${connectionMessage.id}`);
+        console.log(`Connected with job ID: ${connectionMessage.id}`);
     });
 
     const stream = client.start();
