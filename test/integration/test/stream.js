@@ -102,6 +102,37 @@ const handleStreamError = (error) => {
     file.once('readable', () => file.pipe(stream));
 })();
 
+// Test Streaming Client's Keep Alive
+(async () => {
+    const client = new RevAiStreamingClient(apiKey, audioConfig);
+    client.baseUrl = `wss://${baseUrl}/speechtotext/v1/stream`;
+    const expectedReason = "Did not receive data, closing connection";
+
+    client.on('close', (code, reason) => {
+        assert.equal(code, 1000, `Expected close code to be [1000] but was [${code}]`);
+        assert.equal(reason, expectedReason, `Expected close reason to be [${expectedReason}] but was [${reason}]`);
+        printPassStatement("Stream Keeps Alive Until Server Closes Connection");
+        return;
+    });
+    client.on('httpResponse', code => {
+        throw new Error(`Streaming client received http response with code: ${code}`);
+    });
+    client.on('connectFailed', error => {
+        throw new Error(`Connection failed with error: ${error}`);
+    });
+    client.on('connect', connectionMessage => {
+        console.log(`Connected with job id: ${connectionMessage.id}`);
+    });
+
+    const stream = client.start();
+    stream.on('error', (error) => {
+        throw new Error(`Streaming error occurred: ${error}`);
+    });
+
+    const file = fs.createReadStream('./test/integration/resources/english_test.raw');
+    file.once('readable', () => file.pipe(stream));
+})();
+
 const assertPartialHypothesis = (partial) => {
     partial.elements.forEach(element => {
         assert.equal(element.type, 'text', 'Expected element type to be [text]: ' + JSON.stringify(element));

@@ -1,5 +1,3 @@
-import * as events from 'events';
-import * as fs from 'fs';
 import { WebSocketClient, WebSocketConnection } from 'websocket';
 
 import { AudioConfig } from '../../src/models/streaming/AudioConfig';
