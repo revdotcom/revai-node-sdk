@@ -2,7 +2,7 @@ const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
 
 test('Can return email and balance', async () => {
-    const client = clientHelper.getAsyncClient(configHelper.getApiKey());
+    const client = clientHelper.getAsyncClient();
     const account = await client.getAccount();
     expect(account.email).toBe(configHelper.getUserEmail());
     expect(account.balance_seconds).not.toBeNull();

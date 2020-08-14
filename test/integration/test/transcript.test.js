@@ -1,7 +1,7 @@
 const clientHelper = require('../src/client-helper');
 const configHelper = require('../src/config-helper');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
-const client = clientHelper.getAsyncClient(configHelper.getApiKey());
+const client = clientHelper.getAsyncClient();
 
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
