@@ -37,7 +37,7 @@ const handleStreamError = (error) => {
     });
 
     const stream = client.start();
-
+    stream.on('error', handleStreamError);
     stream.on('data', data => {
         if (data.type === 'partial') {
             assertPartialHypothesis(data);
@@ -47,8 +47,6 @@ const handleStreamError = (error) => {
             throw new Error('Type not recognized: ' + JSON.stringify(data));
         }
     });
-
-    stream.on('error', handleStreamError);
 
     const file = fs.createReadStream('./test/integration/resources/english_test.raw');
     file.on('end', () => client.end());
@@ -84,7 +82,7 @@ const handleStreamError = (error) => {
 
     const sessionConfig = new SessionConfig(customVocabularyID=cvSubmission.id);
     const stream = client.start(sessionConfig);
-
+    stream.on('error', handleStreamError);
     stream.on('data', data => {
         if (data.type === 'partial') {
             assertPartialHypothesis(data);
@@ -95,10 +93,32 @@ const handleStreamError = (error) => {
         }
     });
 
+    const file = fs.createReadStream('./test/integration/resources/english_test.raw');
+    file.on('end', () => client.end());
+    file.once('readable', () => file.pipe(stream));
+})();
+
+// Test Streaming Client's Keep Alive
+(async () => {
+    const expectedReason = "Did not receive data, closing connection";
+    const client = clientHelper.getStreamingClient(audioConfig);
+
+    client.on('close', (code, reason) => {
+        assert.equal(code, 1000, `Expected close code to be [1000] but was [${code}]`);
+        assert.equal(reason, expectedReason, `Expected close reason to be [${expectedReason}] but was [${reason}]`);
+        printPassStatement("Stream Keeps Alive Until Server Closes Connection");
+        return;
+    });
+    client.on('httpResponse', handleHttpResponse);
+    client.on('connectFailed', handleConnectFailed);
+    client.on('connect', connectionMessage => {
+        console.log(`Connected with job id: ${connectionMessage.id}`);
+    });
+
+    const stream = client.start();
     stream.on('error', handleStreamError);
 
     const file = fs.createReadStream('./test/integration/resources/english_test.raw');
-    file.on('end', () => client.end());
     file.once('readable', () => file.pipe(stream));
 })();
 
