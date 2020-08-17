@@ -101,8 +101,7 @@ const handleStreamError = (error) => {
 // Test Streaming Client's Keep Alive
 (async () => {
     const expectedReason = "Did not receive data, closing connection";
-    const client = new RevAiStreamingClient(apiKey, audioConfig);
-    client.baseUrl = `wss://${baseUrl}/speechtotext/v1/stream`;
+    const client = clientHelper.getStreamingClient(audioConfig);
 
     client.on('close', (code, reason) => {
         assert.equal(code, 1000, `Expected close code to be [1000] but was [${code}]`);
