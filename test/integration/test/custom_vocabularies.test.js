@@ -1,7 +1,6 @@
 const clientHelper = require('../src/client-helper');
-const configHelper = require('../src/config-helper');
 const CustomVocabularyStatus = require('../../../dist/src/models/CustomVocabularyStatus').CustomVocabularyStatus;
-const client = clientHelper.getCustomVocabulariesClient(configHelper.getApiKey());
+const client = clientHelper.getCustomVocabulariesClient();
 
 test('Can submit custom vocabulary', async () => {
     const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);

@@ -1,34 +1,42 @@
-const {AudioConfig} = require('../../../dist/src/models/streaming/AudioConfig');
-const {SessionConfig} = require('../../../dist/src/models/streaming/SessionConfig');
-const {CustomVocabularyStatus} = require('../../../dist/src/models/CustomVocabularyStatus');
-const {RevAiStreamingClient} = require('../../../dist/src/streaming-client');
-const {RevAiCustomVocabulariesClient} = require('../../../dist/src/custom-vocabularies-client')
-const configHelper = require('../src/config-helper');
+const { AudioConfig } = require('../../../dist/src/models/streaming/AudioConfig');
+const { SessionConfig } = require('../../../dist/src/models/streaming/SessionConfig');
+const { CustomVocabularyStatus } = require('../../../dist/src/models/CustomVocabularyStatus');
+const clientHelper = require('../src/client-helper');
+
 const fs = require('fs');
 const assert = require('assert');
 
+const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
+
+const handleHttpResponse = (code) => {
+    throw new Error(`Streaming client received http response with code: ${code}`);
+};
+
+const handleConnectFailed = (error) => {
+    throw new Error(`Connection failed with error: ${error}`);
+};
+
+const handleStreamError = (error) => {
+    throw new Error(`Streaming error occurred: ${error}`);
+};
+
 // Test Streaming Client
 (async () => {
-    const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
-    const client = new RevAiStreamingClient(configHelper.getApiKey(), audioConfig);
-    client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1/stream`;
+    const client = clientHelper.getStreamingClient(audioConfig);
 
     client.on('close', (code, reason) => {
         assertCloseCodeAndReason(code, reason);
-        printPassStatement();
+        printPassStatement("Streaming");
         return;
     });
-    client.on('httpResponse', code => {
-        throw new Error(`Streaming client received http response with code: ${code}`);
-    });
-    client.on('connectFailed', error => {
-        throw new Error(`Connection failed with error: ${error}`);
-    });
+
+    client.on('httpResponse', handleHttpResponse);
+    client.on('connectFailed', handleConnectFailed);
     client.on('connect', connectionMessage => {
-        console.log(`Connected with job id: ${connectionMessage.id}`);
+        console.log(`Connected with job ID: ${connectionMessage.id}`);
     });
 
-    var stream = client.start();
+    const stream = client.start();
 
     stream.on('data', data => {
         if (data.type === 'partial') {
@@ -40,67 +48,42 @@ const assert = require('assert');
         }
     });
 
-    stream.on('error', (error) => {
-        throw new Error(`Streaming error occurred: ${error}`);
-    });
+    stream.on('error', handleStreamError);
 
-    var file = fs.createReadStream('./test/integration/resources/english_test.raw');
-
-    file.on('end', () => {
-        client.end();
-    });
-
-    file.once('readable', () => {
-        file.pipe(stream);
-    });
+    const file = fs.createReadStream('./test/integration/resources/english_test.raw');
+    file.on('end', () => client.end());
+    file.once('readable', () => file.pipe(stream));
 })();
 
-
-// Test Streaming Client with Custom Vocabs Passed
+// Test Streaming Client with Custom Vocabulary
 (async () => {
-    const audioConfig = new AudioConfig("audio/x-raw", 'interleaved', 16000, 'S16LE', 1);
-    const client = new RevAiStreamingClient(configHelper.getApiKey(), audioConfig);
-    client.baseUrl = `wss://${configHelper.getBaseUrl()}/speechtotext/v1/stream`;
+    const cvClient = clientHelper.getCustomVocabulariesClient();
+    let cvSubmission = await cvClient.submitCustomVocabularies([{ phrases: [ "test", "vocabularies" ] }]);
+    const stillInProgress = async () => {
+        cvSubmission = await cvClient.getCustomVocabularyInformation(cvSubmission.id);
+        return cvSubmission.status === CustomVocabularyStatus.InProgress;
+    };
 
-    client.on('close', (code, reason) => {
-        assertCloseCodeAndReason(code, reason);
-        printPassStatement('Stream with Custom Vocabulary');
-        return;
-    });
-    client.on('httpResponse', code => {
-        throw new Error(`Streaming client received http response with code: ${code}`);
-    });
-    client.on('connectFailed', error => {
-        throw new Error(`Connection failed with error: ${error}`);
-    });
-
-    const cv_client = new RevAiCustomVocabulariesClient(configHelper.getApiKey());
-
-    var cv_submission = await cv_client.submitCustomVocabularies([{
-            phrases: [
-                "test",
-                "vocabularies"
-            ]
-        }]);
-
-    while(
-        (cv_submission = await cv_client.getCustomVocabularyInformation(cv_submission.id)).status
-            == CustomVocabularyStatus.InProgress
-    )
-    {
+    while (await stillInProgress()) {
         await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
-    console.log('Custom Vocabulary Processed with status: ', cv_submission.status);
-    assertCustomVocabulariesCompleted(cv_submission.status);
+    assertCustomVocabulariesCompleted(cvSubmission.status);
 
-    const sessionConfig = new SessionConfig(customVocabularyID=cv_submission.id);
+    const client = clientHelper.getStreamingClient(audioConfig);
 
+    client.on('close', (code, reason) => {
+        assertCloseCodeAndReason(code, reason);
+        printPassStatement('Streaming with Custom Vocabulary');
+    });
+    client.on('httpResponse', handleHttpResponse);
+    client.on('connectFailed', handleConnectFailed);
     client.on('connect', connectionMessage => {
-        console.log(`Connected with job id: ${connectionMessage.id} and CustomVocabulary id: ${cv_submission.id}`);
+        console.log(`Connected with job ID: ${connectionMessage.id} and custom vocabulary ID: ${cvSubmission.id}`);
     });
 
-    var stream = client.start(sessionConfig);
+    const sessionConfig = new SessionConfig(customVocabularyID=cvSubmission.id);
+    const stream = client.start(sessionConfig);
 
     stream.on('data', data => {
         if (data.type === 'partial') {
@@ -112,29 +95,21 @@ const assert = require('assert');
         }
     });
 
-    stream.on('error', (error) => {
-        throw new Error(`Streaming error occurred: ${error}`);
-    });
+    stream.on('error', handleStreamError);
 
-    var file = fs.createReadStream('./test/integration/resources/english_test.raw');
-
-    file.on('end', () => {
-        client.end();
-    });
-
-    file.once('readable', () => {
-        file.pipe(stream);
-    });
+    const file = fs.createReadStream('./test/integration/resources/english_test.raw');
+    file.on('end', () => client.end());
+    file.once('readable', () => file.pipe(stream));
 })();
 
-function assertPartialHypothesis(partial) {
+const assertPartialHypothesis = (partial) => {
     partial.elements.forEach(element => {
         assert.equal(element.type, 'text', 'Expected element type to be [text]: ' + JSON.stringify(element));
         assert.notEqual(element.value, 'undefined', 'Expected element value to not be [undefined]: ' + JSON.stringify(element));
     });
 }
 
-function assertFinalHypothesis(final) {
+const assertFinalHypothesis = (final) => {
     assert.ok(final.ts < final.end_ts);
     final.elements.forEach(element => {
         if (element.type === 'punct') {
@@ -148,15 +123,16 @@ function assertFinalHypothesis(final) {
     });
 }
 
-function assertCloseCodeAndReason(code, reason) {
-    assert.equal(code, 1000, `Expected close code to be [1000] but was ${code}`);
-    assert.equal(reason, 'End of input. Closing', `Expected close reason to be [End of input. Closing] but was ${reason}`);
+const assertCloseCodeAndReason = (code, reason) => {
+    assert.equal(code, 1000, `Expected close code to be [1000] but was [${code}]`);
+    assert.equal(reason, 'End of input. Closing', `Expected close reason to be [End of input. Closing] but was [${reason}]`);
 }
 
-function assertCustomVocabulariesCompleted(status) {
+const assertCustomVocabulariesCompleted = (status) => {
     assert.equal(status, CustomVocabularyStatus.Complete);
 }
 
-function printPassStatement(testName='') {
-    console.log(`PASS Integration ${testName} test/integration/test/stream.js`);
+const printPassStatement = (name='') => {
+    const test = name ? `[${name}] ` : '';
+    console.log(`PASS Integration ${test}test/integration/test/stream.js`);
 }
