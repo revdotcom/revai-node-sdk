@@ -80,7 +80,7 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.removeDisfluencies) {
                 url += `&remove_disfluencies=true`;
             }
-            if (config.deleteAfterSeconds != null) {
+            if (config.deleteAfterSeconds !== null && config.deleteAfterSeconds !== undefined) {
                 url += `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}`;
             }
         }

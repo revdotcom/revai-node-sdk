@@ -16,8 +16,8 @@ export class SessionConfig {
      *      transcript
      * @param removeDisfluencies (Optional) whether to remove disfluencies
      *      (ums, ahs) from transcript
-     * @param deleteAfterSeconds (Optional) number of seconds after job completion 
-     *      when job is auto-deleted 
+     * @param deleteAfterSeconds (Optional) number of seconds after job completion
+     *      when job is auto-deleted
      */
     constructor(
         metadata?: string,
