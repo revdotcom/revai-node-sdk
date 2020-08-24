@@ -214,7 +214,7 @@ export class RevAiApiClient {
     private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
         let filteredOptions: RevAiJobOptions = {};
         Object.keys(options).forEach((option) => {
-            if (options[option]) { filteredOptions[option] = options[option]; }
+            if (options[option] != null) { filteredOptions[option] = options[option]; }
         });
         return filteredOptions;
     }
