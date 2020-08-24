@@ -26,7 +26,13 @@ describe('streaming-client', () => {
     describe('start', () => {
         it('Connects to api with parameters', () => {
             // Arrange
-            const config = new SessionConfig('my metadata', 'my custom vocab id', true, true);
+            const config = new SessionConfig(
+                'my metadata', 
+                'my custom vocab id', 
+                true, 
+                true,
+                0
+            );
 
             // Act
             const res = sut.start(config);
@@ -39,8 +45,9 @@ describe('streaming-client', () => {
                 `&metadata=${encodeURIComponent(config.metadata)}` +
                 `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}` +
                 `&filter_profanity=${encodeURIComponent(config.filterProfanity)}` + 
-                `&remove_disfluencies=${encodeURIComponent(config.removeDisfluencies)}`
-            );
+                `&remove_disfluencies=${encodeURIComponent(config.removeDisfluencies)}` +
+                `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}`
+            );  
             expect(mockClient.connect).toBeCalledTimes(1);
         });
 

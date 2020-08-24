@@ -10,4 +10,5 @@ export interface RevAiJobOptions {
     custom_vocabularies?: CustomVocabulary[];
     filter_profanity?: boolean;
     remove_disfluencies?: boolean;
+    delete_after_seconds?: number;
 }

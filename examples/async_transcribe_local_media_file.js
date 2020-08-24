@@ -26,7 +26,8 @@ const token = require('./config/config.json').access_token;
             ]
         }],
         filter_profanity: false,
-        remove_disfluencies: false
+        remove_disfluencies: false,
+        delete_after_seconds: 2592000 // 30 days in seconds
     };
 
     // Media may be submitted from a local file
@@ -70,4 +71,3 @@ const token = require('./config/config.json').access_token;
      */
     // await client.deleteJob(job.id);
 })();
-
