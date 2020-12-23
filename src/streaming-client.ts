@@ -83,6 +83,9 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.deleteAfterSeconds !== null && config.deleteAfterSeconds !== undefined) {
                 url += `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds.toString())}`;
             }
+            if (config.language) {
+                url += `&language=${encodeURIComponent(config.language)}`;
+            }
         }
 
         this.client.connect(url);

@@ -7,6 +7,7 @@ export class SessionConfig {
     filterProfanity?: boolean;
     removeDisfluencies?: boolean;
     deleteAfterSeconds?: number;
+    language?: string;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -18,6 +19,8 @@ export class SessionConfig {
      *      (ums, ahs) from transcript
      * @param deleteAfterSeconds (Optional) number of seconds after job completion
      *      when job is auto-deleted
+     * @param language (Optional) language identified using ISO 639-1 2-letter
+     *      language code
      */
     constructor(
         metadata?: string,
@@ -25,11 +28,13 @@ export class SessionConfig {
         filterProfanity?: boolean,
         removeDisfluencies?: boolean,
         deleteAfterSeconds?: number
+        language?: string,
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
         this.filterProfanity = filterProfanity;
         this.removeDisfluencies = removeDisfluencies;
         this.deleteAfterSeconds = deleteAfterSeconds;
+        this.language = language;
     }
 }

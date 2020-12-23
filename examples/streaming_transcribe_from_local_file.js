@@ -33,6 +33,7 @@ const sessionConfig = new revai.SessionConfig(
     null,  /* (optional) custom_vocabulary_id */
     false, /* (optional) filter_profanity */
     false /* (optional) remove_disfluencies */
+    null,  /* (optional) language */
 );
 
 // Begin streaming session
