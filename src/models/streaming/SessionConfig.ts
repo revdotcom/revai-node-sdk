@@ -27,8 +27,8 @@ export class SessionConfig {
         customVocabularyID?: string,
         filterProfanity?: boolean,
         removeDisfluencies?: boolean,
-        deleteAfterSeconds?: number
-        language?: string,
+        deleteAfterSeconds?: number,
+        language?: string
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
