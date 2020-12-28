@@ -11,4 +11,5 @@ export interface RevAiJobOptions {
     filter_profanity?: boolean;
     remove_disfluencies?: boolean;
     delete_after_seconds?: number;
+    language?: string;
 }
