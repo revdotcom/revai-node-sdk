@@ -100,7 +100,7 @@ const handleStreamError = (error) => {
 
 // Test Streaming Client's Keep Alive
 (async () => {
-    const expectedReason = "Did not receive data, closing connection";
+    const expectedReason = "No data has been transferred, closing connection";
     const client = clientHelper.getStreamingClient(audioConfig);
 
     client.on('close', (code, reason) => {
