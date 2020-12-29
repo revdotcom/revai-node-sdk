@@ -33,7 +33,7 @@ const token = require('./config/config.json').access_token;
 
     // Media may be submitted from a local file
     try {
-	    job = await
+	    var job = await
                 client.submitJobLocalFile("./resources/example.mp3",
                 jobOptions);
     } catch (e) {
