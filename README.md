@@ -59,7 +59,7 @@ var job = await client.submitJobAudioData(stream, "file.mp3");
 `job` will contain all the information normally found in a successful response from our
 [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, `skip_diarization`,`skip_punctuation`, `speaker_channels_count`, `filter_profanity`, `remove_disfluencies`, `delete_after_seconds`  and `custom_vocabularies` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, `skip_diarization`,`skip_punctuation`, `speaker_channels_count`, `filter_profanity`, `remove_disfluencies`, `delete_after_seconds`, `custom_vocabularies` and `language` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
 ### Checking your job's status
 
