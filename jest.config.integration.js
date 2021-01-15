@@ -10,5 +10,6 @@ module.exports = {
   },
   testMatch: [
     "**/test/integration/test/*.test.js"
-  ]
+  ],
+  modulePathIgnorePatterns: ['<rootDir>/dist']
 };
