@@ -2,6 +2,7 @@ import { WebSocketClient, WebSocketConnection } from 'websocket';
 
 import { AudioConfig } from '../../src/models/streaming/AudioConfig';
 import { BufferedDuplex } from '../../src/models/streaming/BufferedDuplex';
+import { StreamingHypothesis } from '../../src/models/streaming/StreamingResponses';
 import { SessionConfig } from '../../src/models/streaming/SessionConfig';
 import { RevAiStreamingClient } from '../../src/streaming-client';
 
@@ -198,6 +199,43 @@ describe('streaming-client', () => {
 
             // Assert
             expect(jobId).toBe(expectedJobId);
+        });
+
+        it('writes messages from server to duplex', () => {
+            const res = sut.start();
+            let mockConnection = new WebSocketConnection();
+
+            // Act
+            mockClient.emit('connect', mockConnection);
+            mockConnection.emit('message', 
+                {
+                    type: 'utf8', 
+                    utf8Data: `{ \"type\": \"partial\", \"ts\": 0, \"end_ts\": 1, \"elements\": [] }`
+                }
+            );
+            message = res.read() as StreamingHypothesis;
+
+            // Assert
+            expect(message.ts).toBe(0);
+            expect(message.end_ts).toBe(1);
+        });
+
+        it('does not write messages from server after streams are closed', () => {
+            const res = sut.start();
+            let mockConnection = new WebSocketConnection();
+            sut.unsafeEnd();
+
+            // Act
+            mockClient.emit('connect', mockConnection);
+            mockConnection.emit('message', 
+                {
+                    type: 'utf8', 
+                    utf8Data: `{ \"type\": \"partial\", \"ts\": 0, \"end_ts\": 1, \"elements\": [] }`
+                }
+            );
+
+            // Assert
+            expect(() => { res.read(); }).toThrow();
         });
     });
 
