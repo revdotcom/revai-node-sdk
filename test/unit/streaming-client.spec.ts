@@ -201,25 +201,6 @@ describe('streaming-client', () => {
             expect(jobId).toBe(expectedJobId);
         });
 
-        it('writes messages from server to duplex', () => {
-            const res = sut.start();
-            let mockConnection = new WebSocketConnection();
-
-            // Act
-            mockClient.emit('connect', mockConnection);
-            mockConnection.emit('message', 
-                {
-                    type: 'utf8', 
-                    utf8Data: `{ \"type\": \"partial\", \"ts\": 0, \"end_ts\": 1, \"elements\": [] }`
-                }
-            );
-            message = res.read() as StreamingHypothesis;
-
-            // Assert
-            expect(message.ts).toBe(0);
-            expect(message.end_ts).toBe(1);
-        });
-
         it('does not write messages from server after streams are closed', () => {
             const res = sut.start();
             let mockConnection = new WebSocketConnection();
@@ -235,7 +216,7 @@ describe('streaming-client', () => {
             );
 
             // Assert
-            expect(() => { res.read(); }).toThrow();
+            expect(res.read()).toBe(null);
         });
     });
 
