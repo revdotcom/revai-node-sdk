@@ -30,6 +30,7 @@ const sdkVersion = require('../package.json').version;
 export class RevAiStreamingClient extends EventEmitter {
     baseUrl: string;
     client: client;
+    private streamsClosed: boolean;
     private accessToken: string;
     private config: AudioConfig;
     private requests: PassThrough;
@@ -42,6 +43,7 @@ export class RevAiStreamingClient extends EventEmitter {
      */
     constructor(accessToken: string, config: AudioConfig, version = 'v1') {
         super();
+        this.streamsClosed = false;
         this.accessToken = accessToken;
         this.config = config;
         this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
@@ -130,6 +132,9 @@ export class RevAiStreamingClient extends EventEmitter {
                 this.closeStreams();
             });
             connection.on('message', (message: any) => {
+                if (this.streamsClosed) {
+                    return;
+                }
                 if (message.type === 'utf8') {
                     let response = JSON.parse(message.utf8Data);
                     if ((response as StreamingResponse).type === 'connected') {
@@ -158,6 +163,7 @@ export class RevAiStreamingClient extends EventEmitter {
 
     private closeStreams(): void {
         this.requests.end();
+        this.streamsClosed = true;
         this.responses.push(null);
     }
 }
