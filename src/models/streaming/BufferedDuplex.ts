@@ -21,7 +21,7 @@ export class BufferedDuplex extends Duplex {
     }
 
     public _write(chunk: any, encoding: string, callback: any): boolean {
-        return this.input.write(chunk, encoding, callback);
+        return this.input.writable ? this.input.write(chunk, encoding, callback) : false;
     }
 
     public _read(size: number): any {

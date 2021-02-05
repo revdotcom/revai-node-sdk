@@ -139,7 +139,7 @@ export class RevAiStreamingClient extends EventEmitter {
                     let response = JSON.parse(message.utf8Data);
                     if ((response as StreamingResponse).type === 'connected') {
                         this.emit('connect', response as StreamingConnected);
-                    } else {
+                    } else if (this.responses.writable) {
                         this.responses.write(response as StreamingHypothesis);
                     }
                 }
@@ -162,8 +162,10 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     private closeStreams(): void {
-        this.requests.end();
-        this.streamsClosed = true;
-        this.responses.push(null);
+        if (this.streamsClosed == false) {
+            this.streamsClosed = true;
+            this.requests.end();
+            this.responses.push(null);
+        }
     }
 }
