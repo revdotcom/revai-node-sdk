@@ -38,10 +38,8 @@ export class BufferedDuplex extends Duplex {
 
     private setupInput(): void {
         this.once('finish', () => this.input.end());
-        this.input.on('finish', () => {
-            this.end();
-            console.log("ok");
-        });
+        this.input.on('ending', () => this.writable = false);
+        this.input.on('finish', () => this.end());
         this.input.on('error', error => this.emit('error', error));
     }
 
