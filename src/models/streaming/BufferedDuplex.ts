@@ -21,11 +21,11 @@ export class BufferedDuplex extends Duplex {
     }
 
     public _write(chunk: any, encoding: string, callback: any): boolean {
-        const can_read = this.input.write(chunk, encoding, () => can_read && callback());
-        if (!can_read) {
+        const needs_drain = this.input.write(chunk, encoding, () => needs_drain && callback());
+        if (!needs_drain) {
             this.input.once('drain', callback);
         }
-        return can_read;
+        return needs_drain;
     }
 
     public _read(size: number): any {
@@ -38,7 +38,10 @@ export class BufferedDuplex extends Duplex {
 
     private setupInput(): void {
         this.once('finish', () => this.input.end());
-        this.input.on('finish', () => this.end());
+        this.input.on('finish', () => {
+            this.end();
+            console.log("ok");
+        });
         this.input.on('error', error => this.emit('error', error));
     }
 

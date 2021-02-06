@@ -243,7 +243,7 @@ describe('streaming-client', () => {
     });
 
     describe('end', () => {
-        it('Closes off input stream', () => {
+        it.only('Closes off input stream', () => {
             // Setup
             const mockConnection = new WebSocketConnection();
             let duplex = sut.start();
@@ -252,8 +252,8 @@ describe('streaming-client', () => {
             sut.end();
 
             // Assert
-            expect(duplex.writable).toBe(false);
             expect(() => { duplex.write("message"); }).toThrow();
+            expect(duplex.writable).toBe(false);
         });
     });
 
