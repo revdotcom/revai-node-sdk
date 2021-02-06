@@ -116,6 +116,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(statusCode).toBe(401);
+            expect(res.writable).toBe(false);
             expect(() => { res.write("message"); }).toThrow();
         });
 
@@ -133,6 +134,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(connectionError).toBe(expectedError);
+            expect(res.writable).toBe(false);
             expect(() => { res.write("message"); }).toThrow();
         });
 
@@ -156,6 +158,7 @@ describe('streaming-client', () => {
             // Assert
             expect(closeCode).toBe(expectedCloseCode);
             expect(closeReason).toBe(expectedCloseReason);
+            expect(res.writable).toBe(false);
             expect(() => { res.write("message"); }).toThrow();
         });
 
@@ -175,6 +178,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(connectionError).toBe(expectedError);
+            expect(res.writable).toBe(false);
             expect(() => { res.write("message"); }).toThrow();
         });
 
@@ -248,6 +252,7 @@ describe('streaming-client', () => {
             sut.end();
 
             // Assert
+            expect(res.writable).toBe(false);
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });
@@ -269,6 +274,7 @@ describe('streaming-client', () => {
             sut.unsafeEnd();
 
             // Assert
+            expect(res.writable).toBe(false);
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });
