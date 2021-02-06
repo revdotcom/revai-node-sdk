@@ -252,7 +252,7 @@ describe('streaming-client', () => {
             sut.end();
 
             // Assert
-            expect(res.writable).toBe(false);
+            expect(duplex.writable).toBe(false);
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });
@@ -274,7 +274,7 @@ describe('streaming-client', () => {
             sut.unsafeEnd();
 
             // Assert
-            expect(res.writable).toBe(false);
+            expect(duplex.writable).toBe(false);
             expect(() => { duplex.write("message"); }).toThrow();
         });
     });
