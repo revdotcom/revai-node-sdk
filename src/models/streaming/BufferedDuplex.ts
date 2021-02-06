@@ -21,19 +21,20 @@ export class BufferedDuplex extends Duplex {
     }
 
     public _write(chunk: any, encoding: string, callback: any): boolean {
-        const needs_drain = this.input.write(chunk, encoding, () => needs_drain && callback());
-        if (!needs_drain) {
+        const needsDrain = this.input.write(chunk, encoding, () => needsDrain && callback());
+        if (!needsDrain) {
             this.input.once('drain', callback);
         }
-        return needs_drain;
+        return needsDrain;
     }
 
     public _read(size: number): any {
         const chunk = this.output.read(size);
-        if (chunk !== null)
+        if (chunk !== null) {
             this.push(chunk);
-        else
-            this.output.once('readable', size => this._read(size));
+        } else {
+            this.output.once('readable', s => this._read(s));
+        }
     }
 
     private setupInput(): void {
