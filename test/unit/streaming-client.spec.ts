@@ -50,6 +50,7 @@ describe('streaming-client', () => {
                 `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}`
             );  
             expect(mockClient.connect).toBeCalledTimes(1);
+            expect(res.writable).toBe(true);
         });
 
         it ('does not add optional parameters if no config provided', () => {
@@ -63,6 +64,7 @@ describe('streaming-client', () => {
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
+            expect(res.writable).toBe(true);
         });
 
         it ('does not add optional parameters if empty in config', () => {
@@ -78,6 +80,7 @@ describe('streaming-client', () => {
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
+            expect(res.writable).toBe(true);
         });
 
         it ('does not add optional parameters if null in config', () => {
@@ -93,6 +96,7 @@ describe('streaming-client', () => {
                 `&user_agent=${encodeURIComponent(`RevAi-NodeSDK/${sdkVersion}`)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
+            expect(res.writable).toBe(true);
         });
 
         it('Returns duplex stream', () => {
@@ -203,6 +207,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(jobId).toBe(expectedJobId);
+            expect(res.writable).toBe(true);
         });
 
         it('does not write messages from server after streams are closed', () => {
@@ -221,6 +226,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(res.read()).toBe(null);
+            expect(res.writable).toBe(false);
         });
     });
 
