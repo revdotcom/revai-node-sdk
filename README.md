@@ -1,6 +1,6 @@
 # Rev.ai Node SDK
 
-[![Build Status](https://travis-ci.org/revdotcom/revai-node-sdk.svg?branch=develop)](https://travis-ci.org/revdotcom/revai-node-sdk)
+![CI](https://github.com/revdotcom/revai-node-sdk/workflows/CI/badge.svg)
 
 ## Documentation
 
