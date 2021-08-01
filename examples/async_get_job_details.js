@@ -1,5 +1,4 @@
 const revai = require('revai-node-sdk');
-const fs = require('fs');
 const token = require('./config/config.json').access_token;
 
 (async () => {  
