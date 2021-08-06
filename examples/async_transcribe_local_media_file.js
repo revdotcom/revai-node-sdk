@@ -37,7 +37,7 @@ const token = require('./config/config.json').access_token;
         job = await client.submitJobLocalFile("./resources/example.mp3",
             jobOptions);
     } catch (e) {
-        console.dir(e)
+        console.dir(e);
     }
 
     console.log(`Job Id: ${job.id}`);

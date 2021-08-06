@@ -11,7 +11,7 @@ try {
     pkg.module = 'src/index.js';
 
     const buildPackage = JSON.stringify(pkg, null, 2);
-    const root = __dirname
+    const root = __dirname;
     fs.writeFile(path.join(root, "dist", "package.json"), buildPackage, function() {
         console.log('Package JSON for publish rendered');
         process.exit(0);

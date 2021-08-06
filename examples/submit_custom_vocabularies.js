@@ -51,7 +51,7 @@ const token = require('./config/config.json').access_token;
      */
     console.log("Getting list of submitted custom vocabularies.");
     var customVocabularyInformations = await client.getListOfCustomVocabularyInformations();
-
+    console.log(customVocabularyInformations);
     /**
      * Deletes the custom vocabulary
      */
