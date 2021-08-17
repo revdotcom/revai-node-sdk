@@ -123,7 +123,7 @@ describe('api-client job submission', () => {
         it('submit job with Buffer', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = new Buffer(10);
+            let fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream);
 
@@ -144,7 +144,7 @@ describe('api-client job submission', () => {
         it('submit job with name', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = new Buffer(10);
+            let fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream, 'example.mp3');
 
@@ -165,7 +165,7 @@ describe('api-client job submission', () => {
         it('submit job with all options null', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = new Buffer(10);
+            let fakeStream = Buffer.alloc(10);
             const options = {
                 metadata: null,
                 callback_url: null,
@@ -209,7 +209,7 @@ describe('api-client job submission', () => {
         it('submit job with options', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let mockStream = new Buffer(10);
+            let mockStream = Buffer.alloc(10);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',

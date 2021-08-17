@@ -32,3 +32,10 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm run unit-test
+    - run: node build_release_package_json.js
+    - name: Integration tests ${{ matrix.node-version }}
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        API_KEY: ${{ secrets.API_KEY }}
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
+      run: npm run integration-test
