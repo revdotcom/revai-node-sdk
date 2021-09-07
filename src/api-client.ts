@@ -142,6 +142,7 @@ export class RevAiApiClient {
             options = this.filterNullOptions(options);
             payload.append('options', JSON.stringify(options));
         }
+        
         return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
             payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }

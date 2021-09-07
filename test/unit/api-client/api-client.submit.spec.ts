@@ -19,7 +19,6 @@ describe('api-client job submission', () => {
     const filename = 'path/to/test.mp3';
 
     const twoGigabytes = 2e9; // Number of Bytes in 2 Gigabytes
-
     
     beforeEach(() => {
         ApiRequestHandler.mockClear();
