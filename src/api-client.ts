@@ -14,6 +14,8 @@ const enum TranscriptContentTypes {
     TEXT = 'text/plain'
 }
 
+const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
+
 /**
  * Client which handles connection to the rev.ai API.
  */
@@ -122,7 +124,7 @@ export class RevAiApiClient {
         }
 
         return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
-            payload.getHeaders(), 'json', payload);
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
     /**
@@ -140,9 +142,8 @@ export class RevAiApiClient {
             options = this.filterNullOptions(options);
             payload.append('options', JSON.stringify(options));
         }
-
         return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
-            payload.getHeaders(), 'json', payload);
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
     /**

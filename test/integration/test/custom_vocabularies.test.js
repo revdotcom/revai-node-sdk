@@ -11,7 +11,7 @@ test('Can submit custom vocabulary', async () => {
     expect(informationSubmit.failure).toBeUndefined();
 }, 30000);
 
-test('Can retreive submitted custom vocabulary', async (done) => {
+test('Can retrieve submitted custom vocabulary', async (done) => {
     const informationSubmit = await client.submitCustomVocabularies([{phrases:['some','custom','vocabularies']}]);
 
     var intervalObject = setInterval(function(){

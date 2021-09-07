@@ -38,7 +38,8 @@ export class ApiRequestHandler {
         url: string,
         headers: {},
         responseType: AxiosResponseTypes,
-        params?: {}
+        params?: {},
+        maxBodyLength?: number
     ): Promise<Response> {
         try {
             const data = (method === 'get' || method === 'delete') ? undefined : params;
@@ -47,7 +48,8 @@ export class ApiRequestHandler {
                 url: url,
                 data: data,
                 headers: headers,
-                responseType: responseType
+                responseType: responseType,
+                maxBodyLength
             });
 
             return response.data;
