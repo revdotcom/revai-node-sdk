@@ -17,6 +17,8 @@ describe('api-client job submission', () => {
         created_on: '2018-05-05T23:23:22.29Z'
     }
     const filename = 'path/to/test.mp3';
+
+    const twoGigabytes = 2e9; // Number of Bytes in 2 Gigabytes
     
     beforeEach(() => {
         ApiRequestHandler.mockClear();
@@ -115,7 +117,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -136,7 +138,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -157,7 +159,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -201,7 +203,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -245,7 +247,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -267,7 +269,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -309,7 +311,7 @@ describe('api-client job submission', () => {
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -352,7 +354,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobLocalFile(filename, options);
 
             expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
-                expectedHeader, 'json', expectedPayload);
+                expectedHeader, 'json', expectedPayload, twoGigabytes);
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
