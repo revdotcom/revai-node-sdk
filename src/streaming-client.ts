@@ -48,7 +48,7 @@ export class RevAiStreamingClient extends EventEmitter {
         this.accessToken = accessToken;
         this.config = config;
         this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
-        this.requests = new PassThrough();
+        this.requests = new PassThrough({ objectMode: true });
         this.responses = new PassThrough({ objectMode: true });
         this.client = new client({
             // @ts-ignore
@@ -94,8 +94,7 @@ export class RevAiStreamingClient extends EventEmitter {
 
         this.client.connect(url);
         return new BufferedDuplex(this.requests, this.responses, {
-            readableObjectMode: true,
-            writableObjectMode: true
+            readableObjectMode: true
         });
     }
 
@@ -159,9 +158,9 @@ export class RevAiStreamingClient extends EventEmitter {
 
     private doSendLoop(conn: connection, buffer: PassThrough): void {
         if (conn.connected) {
-            let value = buffer.read(buffer.readableLength);
+            const value = buffer.read();
             if (value !== null) {
-                if (Buffer.compare(value, Buffer.from('EOS')) === 0) {
+                if (typeof value === 'string' && value === 'EOS') {
                     conn.sendUTF('EOS');
                 } else {
                     conn.send(value);
