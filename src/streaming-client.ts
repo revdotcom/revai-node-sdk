@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
+import { IncomingMessage } from 'http';
 import { Duplex, PassThrough } from 'stream';
-import { client } from 'websocket';
+import { client, connection, Message } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
@@ -49,7 +50,11 @@ export class RevAiStreamingClient extends EventEmitter {
         this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
         this.requests = new PassThrough();
         this.responses = new PassThrough({ objectMode: true });
-        this.client = new client({ keepalive: true, keepaliveInterval: 30000 });
+        this.client = new client({
+            // @ts-ignore
+            keepalive: true,
+            keepaliveInterval: 30000
+        });
         this.setUpHttpResponseHandler();
         this.setUpConnectionFailureHandler();
         this.setUpConnectedHandlers();
@@ -88,7 +93,10 @@ export class RevAiStreamingClient extends EventEmitter {
         }
 
         this.client.connect(url);
-        return new BufferedDuplex(this.requests, this.responses, { readableObjectMode: true });
+        return new BufferedDuplex(this.requests, this.responses, {
+            readableObjectMode: true,
+            writableObjectMode: true
+        });
     }
 
     /**
@@ -109,7 +117,7 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     private setUpHttpResponseHandler(): void {
-        this.client.on('httpResponse', (response: any) => {
+        this.client.on('httpResponse', (response: IncomingMessage) => {
             this.emit('httpResponse', response.statusCode);
             this.closeStreams();
         });
@@ -123,16 +131,16 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     private setUpConnectedHandlers(): void {
-        this.client.on('connect', (connection: any) => {
-            connection.on('error', (error: Error) => {
+        this.client.on('connect', (conn: connection) => {
+            conn.on('error', (error: Error) => {
                 this.emit('error', error);
                 this.closeStreams();
             });
-            connection.on('close', (code: number, reason: string) => {
+            conn.on('close', (code: number, reason: string) => {
                 this.emit('close', code, reason);
                 this.closeStreams();
             });
-            connection.on('message', (message: any) => {
+            conn.on('message', (message: Message) => {
                 if (this.streamsClosed) {
                     return;
                 }
@@ -145,20 +153,21 @@ export class RevAiStreamingClient extends EventEmitter {
                     }
                 }
             });
-            this.doSendLoop(connection, this.requests);
+            this.doSendLoop(conn, this.requests);
         });
     }
 
-    private doSendLoop(connection: any, buffer: PassThrough): void {
-        if (connection.connected) {
+    private doSendLoop(conn: connection, buffer: PassThrough): void {
+        if (conn.connected) {
             let value = buffer.read(buffer.readableLength);
             if (value !== null) {
-                connection.send(value);
-                if (value.includes('EOS') || value.includes(Buffer.from('EOS'))) {
-                    connection.sendUTF('EOS');
+                if (Buffer.compare(value, Buffer.from('EOS')) === 0) {
+                    conn.sendUTF('EOS');
+                } else {
+                    conn.send(value);
                 }
             }
-            setTimeout(() => this.doSendLoop(connection, buffer), 100);
+            setTimeout(() => this.doSendLoop(conn, buffer), 100);
         }
     }
 
