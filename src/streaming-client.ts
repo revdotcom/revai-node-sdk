@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
+import { IncomingMessage } from 'http';
 import { Duplex, PassThrough } from 'stream';
-import { client } from 'websocket';
+import { client, connection, Message } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
@@ -35,6 +36,7 @@ export class RevAiStreamingClient extends EventEmitter {
     private config: AudioConfig;
     private requests: PassThrough;
     private responses: PassThrough;
+    private protocol: Duplex;
 
     /**
      * @param accessToken Access token associated with the user's account
@@ -47,9 +49,17 @@ export class RevAiStreamingClient extends EventEmitter {
         this.accessToken = accessToken;
         this.config = config;
         this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
-        this.requests = new PassThrough();
+        this.requests = new PassThrough({ objectMode: true });
         this.responses = new PassThrough({ objectMode: true });
-        this.client = new client({ keepalive: true, keepaliveInterval: 30000 });
+        this.protocol = new BufferedDuplex(this.requests, this.responses, {
+            readableObjectMode: true,
+            writableObjectMode: true
+        });
+        this.client = new client({
+            // @ts-ignore
+            keepalive: true,
+            keepaliveInterval: 30000
+        });
         this.setUpHttpResponseHandler();
         this.setUpConnectionFailureHandler();
         this.setUpConnectedHandlers();
@@ -88,15 +98,14 @@ export class RevAiStreamingClient extends EventEmitter {
         }
 
         this.client.connect(url);
-        return new BufferedDuplex(this.requests, this.responses, { readableObjectMode: true });
+        return this.protocol;
     }
 
     /**
      * Signals to the api that you have finished sending data.
      */
     public end(): void {
-        this.requests.emit('ending');
-        this.requests.end('EOS', 'utf8');
+        this.protocol.end('EOS', 'utf8');
     }
 
     /**
@@ -109,7 +118,7 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     private setUpHttpResponseHandler(): void {
-        this.client.on('httpResponse', (response: any) => {
+        this.client.on('httpResponse', (response: IncomingMessage) => {
             this.emit('httpResponse', response.statusCode);
             this.closeStreams();
         });
@@ -123,16 +132,16 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     private setUpConnectedHandlers(): void {
-        this.client.on('connect', (connection: any) => {
-            connection.on('error', (error: Error) => {
+        this.client.on('connect', (conn: connection) => {
+            conn.on('error', (error: Error) => {
                 this.emit('error', error);
                 this.closeStreams();
             });
-            connection.on('close', (code: number, reason: string) => {
+            conn.on('close', (code: number, reason: string) => {
                 this.emit('close', code, reason);
                 this.closeStreams();
             });
-            connection.on('message', (message: any) => {
+            conn.on('message', (message: Message) => {
                 if (this.streamsClosed) {
                     return;
                 }
@@ -145,27 +154,27 @@ export class RevAiStreamingClient extends EventEmitter {
                     }
                 }
             });
-            this.doSendLoop(connection, this.requests);
+            this.doSendLoop(conn);
         });
     }
 
-    private doSendLoop(connection: any, buffer: PassThrough): void {
-        if (connection.connected) {
-            let value = buffer.read(buffer.readableLength);
+    private doSendLoop(conn: connection): void {
+        if (conn.connected) {
+            const value = this.requests.read();
             if (value !== null) {
-                connection.send(value);
-                if (value.includes('EOS') || value.includes(Buffer.from('EOS'))) {
-                    connection.sendUTF('EOS');
+                if (typeof value === 'string') {
+                    conn.sendUTF(value);
+                } else {
+                    conn.send(value);
                 }
             }
-            setTimeout(() => this.doSendLoop(connection, buffer), 100);
+            setTimeout(() => this.doSendLoop(conn), 100);
         }
     }
 
     private closeStreams(): void {
         if (this.streamsClosed === false) {
             this.streamsClosed = true;
-            this.requests.emit('ending');
             this.requests.end();
             this.responses.push(null);
         }

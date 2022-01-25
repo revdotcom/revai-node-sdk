@@ -4,7 +4,7 @@ export class WebSocketConnectionMock extends EventEmitter {
     connected: boolean;
     send: any;
     sendUTF: any;
-    constructor(connected = true){
+    constructor(connected = true) {
         super();
         this.connected = connected;
         this.send = jest.fn();
@@ -14,8 +14,8 @@ export class WebSocketConnectionMock extends EventEmitter {
 
 export class WebSocketClientMock extends EventEmitter {
     abort: any;
-    connect: any
-    constructor(){
+    connect: any;
+    constructor() {
         super();
         this.connect = jest.fn();
         this.abort = jest.fn();
