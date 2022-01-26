@@ -28,7 +28,8 @@ const token = require('./config/config.json').access_token;
         filter_profanity: false, // Optional value available with some languages
         remove_disfluencies: false, // Optional value available with some languages
         delete_after_seconds: 2592000, // 30 days in seconds
-        language: "en" // Supported ISO 639-1 (2-letter) or ISO 639-3 (3-letter) language code
+        language: "en", // Supported ISO 639-1 (2-letter) or ISO 639-3 (3-letter) language code
+        transcriber: "machine_v2" 
     };
 
     // Media may be submitted from a local file

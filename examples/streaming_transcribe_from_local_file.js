@@ -32,7 +32,10 @@ const sessionConfig = new revai.SessionConfig(
     "my example metadata",  /* (optional) metadata */
     null,  /* (optional) custom_vocabulary_id */
     false, /* (optional) filter_profanity */
-    false /* (optional) remove_disfluencies */
+    false, /* (optional) remove_disfluencies */
+    0, /* (optional) delete_after_seconds */
+    0, /* (optional) start_ts */
+    "machine_v2" /* (optional) transcriber */
 );
 
 // Begin streaming session
