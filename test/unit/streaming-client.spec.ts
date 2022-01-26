@@ -33,7 +33,9 @@ describe('streaming-client', () => {
                 'my custom vocab id',
                 true,
                 true,
-                0
+                0,
+                10,
+                'machine_v2'
             );
 
             // Act
@@ -48,7 +50,9 @@ describe('streaming-client', () => {
                 `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}` +
                 `&filter_profanity=${encodeURIComponent(config.filterProfanity)}` +
                 `&remove_disfluencies=${encodeURIComponent(config.removeDisfluencies)}` +
-                `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}`
+                `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}` +
+                `&start_ts=${encodeURIComponent(config.startTs)}` +
+                `&transcriber=${encodeURIComponent(config.transcriber)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
             expect(res.writable).toBe(true);

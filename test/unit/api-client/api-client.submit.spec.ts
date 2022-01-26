@@ -63,7 +63,8 @@ describe('api-client job submission', () => {
                 filter_profanity: null,
                 remove_disfluencies: null,
                 delete_after_seconds: null,
-                language: null
+                language: null,
+                transcriber: null
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -88,7 +89,8 @@ describe('api-client job submission', () => {
                 media_url: mediaUrl,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
-                language: 'en'
+                language: 'en',
+                transcriber: 'machine_v2'
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -178,7 +180,8 @@ describe('api-client job submission', () => {
                 filter_profanity: null,
                 remove_disfluencies: null,
                 delete_after_seconds: null,
-                language: null
+                language: null,
+                transcriber: null
             };
             const job = await sut.submitJobAudioData(fakeStream, null, options);
 
@@ -198,7 +201,8 @@ describe('api-client job submission', () => {
                     expect.not.stringContaining('filter_profanity'),
                     expect.not.stringContaining('remove_disfluencies'),
                     expect.not.stringContaining('delete_after_seconds'),
-                    expect.not.stringContaining('language')
+                    expect.not.stringContaining('language'),
+                    expect.not.stringContaining('transcriber')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -222,7 +226,8 @@ describe('api-client job submission', () => {
                 filter_profanity: true,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
-                language: 'en'
+                language: 'en',
+                transcriber: 'machine_v2'
             };
 
             const job = await sut.submitJobAudioData(mockStream, 'example.mp3', options);
@@ -242,7 +247,8 @@ describe('api-client job submission', () => {
                     expect.stringContaining('"filter_profanity":true'),
                     expect.stringContaining('"remove_disfluencies":true'),
                     expect.stringContaining('"delete_after_seconds":0'),
-                    expect.stringContaining('"language":"en"')
+                    expect.stringContaining('"language":"en"'),
+                    expect.stringContaining('"transcriber":"machine_v2"')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -287,7 +293,8 @@ describe('api-client job submission', () => {
                 filter_profanity: null,
                 remove_disfluencies: null,
                 delete_after_seconds: null,
-		language: null
+		        language: null,
+                transcriber: null
             };
 
             const job = await sut.submitJobLocalFile(filename, options);
@@ -306,7 +313,8 @@ describe('api-client job submission', () => {
                     expect.not.stringContaining('filter_profanity'),
                     expect.not.stringContaining('remove_disfluencies'),
                     expect.not.stringContaining('delete_after_seconds'),
-                    expect.not.stringContaining('language')
+                    expect.not.stringContaining('language'),
+                    expect.not.stringContaining('transcriber')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
@@ -329,7 +337,8 @@ describe('api-client job submission', () => {
                 filter_profanity: true,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
-                language: 'en'
+                language: 'en',
+                transcriber: 'machine_v2'
             };
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
@@ -346,7 +355,8 @@ describe('api-client job submission', () => {
                     expect.stringContaining('"filter_profanity":true'),
                     expect.stringContaining('"remove_disfluencies":true'),
                     expect.stringContaining('"delete_after_seconds":0'),
-                    expect.stringContaining('"language":"en"')
+                    expect.stringContaining('"language":"en"'),
+                    expect.stringContaining('"transcriber":"machine_v2"')
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
