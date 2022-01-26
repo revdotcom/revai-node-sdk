@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { RevAiApiClient } from '../../../src/api-client';
@@ -6,53 +5,49 @@ import { ApiRequestHandler } from '../../../src/api-request-handler';
 
 jest.mock('../../../src/api-request-handler');
 
-let sut: RevAiApiClient;
-
 describe('api-client job submission', () => {
+    let sut: RevAiApiClient;
+    let mockMakeApiRequest: jest.Mock;
+
     const jobId = 'Umx5c6F7pH7r';
     const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
     const jobDetails = {
         id: jobId,
         status: 'in_progress',
         created_on: '2018-05-05T23:23:22.29Z'
-    }
+    };
     const filename = 'path/to/test.mp3';
 
     const twoGigabytes = 2e9; // Number of Bytes in 2 Gigabytes
-    
+
     beforeEach(() => {
-        ApiRequestHandler.mockClear();
+        mockMakeApiRequest = jest.fn().mockResolvedValue(jobDetails);
+        (ApiRequestHandler as jest.Mock<ApiRequestHandler>).mockImplementationOnce(() => ({
+            makeApiRequest: mockMakeApiRequest
+        }));
         sut = new RevAiApiClient('testtoken');
     });
 
     describe('submitJobUrl', () => {
         it('submit job with media url without options', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-
             const job = await sut.submitJobUrl(mediaUrl);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with media url with null options', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-
             const job = await sut.submitJobUrl(mediaUrl, null);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
-        
+
         it('submit job with media url with all options null', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: null,
                 callback_url: null,
@@ -69,15 +64,13 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
-            
+
         it('submit job with media url with options', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -95,18 +88,16 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', options);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
     });
 
     describe('submitJobFileStream', () => {
         it('submit job with Readable', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = new Readable();
+            const fakeStream = new Readable();
 
             const job = await sut.submitJobAudioData(fakeStream);
 
@@ -118,16 +109,14 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with Buffer', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = Buffer.alloc(10);
+            const fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream);
 
@@ -139,16 +128,14 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with name', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = Buffer.alloc(10);
+            const fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream, 'example.mp3');
 
@@ -160,16 +147,14 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with all options null', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let fakeStream = Buffer.alloc(10);
+            const fakeStream = Buffer.alloc(10);
             const options = {
                 metadata: null,
                 callback_url: null,
@@ -206,16 +191,14 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with options', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-            let mockStream = Buffer.alloc(10);
+            const fakeStream = Buffer.alloc(10);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -230,7 +213,7 @@ describe('api-client job submission', () => {
                 transcriber: 'machine_v2'
             };
 
-            const job = await sut.submitJobAudioData(mockStream, 'example.mp3', options);
+            const job = await sut.submitJobAudioData(fakeStream, 'example.mp3', options);
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
@@ -240,7 +223,8 @@ describe('api-client job submission', () => {
                     expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
                     expect.stringContaining('"metadata":"This is a sample submit jobs option",'),
                     expect.stringContaining('"callback_url":"https://www.example.com/callback",'),
-                    expect.stringContaining('"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],'),
+                    expect.stringContaining(
+                        '"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],'),
                     expect.stringContaining('"skip_punctuation":true,'),
                     expect.stringContaining('"skip_diarization":true,'),
                     expect.stringContaining('"speaker_channels_count":1,'),
@@ -252,18 +236,15 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
     });
 
     describe('submitJobLocalFile', () => {
         it('submit job with local file without options', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
-
             const job = await sut.submitJobLocalFile(filename);
 
             const expectedPayload = expect.objectContaining({
@@ -274,15 +255,13 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with local file with all options null', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: null,
                 callback_url: null,
@@ -293,7 +272,7 @@ describe('api-client job submission', () => {
                 filter_profanity: null,
                 remove_disfluencies: null,
                 delete_after_seconds: null,
-		        language: null,
+                language: null,
                 transcriber: null
             };
 
@@ -318,15 +297,13 @@ describe('api-client job submission', () => {
                 ])
             });
             const expectedHeader = { 'content-type': expect.stringMatching(/multipart\/form-data; boundary=.+/) };
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit job with local file with options', async () => {
-            const mockHandler = ApiRequestHandler.mock.instances[0];
-            mockHandler.makeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
@@ -348,7 +325,8 @@ describe('api-client job submission', () => {
                     expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
                     expect.stringContaining('"metadata":"This is a sample submit jobs option",'),
                     expect.stringContaining('"callback_url":"https://www.example.com/callback",'),
-                    expect.stringContaining('"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],'),
+                    expect.stringContaining(
+                        '"custom_vocabularies":[{"phrases":["word1","word2"]},{"phrases":["word3","word4"]}],'),
                     expect.stringContaining('"skip_punctuation":true,'),
                     expect.stringContaining('"skip_diarization":true,'),
                     expect.stringContaining('"speaker_channels_count":1,'),
@@ -363,9 +341,9 @@ describe('api-client job submission', () => {
 
             const job = await sut.submitJobLocalFile(filename, options);
 
-            expect(mockHandler.makeApiRequest).toBeCalledWith('post', '/jobs',
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 expectedHeader, 'json', expectedPayload, twoGigabytes);
-            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
     });

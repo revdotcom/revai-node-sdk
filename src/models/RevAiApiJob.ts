@@ -18,8 +18,8 @@ export interface RevAiApiJob {
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
     remove_disfluencies?: boolean;
-    filter_profanity?:boolean;
-    custom_vocabulary_id?:string;
+    filter_profanity?: boolean;
+    custom_vocabulary_id?: string;
     speaker_channels_count?: number;
     language?: string;
     transcriber?: string;

@@ -2,7 +2,7 @@ const revai = require('revai-node-sdk');
 const fs = require('fs');
 const token = require('./config/config.json').access_token;
 
-(async () => {  
+(async () => {
     // Initialize your client with your revai access token
     var client = new revai.RevAiApiClient(token);
 
@@ -12,26 +12,26 @@ const token = require('./config/config.json').access_token;
     console.log(`Credits remaining: ${account.balance_seconds} seconds`);
 
     const jobOptions = {
-        metadata: "InternalOrderNumber=123456789",
-        callback_url: "https://jsonplaceholder.typicode.com/posts",
+        metadata: 'InternalOrderNumber=123456789',
+        callback_url: 'https://jsonplaceholder.typicode.com/posts',
         skip_diarization: false,
         custom_vocabularies: [{
             phrases: [
-                "add",
-                "custom",
-                "vocabularies",
-                "here"
+                'add',
+                'custom',
+                'vocabularies',
+                'here'
             ]
         }],
         filter_profanity: false, // Optional value available with some languages
         remove_disfluencies: false, // Optional value available with some languages
         delete_after_seconds: 2592000, // 30 days in seconds
-        language: "en", // Supported ISO 639-1 (2-letter) or ISO 639-3 (3-letter) language code
-        transcriber: "machine_v2" 
+        language: 'en', // Supported ISO 639-1 (2-letter) or ISO 639-3 (3-letter) language code
+        transcriber: 'machine_v2' // Optional value for transcriber
     };
 
     // Media may be submitted from a url
-    var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3", jobOptions);
+    var job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', jobOptions);
 
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
@@ -44,7 +44,7 @@ const token = require('./config/config.json').access_token;
      * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
-    {  
+    {
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
     }
@@ -60,9 +60,9 @@ const token = require('./config/config.json').access_token;
     // var transcriptObjectStream = await client.getTranscriptObjectStream(job.id);
     // var captionsStream = await client.getCaptions(job.id);
 
-    fs.writeFile("./outputs/async_url_transcript.txt", transcriptText, (err) => {
+    fs.writeFile('./outputs/async_url_transcript.txt', transcriptText, (err) => {
         if (err) throw err;
-        console.log("Success! Check the examples/outputs/ directory for the transcript.")
+        console.log('Success! Check the examples/outputs/ directory for the transcript.')
     });
 
     /**

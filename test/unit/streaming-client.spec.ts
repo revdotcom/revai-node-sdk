@@ -35,7 +35,7 @@ describe('streaming-client', () => {
                 true,
                 0,
                 10,
-                'machine_v2'
+                'machine'
             );
 
             // Act
