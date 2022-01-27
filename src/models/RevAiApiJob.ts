@@ -14,4 +14,13 @@ export interface RevAiApiJob {
     media_url?: string;
     failure?: string;
     failure_detail?: string;
+    delete_after_seconds?: number;
+    skip_diarization?: boolean;
+    skip_punctuation?: boolean;
+    remove_disfluencies?: boolean;
+    filter_profanity?: boolean;
+    custom_vocabulary_id?: string;
+    speaker_channels_count?: number;
+    language?: string;
+    transcriber?: string;
 }

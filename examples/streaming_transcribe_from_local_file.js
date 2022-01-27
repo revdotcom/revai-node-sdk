@@ -4,10 +4,10 @@ const token = require('./config/config.json').access_token;
 
 // Initialize your client with your audio configuration and access token
 const audioConfig = new revai.AudioConfig(
-    /* contentType */ "audio/x-raw",
-    /* layout */      "interleaved",
+    /* contentType */ 'audio/x-raw',
+    /* layout */      'interleaved',
     /* sample rate */ 16000,
-    /* format */      "S16LE",
+    /* format */      'S16LE',
     /* channels */    1
 );
 
@@ -29,23 +29,26 @@ client.on('connect', connectionMessage => {
 
 // Optional config to be provided.
 const sessionConfig = new revai.SessionConfig(
-    "my example metadata",  /* (optional) metadata */
+    'my example metadata',  /* (optional) metadata */
     null,  /* (optional) custom_vocabulary_id */
     false, /* (optional) filter_profanity */
-    false /* (optional) remove_disfluencies */
+    false, /* (optional) remove_disfluencies */
+    0, /* (optional) delete_after_seconds */
+    0, /* (optional) start_ts */
+    'machine' /* (optional) transcriber */
 );
 
 // Begin streaming session
 var stream = client.start(sessionConfig);
 
 // Read file from disk
-var file = fs.createReadStream("./resources/example.raw");
+var file = fs.createReadStream('./resources/example.raw');
 
 stream.on('data', data => {
     console.log(data);
 });
 stream.on('end', function () {
-    console.log("End of Stream");
+    console.log('End of Stream');
 });
 
 // Once your file has been sent, signal to the API that you have finished sending audio

@@ -12,4 +12,5 @@ export interface RevAiJobOptions {
     remove_disfluencies?: boolean;
     delete_after_seconds?: number;
     language?: string;
+    transcriber?: string;
 }

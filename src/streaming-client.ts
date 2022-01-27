@@ -95,6 +95,12 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.deleteAfterSeconds !== null && config.deleteAfterSeconds !== undefined) {
                 url += `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds.toString())}`;
             }
+            if (config.startTs !== null && config.startTs !== undefined) {
+                url += `&start_ts=${encodeURIComponent(config.startTs.toString())}`;
+            }
+            if (config.transcriber !== null && config.transcriber !== undefined) {
+                url += `&transcriber=${encodeURIComponent(config.transcriber)}`;
+            }
         }
 
         this.client.connect(url);
