@@ -45,7 +45,7 @@ var accountInfo = await client.getAccount();
 Once you've set up your client with your Access Token sending a file is easy!
 
 ```javascript
-// you can submit a local file
+// You can submit a local file
 var job = await client.submitJobLocalFile("./path/to/file.mp4");
 
 // or submit via a public url
@@ -54,6 +54,19 @@ var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 // or from audio data, the filename is optional
 const stream = fs.createReadStream("./path/to/file.mp3");
 var job = await client.submitJobAudioData(stream, "file.mp3");
+```
+
+You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://www.rev.ai/docs#section/Human-Transcription-(Labs)) option.
+```javascript
+// You can submit a local file
+var job = await client.submitHumanTranscriptionJobLocalFile("./path/to/file.mp4");
+
+// or submit via a public url
+var job = await client.submitHumanTranscriptionJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
+
+// or from audio data, the filename is optional
+const stream = fs.createReadStream("./path/to/file.mp3");
+var job = await client.submitHumanTranscriptionJobAudioData(stream, "file.mp3");
 ```
 
 `job` will contain all the information normally found in a successful response from our

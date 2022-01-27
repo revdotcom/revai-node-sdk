@@ -5,7 +5,7 @@ import { Readable } from 'stream';
 import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
 import { RevAiAccount } from './models/async/RevAiAccount';
-import { RevAiJobOptions } from './models/async/RevAiJobOptions';
+import { RevAiHumanTranscriptionJobOptions, RevAiJobOptions } from './models/async/RevAiJobOptions';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
@@ -59,7 +59,7 @@ export class RevAiApiClient {
      * @returns List of job details
      */
     async getListOfJobs(limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
-        let params = [];
+        const params = [];
         if (limit) {
             params.push(`limit=${limit}`);
         }
@@ -116,7 +116,7 @@ export class RevAiApiClient {
         filename?: string,
         options?: RevAiJobOptions
     ): Promise<RevAiApiJob> {
-        let payload = new FormData();
+        const payload = new FormData();
         payload.append('media', audioData, { filename: filename || 'audio_file' });
         if (options) {
             options = this.filterNullOptions(options);
@@ -136,12 +136,85 @@ export class RevAiApiClient {
      * @returns Details of submitted job
      */
     async submitJobLocalFile(filepath: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
-        let payload = new FormData();
+        const payload = new FormData();
         payload.append('media', fs.createReadStream(filepath));
         if (options) {
             options = this.filterNullOptions(options);
             payload.append('options', JSON.stringify(options));
         }
+
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
+    }
+
+    /**
+     * See https://www.rev.ai/docs#section/Human-Transcription-(Labs)
+     * Submit media given a URL for transcription by a human. The audio data is downloaded from the URL.
+     * @param mediaUrl Web location of media to be downloaded and transcribed
+     * @param options (optional) Options submitted with the job, see RevAiHumanTcJobOptions object
+     * @returns Details of the submitted job
+     */
+    async submitHumanTranscriptionJobUrl(
+        mediaUrl: string,
+        options?: RevAiHumanTranscriptionJobOptions
+    ): Promise<RevAiApiJob> {
+        options = this.filterNullOptions({
+            transcriber: 'human',
+            media_url: mediaUrl,
+            ...(options || {})
+        });
+
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+            { 'Content-Type': 'application/json' }, 'json', options);
+    }
+
+    /**
+     * See https://www.rev.ai/docs#section/Human-Transcription-(Labs)
+     * Submit audio data for transcription by a human.
+     * @param audioData Audio data to be transcribed.
+     * @param filename (optional) Name of file associated with audio.
+     * @param options (optional) Options submitted with the job, see RevAiHumanTcJobOptions object
+     *     or https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     * @returns Details of submitted job
+     */
+    async submitHumanTranscriptionJobAudioData(
+        audioData: Buffer | Readable,
+        filename?: string,
+        options?: RevAiHumanTranscriptionJobOptions
+    ): Promise<RevAiApiJob> {
+        const payload = new FormData();
+        payload.append('media', audioData, { filename: filename || 'audio_file' });
+
+        options = this.filterNullOptions({
+            transcriber: 'human',
+            ...(options || {})
+        });
+
+        payload.append('options', JSON.stringify(options));
+
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
+    }
+
+    /**
+     * See https://www.rev.ai/docs#section/Human-Transcription-(Labs)
+     * Send local file for transcription by a human.
+     * @param filepath Path to local file to be transcribed. Assumes the process has access to read this file.
+     * @param options (optional) Options submitted with the job, see RevAiHumanTcJobOptions object
+     *     or https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     * @returns Details of submitted job
+     */
+    async submitHumanTranscriptionJobLocalFile(
+        filepath: string,
+        options?: RevAiHumanTranscriptionJobOptions
+    ): Promise<RevAiApiJob> {
+        const payload = new FormData();
+        payload.append('media', fs.createReadStream(filepath));
+
+        options = this.filterNullOptions({
+            transcriber: 'human',
+            ...(options || {})
+        });
 
         return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
             payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
@@ -209,12 +282,12 @@ export class RevAiApiClient {
         if (channelId) {
             url += `?speaker_channel=${channelId}`;
         }
-        return await this.apiHandler.makeApiRequest<Readable>('get',
-            url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
+        return await this.apiHandler.makeApiRequest<Readable>(
+            'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 
-    private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
-        let filteredOptions: RevAiJobOptions = {};
+    private filterNullOptions<T>(options: T): T {
+        const filteredOptions = {} as T;
         Object.keys(options).forEach((option) => {
             if (options[option] !== null && options[option] !== undefined) {
                 filteredOptions[option] = options[option];
