@@ -48,6 +48,15 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
+        it('submit job with media url with empty options', async () => {
+            const job = await sut.submitJobUrl(mediaUrl, {});
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
         it('submit job with media url with all options null', async () => {
             const options: RevAiJobOptions = {
                 metadata: null,
@@ -114,7 +123,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', options);
+                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
