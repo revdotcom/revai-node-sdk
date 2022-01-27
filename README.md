@@ -30,14 +30,14 @@ given Access Token:
 import { RevAiApiClient } from 'revai-node-sdk';
 
 // Initialize your client with your revai access token
-var accessToken = "Your Access Token";
-var client = new RevAiApiClient(accessToken);
+const accessToken = "Your Access Token";
+const client = new RevAiApiClient(accessToken);
 ```
 
 ### Checking credits remaining
 
 ```javascript
-var accountInfo = await client.getAccount();
+const accountInfo = await client.getAccount();
 ```
 
 ### Submitting a job
@@ -46,27 +46,29 @@ Once you've set up your client with your Access Token sending a file is easy!
 
 ```javascript
 // You can submit a local file
-var job = await client.submitJobLocalFile("./path/to/file.mp4");
+const job = await client.submitJobLocalFile("./path/to/file.mp4");
 
 // or submit via a public url
-var job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
+const job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
 
 // or from audio data, the filename is optional
 const stream = fs.createReadStream("./path/to/file.mp3");
-var job = await client.submitJobAudioData(stream, "file.mp3");
+const job = await client.submitJobAudioData(stream, "file.mp3");
 ```
 
 You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://www.rev.ai/docs#section/Human-Transcription-(Labs)) option.
 ```javascript
-// You can submit a local file
-var job = await client.submitHumanTranscriptionJobLocalFile("./path/to/file.mp4");
-
-// or submit via a public url
-var job = await client.submitHumanTranscriptionJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
-
-// or from audio data, the filename is optional
-const stream = fs.createReadStream("./path/to/file.mp3");
-var job = await client.submitHumanTranscriptionJobAudioData(stream, "file.mp3");
+// Submitting with human transcription options
+const job = await client.submitJobUrl("./path/to/file.mp4", {
+    transcriber: "human",
+    verbatim: false,
+    rush: false,
+    test_mode: true,
+    segments_to_transcribe: [{
+        start: 1.0,
+        end: 2.4
+    }]
+});
 ```
 
 `job` will contain all the information normally found in a successful response from our
@@ -79,7 +81,7 @@ If you want to get fancy, both send job methods can take a `RevAiJobOptions` obj
 You can check the status of your transcription job using its `id`
 
 ```javascript
-var jobDetails = await client.getJobDetails(job.id);
+const jobDetails = await client.getJobDetails(job.id);
 ```
 
 `jobDetails` will contain all information normally found in a successful response from
@@ -90,13 +92,13 @@ our [Get Job](https://www.rev.ai/docs#operation/GetJobById) endpoint
 You can retrieve a list of transcription jobs with optional parameters
 
 ```javascript
-var jobs = await client.getListOfJobs();
+const jobs = await client.getListOfJobs();
 
 // limit amount of retrieved jobs
-var jobs = await client.getListOfJobs(3);
+const jobs = await client.getListOfJobs(3);
 
 // get jobs starting after a certain job id
-var jobs = await client.getListOfJobs(undefined, 'Umx5c6F7pH7r');
+const jobs = await client.getListOfJobs(undefined, 'Umx5c6F7pH7r');
 ```
 
 `jobs` will contain a list of job details having all information normally found in a successful response
@@ -120,10 +122,10 @@ Once your file is transcribed, you can get your transcript in a few different fo
 
 ```javascript
 // as plain text
-var transcriptText = await client.getTranscriptText(job.id);
+const transcriptText = await client.getTranscriptText(job.id);
 
 // or as an object
-var transcriptObject = await client.getTranscriptObject(job.id);
+const transcriptObject = await client.getTranscriptObject(job.id);
 ```
 
 The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint when using the json response schema.
@@ -131,8 +133,8 @@ The text output is a string containing just the text of your transcript. The obj
 Any of these outputs can we retrieved as a stream for easy file writing:
 
 ```javascript
-var textStream = await client.getTranscriptTextStream(job.id);
-var transcriptStream = await client.getTranscriptObjectStream(job.id);
+const textStream = await client.getTranscriptTextStream(job.id);
+const transcriptStream = await client.getTranscriptObjectStream(job.id);
 ```
 
 ### Getting captions output
@@ -140,11 +142,11 @@ var transcriptStream = await client.getTranscriptObjectStream(job.id);
 Another way to retrieve your file is captions output. We support both .srt and .vtt outputs. See below for an example showing how you can get captions as a readable stream. If your job was submitted with multiple speaker channels you are required to provide the id of the channel you would like captioned.
 
 ```javascript
-var captionsStream = await client.getCaptions(job.id, CaptionType.SRT);
+const captionsStream = await client.getCaptions(job.id, CaptionType.SRT);
 
 // with speaker channels
 const channelId = 1;
-var captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channelId);
+const captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channelId);
 ```
 
 ## Streaming Audio
@@ -154,8 +156,8 @@ In order to stream audio, you will need to setup a streaming client and a media 
 ```javascript
 import { RevAiStreamingClient } from 'revai-node-sdk';
 
-var audioConfig = new AudioConfig() // Initialize audio configuration for the streaming client
-var streamingClient = new RevAiStreamingClient("ACCESS TOKEN", audioConfig);
+const audioConfig = new AudioConfig() // Initialize audio configuration for the streaming client
+const streamingClient = new RevAiStreamingClient("ACCESS TOKEN", audioConfig);
 ```
 
 You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting! Look at the [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples) for more details.
@@ -175,7 +177,7 @@ Now you will be able to start the streaming session by simply calling the `strea
 ```javascript
 const sessionConfig = new SessionConfig('my metadata', 'myCustomVocabularyID');
 
-var stream = streamingClient.start(sessionConfig);
+const stream = streamingClient.start(sessionConfig);
 ```
 
 You can then stream data to this `stream` from a local file or other sources of your choosing and the session will end when the data stream to the `stream` session ends or when you would like to end it, by calling `streamingClient.end()`. For more details, take a look at our [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples).
@@ -191,18 +193,18 @@ For more information, check out our [examples](https://github.com/revdotcom/reva
 import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
 
 // Initialize your client with your revai access token
-var accessToken = "Your Access Token";
-var client = new RevAiCustomVocabulariesClient(accessToken);
+const accessToken = "Your Access Token";
+const client = new RevAiCustomVocabulariesClient(accessToken);
 
 // Construct custom vocabularies object and submit it through the client
-var customVocabularies = [{phrases: ["Noam Chomsky", "Robert Berwick", "Patrick Winston"]}];
-var customVocabularySubmission = await client.submitCustomVocabularies(customVocabularies);
+const customVocabularies = [{phrases: ["Noam Chomsky", "Robert Berwick", "Patrick Winston"]}];
+const customVocabularySubmission = await client.submitCustomVocabularies(customVocabularies);
 
 // Get information regarding the custom vocabulary submission and its progress
-var customVocabularyInformation = await client.getCustomVocabularyInformation(customVocabularySubmission.id)
+const customVocabularyInformation = await client.getCustomVocabularyInformation(customVocabularySubmission.id)
 
 // Get a list of information on previously submitted custom vocabularies
-var customVocabularyInformations = await client.getListOfCustomVocabularyInformations()
+const customVocabularyInformations = await client.getListOfCustomVocabularyInformations()
 
 // Delete a custom vocabulary
 await client.deleteCustomVocabulary(customVocabularySubmission.id)
