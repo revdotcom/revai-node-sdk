@@ -1,26 +1,29 @@
 import { CustomVocabulary } from '../CustomVocabulary';
 
-interface RevAiBaseJobOptions {
+export interface RevAiHumanTranscriptionSegment {
+    start: number;
+    end: number;
+}
+
+/**
+ * Options that can used when submitting Rev.ai speech-to-text job.
+ * See https://www.rev.ai/docs#operation/SubmitTranscriptionJob for more details.
+ */
+export interface RevAiJobOptions {
     media_url?: string;
     metadata?: string;
     callback_url?: string;
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
+    speaker_channels_count?: number;
     custom_vocabularies?: CustomVocabulary[];
     filter_profanity?: boolean;
+    remove_disfluencies?: boolean;
     delete_after_seconds?: number;
     language?: string;
-}
-
-export interface RevAiJobOptions extends RevAiBaseJobOptions {
-    speaker_channels_count?: number;
-    remove_disfluencies?: boolean;
     transcriber?: string;
-}
-
-export interface RevAiHumanTranscriptionJobOptions extends RevAiBaseJobOptions {
     verbatim?: boolean;
     rush?: boolean;
-    segments_to_transcribe?: boolean;
+    segments_to_transcribe?: RevAiHumanTranscriptionSegment[];
     test_mode?: boolean;
 }

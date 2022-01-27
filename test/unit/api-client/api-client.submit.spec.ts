@@ -2,6 +2,7 @@ import { Readable } from 'stream';
 
 import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
+import { RevAiJobOptions } from '../../../src/models/async/RevAiJobOptions';
 
 jest.mock('../../../src/api-request-handler');
 
@@ -48,7 +49,7 @@ describe('api-client job submission', () => {
         });
 
         it('submit job with media url with all options null', async () => {
-            const options = {
+            const options: RevAiJobOptions = {
                 metadata: null,
                 callback_url: null,
                 custom_vocabularies: null,
@@ -71,7 +72,7 @@ describe('api-client job submission', () => {
         });
 
         it('submit job with media url with options', async () => {
-            const options = {
+            const options: RevAiJobOptions = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
@@ -84,6 +85,30 @@ describe('api-client job submission', () => {
                 delete_after_seconds: 0,
                 language: 'en',
                 transcriber: 'machine_v2'
+            };
+
+            const job = await sut.submitJobUrl(mediaUrl, options);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', options);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit human transcription job with options', async () => {
+            const options: RevAiJobOptions = {
+                metadata: 'This is a sample submit jobs option',
+                callback_url: 'https://www.example.com/callback',
+                transcriber: 'human',
+                verbatim: true,
+                rush: true,
+                segments_to_transcribe: [{
+                    start: 0.0,
+                    end: 1.5
+                }, {
+                    start: 240,
+                    end: 300
+                }]
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
