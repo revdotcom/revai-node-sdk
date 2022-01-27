@@ -10,12 +10,12 @@ interface RevAiBaseJobOptions {
     filter_profanity?: boolean;
     delete_after_seconds?: number;
     language?: string;
-    transcriber?: string;
 }
 
 export interface RevAiJobOptions extends RevAiBaseJobOptions {
     speaker_channels_count?: number;
     remove_disfluencies?: boolean;
+    transcriber?: string;
 }
 
 export interface RevAiHumanTranscriptionJobOptions extends RevAiBaseJobOptions {
