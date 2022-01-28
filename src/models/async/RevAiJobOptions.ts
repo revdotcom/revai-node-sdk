@@ -1,6 +1,6 @@
 import { CustomVocabulary } from '../CustomVocabulary';
 
-export interface RevAiHumanTranscriptionSegment {
+export interface SegmentToTranscribe {
     start: number;
     end: number;
 }
@@ -24,6 +24,6 @@ export interface RevAiJobOptions {
     transcriber?: string;
     verbatim?: boolean;
     rush?: boolean;
-    segments_to_transcribe?: RevAiHumanTranscriptionSegment[];
     test_mode?: boolean;
+    segments_to_transcribe?: SegmentToTranscribe[];
 }

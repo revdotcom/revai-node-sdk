@@ -1,3 +1,4 @@
+import { SegmentToTranscribe } from './async/RevAiJobOptions';
 import { JobStatus } from './JobStatus';
 import { JobType } from './JobType';
 
@@ -23,4 +24,7 @@ export interface RevAiApiJob {
     speaker_channels_count?: number;
     language?: string;
     transcriber?: string;
+    verbatim?: boolean;
+    rush?: boolean;
+    segments_to_transcribe?: SegmentToTranscribe[];
 }
