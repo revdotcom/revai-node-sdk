@@ -59,7 +59,7 @@ export class RevAiApiClient {
      * @returns List of job details
      */
     async getListOfJobs(limit?: number, startingAfter?: string): Promise<RevAiApiJob[]> {
-        let params = [];
+        const params = [];
         if (limit) {
             params.push(`limit=${limit}`);
         }
@@ -91,12 +91,10 @@ export class RevAiApiClient {
      * @returns Details of the submitted job
      */
     async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
-        if (options) {
-            options = this.filterNullOptions(options);
-            options.media_url = mediaUrl;
-        } else {
-            options = { 'media_url': mediaUrl };
-        }
+        options = this.filterNullOptions({
+            media_url: mediaUrl,
+            ...(options || {})
+        });
 
         return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
             { 'Content-Type': 'application/json' }, 'json', options);
@@ -116,7 +114,7 @@ export class RevAiApiClient {
         filename?: string,
         options?: RevAiJobOptions
     ): Promise<RevAiApiJob> {
-        let payload = new FormData();
+        const payload = new FormData();
         payload.append('media', audioData, { filename: filename || 'audio_file' });
         if (options) {
             options = this.filterNullOptions(options);
@@ -136,7 +134,7 @@ export class RevAiApiClient {
      * @returns Details of submitted job
      */
     async submitJobLocalFile(filepath: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
-        let payload = new FormData();
+        const payload = new FormData();
         payload.append('media', fs.createReadStream(filepath));
         if (options) {
             options = this.filterNullOptions(options);
@@ -209,12 +207,12 @@ export class RevAiApiClient {
         if (channelId) {
             url += `?speaker_channel=${channelId}`;
         }
-        return await this.apiHandler.makeApiRequest<Readable>('get',
-            url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
+        return await this.apiHandler.makeApiRequest<Readable>(
+            'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 
     private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
-        let filteredOptions: RevAiJobOptions = {};
+        const filteredOptions: RevAiJobOptions = {};
         Object.keys(options).forEach((option) => {
             if (options[option] !== null && options[option] !== undefined) {
                 filteredOptions[option] = options[option];
