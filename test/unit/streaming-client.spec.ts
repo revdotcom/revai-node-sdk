@@ -35,7 +35,8 @@ describe('streaming-client', () => {
                 true,
                 0,
                 10,
-                'machine'
+                'machine',
+                true
             );
 
             // Act
@@ -51,6 +52,7 @@ describe('streaming-client', () => {
                 `&filter_profanity=${encodeURIComponent(config.filterProfanity)}` +
                 `&remove_disfluencies=${encodeURIComponent(config.removeDisfluencies)}` +
                 `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}` +
+                `&detailed_partials=${encodeURIComponent(config.detailedPartials)}` +
                 `&start_ts=${encodeURIComponent(config.startTs)}` +
                 `&transcriber=${encodeURIComponent(config.transcriber)}`
             );

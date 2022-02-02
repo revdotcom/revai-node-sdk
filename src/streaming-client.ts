@@ -87,13 +87,16 @@ export class RevAiStreamingClient extends EventEmitter {
                 url += `&custom_vocabulary_id=${encodeURIComponent(config.customVocabularyID)}`;
             }
             if (config.filterProfanity) {
-                url += `&filter_profanity=true`;
+                url += '&filter_profanity=true';
             }
             if (config.removeDisfluencies) {
-                url += `&remove_disfluencies=true`;
+                url += '&remove_disfluencies=true';
             }
             if (config.deleteAfterSeconds !== null && config.deleteAfterSeconds !== undefined) {
                 url += `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds.toString())}`;
+            }
+            if (config.detailedPartials) {
+                url += '&detailed_partials=true';
             }
             if (config.startTs !== null && config.startTs !== undefined) {
                 url += `&start_ts=${encodeURIComponent(config.startTs.toString())}`;
