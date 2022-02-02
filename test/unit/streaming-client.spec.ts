@@ -116,9 +116,7 @@ describe('streaming-client', () => {
             // Setup
             const res = sut.start();
             let statusCode = null;
-            sut.on('httpResponse', code => {
-                statusCode = code;
-            });
+            sut.on('httpResponse', code => statusCode = code);
 
             // Act
             mockClient.emit('httpResponse', { statusCode: 401 });
@@ -126,7 +124,6 @@ describe('streaming-client', () => {
             // Assert
             expect(statusCode).toBe(401);
             expect(res.writable).toBe(false);
-            expect(() => { res.write('message'); }).toThrow();
         });
 
         it('adds event listener to connectFailed', () => {
@@ -134,9 +131,7 @@ describe('streaming-client', () => {
             const res = sut.start();
             let connectionError = null;
             let expectedError = new Error('fake error');
-            sut.on('connectFailed', error => {
-                connectionError = error;
-            });
+            sut.on('connectFailed', error => connectionError = error);
 
             // Act
             mockClient.emit('connectFailed', expectedError);
@@ -144,7 +139,6 @@ describe('streaming-client', () => {
             // Assert
             expect(connectionError).toBe(expectedError);
             expect(res.writable).toBe(false);
-            expect(() => { res.write('message'); }).toThrow();
         });
 
         it('adds event listener to connection close', () => {
@@ -168,7 +162,6 @@ describe('streaming-client', () => {
             expect(closeCode).toBe(expectedCloseCode);
             expect(closeReason).toBe(expectedCloseReason);
             expect(res.writable).toBe(false);
-            expect(() => { res.write('message'); }).toThrow();
         });
 
         it('adds event listener to connection error', () => {
@@ -177,9 +170,7 @@ describe('streaming-client', () => {
             const expectedError = new Error('fake connection error');
             const mockConnection = new WebSocketConnectionMock();
             let connectionError = null;
-            sut.on('error', error => {
-                connectionError = error;
-            });
+            sut.on('error', error => connectionError = error);
 
             // Act
             mockClient.emit('connect', mockConnection);
@@ -188,7 +179,6 @@ describe('streaming-client', () => {
             // Assert
             expect(connectionError).toBe(expectedError);
             expect(res.writable).toBe(false);
-            expect(() => { res.write('message'); }).toThrow();
         });
 
         it('emits connected event on connected message from server', () => {
@@ -197,9 +187,7 @@ describe('streaming-client', () => {
             let jobId = null;
             const expectedJobId = '1';
             let mockConnection = new WebSocketConnectionMock();
-            sut.on('connect', response => {
-                jobId = response.id;
-            });
+            sut.on('connect', response => jobId = response.id);
 
             // Act
             mockClient.emit('connect', mockConnection);
@@ -278,7 +266,6 @@ describe('streaming-client', () => {
 
             // Assert
             expect(duplex.writable).toBe(false);
-            expect(() => { duplex.write('message'); }).toThrow();
         });
     });
 
@@ -300,7 +287,6 @@ describe('streaming-client', () => {
 
             // Assert
             expect(duplex.writable).toBe(false);
-            expect(() => { duplex.write('message'); }).toThrow();
         });
     });
 });
