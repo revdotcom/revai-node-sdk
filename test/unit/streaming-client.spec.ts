@@ -113,7 +113,7 @@ describe('streaming-client', () => {
         });
 
         it('adds event listener to httpResponse', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             let statusCode = null;
             sut.on('httpResponse', code => statusCode = code);
@@ -124,10 +124,12 @@ describe('streaming-client', () => {
             // Assert
             expect(statusCode).toBe(401);
             expect(res.writable).toBe(false);
+            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.write('messsage');
         });
 
         it('adds event listener to connectFailed', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             let connectionError = null;
             let expectedError = new Error('fake error');
@@ -139,10 +141,12 @@ describe('streaming-client', () => {
             // Assert
             expect(connectionError).toBe(expectedError);
             expect(res.writable).toBe(false);
+            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.write('messsage');
         });
 
         it('adds event listener to connection close', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             const expectedCloseCode = 1000;
             const expectedCloseReason = 'NormalClosure';
@@ -162,10 +166,12 @@ describe('streaming-client', () => {
             expect(closeCode).toBe(expectedCloseCode);
             expect(closeReason).toBe(expectedCloseReason);
             expect(res.writable).toBe(false);
+            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.write('messsage');
         });
 
         it('adds event listener to connection error', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             const expectedError = new Error('fake connection error');
             const mockConnection = new WebSocketConnectionMock();
@@ -179,10 +185,12 @@ describe('streaming-client', () => {
             // Assert
             expect(connectionError).toBe(expectedError);
             expect(res.writable).toBe(false);
+            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.write('messsage');
         });
 
         it('emits connected event on connected message from server', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             let jobId = null;
             const expectedJobId = '1';
@@ -220,12 +228,14 @@ describe('streaming-client', () => {
             // Assert
             expect(res.read()).toBe(null);
             expect(res.writable).toBe(false);
+            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.write('messsage');
         });
     });
 
     describe('message sending', () => {
         it('sends messages written to input of duplex', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             const mockConnection = new WebSocketConnectionMock();
             mockClient.emit('connect', mockConnection);
@@ -241,7 +251,7 @@ describe('streaming-client', () => {
         });
 
         it('sends strings as text messages', () => {
-            // Setup
+            // Arrange
             const res = sut.start();
             const mockConnection = new WebSocketConnectionMock();
             mockClient.emit('connect', mockConnection);
@@ -258,14 +268,16 @@ describe('streaming-client', () => {
 
     describe('end', () => {
         it('closes off input stream', () => {
-            // Setup
-            let duplex = sut.start();
+            // Arrange
+            const protocol = sut.start();
 
             // Act
             sut.end();
 
             // Assert
-            expect(duplex.writable).toBe(false);
+            expect(protocol.writable).toBe(false);
+            protocol.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            protocol.write('messsage');
         });
     });
 
@@ -279,14 +291,16 @@ describe('streaming-client', () => {
         });
 
         it('closes off input stream', () => {
-            // Setup
-            const duplex = sut.start();
+            // Arrange
+            const protocol = sut.start();
 
             // Act
             sut.unsafeEnd();
 
             // Assert
-            expect(duplex.writable).toBe(false);
+            expect(protocol.writable).toBe(false);
+            protocol.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            protocol.write('messsage');
         });
     });
 });

@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
+    "build-examples": "tsc && cd ./examples && npm install && rm -r ./node_modules/revai-node-sdk/src && cp -r ../dist/src ./node_modules/revai-node-sdk",
     "unit-test": "jest -c ./jest.config.unit.js",
     "integration-test": "jest -c ./jest.config.integration.js && node ./test/integration/test/stream.js",
     "lint": "tslint --project \".\""
