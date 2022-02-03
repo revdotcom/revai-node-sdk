@@ -124,7 +124,7 @@ describe('streaming-client', () => {
             // Assert
             expect(statusCode).toBe(401);
             expect(res.writable).toBe(false);
-            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.on('error', (err: any) => expect(err.message).toBe('write after end'));
             res.write('messsage');
         });
 
@@ -141,7 +141,7 @@ describe('streaming-client', () => {
             // Assert
             expect(connectionError).toBe(expectedError);
             expect(res.writable).toBe(false);
-            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.on('error', (err: any) => expect(err.message).toBe('write after end'));
             res.write('messsage');
         });
 
@@ -166,7 +166,7 @@ describe('streaming-client', () => {
             expect(closeCode).toBe(expectedCloseCode);
             expect(closeReason).toBe(expectedCloseReason);
             expect(res.writable).toBe(false);
-            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.on('error', (err: any) => expect(err.message).toBe('write after end'));
             res.write('messsage');
         });
 
@@ -185,7 +185,7 @@ describe('streaming-client', () => {
             // Assert
             expect(connectionError).toBe(expectedError);
             expect(res.writable).toBe(false);
-            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.on('error', (err: any) => expect(err.message).toBe('write after end'));
             res.write('messsage');
         });
 
@@ -228,7 +228,7 @@ describe('streaming-client', () => {
             // Assert
             expect(res.read()).toBe(null);
             expect(res.writable).toBe(false);
-            res.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            res.on('error', (err: any) => expect(err.message).toBe('write after end'));
             res.write('messsage');
         });
     });
@@ -276,7 +276,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(protocol.writable).toBe(false);
-            protocol.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            protocol.on('error', (err: any) => expect(err.message).toBe('write after end'));
             protocol.write('messsage');
         });
     });
@@ -299,7 +299,7 @@ describe('streaming-client', () => {
 
             // Assert
             expect(protocol.writable).toBe(false);
-            protocol.on('error', (err: any) => expect(err.code).toBe('ERR_STREAM_WRITE_AFTER_END'));
+            protocol.on('error', (err: any) => expect(err.message).toBe('write after end'));
             protocol.write('messsage');
         });
     });
