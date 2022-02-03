@@ -18,7 +18,7 @@ To install the package, run:
 
 ## Support
 
-We support Node 8, 10, and 12.
+We support Node 10, 12, 14, 16 and 17.
 
 ## Usage
 
