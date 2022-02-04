@@ -61,6 +61,7 @@ describe('api-client job submission', () => {
             const options: RevAiJobOptions = {
                 metadata: null,
                 callback_url: null,
+                custom_vocabulary_id: null,
                 custom_vocabularies: null,
                 skip_punctuation: null,
                 skip_diarization: null,
@@ -84,6 +85,7 @@ describe('api-client job submission', () => {
             const options: RevAiJobOptions = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
+                custom_vocabulary_id: null,
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
                 skip_punctuation: true,
                 skip_diarization: true,
