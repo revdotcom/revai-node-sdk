@@ -18,7 +18,7 @@ To install the package, run:
 
 ## Support
 
-We support Node 8, 10, and 12.
+We support Node 8, 10, 12, 14, 16 and 17.
 
 ## Usage
 
@@ -58,7 +58,6 @@ const job = await client.submitJobAudioData(stream, "file.mp3");
 
 You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://www.rev.ai/docs#section/Human-Transcription-(Labs)) option.
 ```javascript
-// Submitting with human transcription options
 const job = await client.submitJobUrl("./path/to/file.mp4", {
     transcriber: "human",
     verbatim: false,
@@ -219,6 +218,7 @@ After cloning and installing required npm modules, you should follow these pract
     2. `build` transpiles the Typescript into Javascript with the options specified in [tsconfig.json](https://github.com/revdotcom/revai-node-sdk/tree/develop/tsconfig.json)
     3. `unit-test` runs our unit tests which live in the [unit test directory](https://github.com/revdotcom/revai-node-sdk/tree/develop/test/unit).
     * Note that `integration-test` is currently configured to work with a certain account specified in our continuous integration build environment, as such for now you can check the automated continuous integration checks to pass the integration tests.
+    4. `build-examples` performs the same action as `build` and in addition, copies the `src` to the `node_modules` directory in `examples` such that you can test examples with local changes.
 2. Add any relevant test logic if you add or modify any features in the source code and check that the tests pass using the scripts mentioned above.
 3. Update the examples provided to illustrate any relevant changes you made, and check that they work properly with your changed local `revai-node-sdk`.
     * One way to use your changed local package in the examples is to copy the output of the `build` script into the `examples/node_modules/revai-node-sdk`. On Unix, this can be simply done with the following command when in the root directory: `$ cp -r dist/src examples/node_modules/revai-node-sdk/`.

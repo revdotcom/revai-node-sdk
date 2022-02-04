@@ -179,8 +179,9 @@ export class RevAiStreamingClient extends EventEmitter {
     }
 
     private closeStreams(): void {
-        if (this.streamsClosed === false) {
+        if (!this.streamsClosed) {
             this.streamsClosed = true;
+            this.protocol.end();
             this.requests.end();
             this.responses.push(null);
         }
