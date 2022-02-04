@@ -9,6 +9,7 @@ export class SessionConfig {
     deleteAfterSeconds?: number;
     startTs?: number;
     transcriber?: string;
+    detailedPartials?: boolean;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -23,6 +24,7 @@ export class SessionConfig {
      * @param startTs (Optional) number of seconds to offset all hypotheses timings
      * @param transcriber (Optional) type of transcriber to use to transcribe the
      *      media file
+     * @param detailedPartials (Optional) whether to return detailed partials
      */
     constructor(
         metadata?: string,
@@ -31,7 +33,8 @@ export class SessionConfig {
         removeDisfluencies?: boolean,
         deleteAfterSeconds?: number,
         startTs?: number,
-        transcriber?: string
+        transcriber?: string,
+        detailedPartials?: boolean
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
@@ -40,5 +43,6 @@ export class SessionConfig {
         this.deleteAfterSeconds = deleteAfterSeconds;
         this.startTs = startTs;
         this.transcriber = transcriber;
+        this.detailedPartials = detailedPartials;
     }
 }
