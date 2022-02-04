@@ -81,26 +81,15 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with options', async () => {
+        it('submit job with media url with custom vocabulary id', async () => {
             const options: RevAiJobOptions = {
-                metadata: 'This is a sample submit jobs option',
-                callback_url: 'https://www.example.com/callback',
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
-                skip_punctuation: true,
-                skip_diarization: true,
-                speaker_channels_count: 1,
-                filter_profanity: true,
-                media_url: mediaUrl,
-                remove_disfluencies: true,
-                delete_after_seconds: 0,
-                language: 'en',
-                transcriber: 'machine_v2'
+                custom_vocabulary_id: 'cvId'
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', options);
+                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
