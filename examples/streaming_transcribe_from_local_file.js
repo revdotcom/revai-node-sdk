@@ -29,13 +29,14 @@ client.on('connect', connectionMessage => {
 
 // Optional config to be provided.
 const sessionConfig = new revai.SessionConfig(
-    'my example metadata',  /* (optional) metadata */
-    null,  /* (optional) custom_vocabulary_id */
-    false, /* (optional) filter_profanity */
-    false, /* (optional) remove_disfluencies */
-    0, /* (optional) delete_after_seconds */
-    0, /* (optional) start_ts */
-    'machine' /* (optional) transcriber */
+    metadata='my example metadata', /* (optional) metadata */
+    customVocabularyID=null,  /* (optional) custom_vocabulary_id */
+    filterProfanity=false,    /* (optional) filter_profanity */
+    removeDisfluencies=false, /* (optional) remove_disfluencies */
+    deleteAfterSeconds=0,     /* (optional) delete_after_seconds */
+    startTs=0,                /* (optional) start_ts */
+    transcriber='machine',    /* (optional) transcriber */
+    detailedPartials=false    /* (optional) detailed_partials */
 );
 
 // Begin streaming session

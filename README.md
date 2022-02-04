@@ -74,7 +74,8 @@ const job = await client.submitJobUrl("./path/to/file.mp4", {
 `job` will contain all the information normally found in a successful response from our
 [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
-If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, `skip_diarization`,`skip_punctuation`, `speaker_channels_count`, `filter_profanity`, `remove_disfluencies`, `delete_after_seconds`, `custom_vocabularies` and `language` as optional parameters. These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+If you want to get fancy, both send job methods can take a `RevAiJobOptions` object which contains fields for `metadata`, `callback_url`, `skip_diarization`,`skip_punctuation`, `speaker_channels_count`, `filter_profanity`, `remove_disfluencies`, `delete_after_seconds`, `custom_vocabularies` and `language` as optional parameters.
+These are also described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
 
 ### Checking your job's status
 
@@ -160,7 +161,8 @@ const audioConfig = new AudioConfig() // Initialize audio configuration for the 
 const streamingClient = new RevAiStreamingClient("ACCESS TOKEN", audioConfig);
 ```
 
-You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting! Look at the [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples) for more details.
+You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting!
+Look at the [examples](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples) for more details.
 
 ```javascript
 streamingClient.on('close', (code, reason) => {
@@ -172,10 +174,11 @@ streamingClient.on('connect', connectionMessage => {
 })
 ```
 
-Now you will be able to start the streaming session by simply calling the `streamingClient.start()` method! You can supply an optional `SessionConfig` object to the function as well in order to provide additional information for that session, such as metadata, or a Custom Vocabulary's ID to be used with your streaming session.
+Now you will be able to start the streaming session by simply calling the `streamingClient.start()` method!
+You can supply an optional `SessionConfig` object to the function as well in order to provide additional information for that session, such as metadata, or a custom vocabulary's ID to be used with your streaming session.
 
 ```javascript
-const sessionConfig = new SessionConfig('my metadata', 'myCustomVocabularyID');
+const sessionConfig = new SessionConfig(metadata='my metadata', customVocabularyID='myCustomVocabularyID');
 
 const stream = streamingClient.start(sessionConfig);
 ```
