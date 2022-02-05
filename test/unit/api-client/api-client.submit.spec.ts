@@ -61,6 +61,7 @@ describe('api-client job submission', () => {
             const options: RevAiJobOptions = {
                 metadata: null,
                 callback_url: null,
+                custom_vocabulary_id: null,
                 custom_vocabularies: null,
                 skip_punctuation: null,
                 skip_diarization: null,
@@ -100,6 +101,19 @@ describe('api-client job submission', () => {
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', options);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url with custom vocabulary id', async () => {
+            const options: RevAiJobOptions = {
+                custom_vocabulary_id: 'cvId'
+            };
+
+            const job = await sut.submitJobUrl(mediaUrl, options);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });

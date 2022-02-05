@@ -16,6 +16,7 @@ export interface RevAiJobOptions {
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
     speaker_channels_count?: number;
+    custom_vocabulary_id?: string;
     custom_vocabularies?: CustomVocabulary[];
     filter_profanity?: boolean;
     remove_disfluencies?: boolean;
