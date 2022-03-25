@@ -7,7 +7,7 @@ export interface SegmentToTranscribe {
 
 /**
  * Options that can used when submitting Rev.ai speech-to-text job.
- * See https://www.rev.ai/docs#operation/SubmitTranscriptionJob for more details.
+ * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob for more details.
  */
 export interface RevAiJobOptions {
     media_url?: string;

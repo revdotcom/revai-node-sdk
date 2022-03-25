@@ -31,7 +31,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#tag/Account
+     * See https://docs.rev.ai/api/asynchronous/reference/#tag/Account
      * Get information associated with the account whose access token is used by this client
      * @returns Account object
      */
@@ -40,7 +40,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetJobById
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetJobById
      * Get information about a specific job
      * @param id Id of job whose details are to be retrieved
      * @returns Job details
@@ -50,7 +50,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetListOfJobs
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetListOfJobs
      * Get a list of transcription jobs submitted within the last week in reverse chronological order
      * (last submitted first) up to the provided limit number of jobs per call. Pagination is supported via passing
      * the last job id from previous call into starting_after.
@@ -73,7 +73,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/DeleteJobById
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/DeleteJobById
      * Delete a specific transcription job.
      * All data related to the job, such as input media and transcript, will be permanently deleted.
      * A job can only by deleted once it's completed.
@@ -84,7 +84,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * Submit media given a URL for transcription. The audio data is downloaded from the URL.
      * @param mediaUrl Web location of media to be downloaded and transcribed
      * @param options (optional) Options submitted with the job, see RevAiJobOptions object
@@ -101,12 +101,12 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * Submit audio data for transcription.
      * @param audioData Audio data to be transcribed.
      * @param filename (optional) Name of file associated with audio.
      * @param options (optional) Options submitted with the job, see RevAiJobOptions object
-     *     or https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     *     or https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * @returns Details of submitted job
      */
     async submitJobAudioData(
@@ -126,11 +126,11 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * Send local file for transcription.
      * @param filepath Path to local file to be transcribed. Assumes the process has access to read this file.
      * @param options (optional) Options submitted with the job, see RevAiJobOptions object
-     *     or https://www.rev.ai/docs#operation/SubmitTranscriptionJob
+     *     or https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * @returns Details of submitted job
      */
     async submitJobLocalFile(filepath: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
@@ -146,7 +146,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetTranscriptById
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a javascript object, see the RevAiApiTranscript object.
      * @param id Id of job to retrieve the transcript of
      * @returns Transcript of job as a javascript object.
@@ -157,7 +157,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetTranscriptById
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a stream of JSON.
      * Use for large transcripts or transcripts meant to be written directly to file.
      * @param id Id of job to retrieve transcript of
@@ -169,7 +169,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetTranscriptById
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as plain text.
      * @param id Id of job to retrieve transcript of
      * @returns Transcript of the requested job as a readable text string
@@ -180,7 +180,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetTranscriptById
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a stream of plain text.
      * Use for large transcripts or transcripts meant to be written directly to file.
      * @param id Id of job to retrieve transcript of
@@ -192,7 +192,7 @@ export class RevAiApiClient {
     }
 
     /**
-     * See https://www.rev.ai/docs#operation/GetCaptions
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetCaptions
      * Get captions created from the transcript of a job.
      * Captions are only retrievable in a stream and can be obtained in either SRT or VTT format.
      * @param id Id of job to get captions of

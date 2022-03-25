@@ -4,8 +4,8 @@ import { CustomVocabularyInformation } from './models/CustomVocabularyInformatio
 import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
 
 /**
-* Client to submit and retreive status of custom vocabularies
-* from the rev.ai api. Check rev.ai/docs for more information.
+* Client to submit and retrieve status of custom vocabularies
+* from the rev.ai api. Check https://docs.rev.ai/api/custom-vocabulary/ for more information.
 */
 export class RevAiCustomVocabulariesClient {
     apiHandler: ApiRequestHandler;
@@ -22,11 +22,11 @@ export class RevAiCustomVocabulariesClient {
     }
 
     /**
-     * See https://www.rev.ai/docs/streaming#operation/SubmitCustomVocabulary
+     * See https://docs.rev.ai/api/custom-vocabulary/reference/#operation/SubmitCustomVocabulary
      * Submit custom vocabularies to be built. This is primarily
      * useful for using the custom vocabulary with streaming jobs.
      * @param customVocabularies array of CustomVocabulary objects.
-     *                           For more information visit rev.ai/docs
+     *                           For more information visit https://docs.rev.ai/api/custom-vocabulary/reference/#operation/SubmitCustomVocabulary!path=custom_vocabularies&t=request
      * @param callbackUrl (optional) string url to be called when custom
      *                    vocabulary submission is completed
      * @param metadata (optional) string to include with this custom
@@ -60,10 +60,10 @@ export class RevAiCustomVocabulariesClient {
     }
 
     /**
-     * See https://www.rev.ai/docs/streaming#operation/GetCustomVocabulary
-     * Retreive the information of a submitted custom vocabulary.
+     * See https://docs.rev.ai/api/custom-vocabulary/reference/#operation/GetCustomVocabulary
+     * Retrieve the information of a submitted custom vocabulary.
      * @param id string id of the custom vocabulary submission whose
-     *           information is to be retreived.
+     *           information is to be retrieved.
      * @returns Custom vocabulary information
      */
     async getCustomVocabularyInformation(id: string): Promise<CustomVocabularyInformation> {
@@ -75,7 +75,7 @@ export class RevAiCustomVocabulariesClient {
     }
 
     /**
-     * See https://www.rev.ai/docs/streaming#operation/GetCustomVocabularies
+     * See https://docs.rev.ai/api/custom-vocabulary/reference/#operation/GetCustomVocabularies
      * Gets a list of most recent custom vocabularies' processing information
      * @param limit (optional) maximum number of jobs to retrieve, default is 100, maximum is 1000
      * @returns List of custom vocabulary informations
@@ -86,7 +86,7 @@ export class RevAiCustomVocabulariesClient {
     }
 
     /**
-     * See https://www.rev.ai/docs/streaming#operation/DeleteCustomVocabulary
+     * See https://docs.rev.ai/api/custom-vocabulary/reference/#operation/DeleteCustomVocabulary
      * Delete a submitted custom vocabulary.
      * @param id string id of the custom vocabulary to be deleted
      */
