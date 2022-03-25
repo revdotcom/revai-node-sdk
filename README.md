@@ -4,7 +4,7 @@
 
 ## Documentation
 
-See the [API docs](https://www.rev.ai/docs) for more information about the API.
+See the [API docs](https://docs.rev.ai) for more information about the API.
 
 ## Examples
 
@@ -56,7 +56,7 @@ const stream = fs.createReadStream("./path/to/file.mp3");
 const job = await client.submitJobAudioData(stream, "file.mp3");
 ```
 
-You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://www.rev.ai/docs#section/Human-Transcription-(Labs)) option.
+You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://docs.rev.ai/api/asynchronous/transcribers/#human-transcription) option.
 ```javascript
 const job = await client.submitJobUrl("./path/to/file.mp4", {
     transcriber: "human",
@@ -71,10 +71,10 @@ const job = await client.submitJobUrl("./path/to/file.mp4", {
 ```
 
 `job` will contain all the information normally found in a successful response from our
-[Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+[Submit Job](https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob) endpoint.
 
 If you want to get fancy, both send job methods can take a `RevAiJobOptions` object containing optional parameters.
-These are described in the request body of the [Submit Job](https://www.rev.ai/docs#operation/SubmitTranscriptionJob) endpoint.
+These are described in the request body of the [Submit Job](https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob) endpoint.
 
 ### Checking your job's status
 
@@ -85,7 +85,7 @@ const jobDetails = await client.getJobDetails(job.id);
 ```
 
 `jobDetails` will contain all information normally found in a successful response from
-our [Get Job](https://www.rev.ai/docs#operation/GetJobById) endpoint
+our [Get Job](https://docs.rev.ai/api/asynchronous/reference/#operation/GetJobById) endpoint
 
 ### Checking multiple files
 
@@ -102,7 +102,7 @@ const jobs = await client.getListOfJobs(undefined, 'Umx5c6F7pH7r');
 ```
 
 `jobs` will contain a list of job details having all information normally found in a successful response
-from our [Get List of Jobs](https://www.rev.ai/docs#operation/GetListOfJobs) endpoint
+from our [Get List of Jobs](https://docs.rev.ai/api/asynchronous/reference/#operation/GetListOfJobs) endpoint
 
 ### Deleting a job
 
@@ -128,7 +128,7 @@ const transcriptText = await client.getTranscriptText(job.id);
 const transcriptObject = await client.getTranscriptObject(job.id);
 ```
 
-The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://www.rev.ai/docs#operation/GetTranscriptById) endpoint when using the json response schema.
+The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById) endpoint when using the json response schema.
 
 Any of these outputs can we retrieved as a stream for easy file writing:
 

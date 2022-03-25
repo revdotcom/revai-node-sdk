@@ -49,7 +49,7 @@ const token = require('./config/config.json').access_token;
     /**
      * Waits 5 seconds between each status check to see if job is complete.
      * note: polling for job status is not recommended in a non-testing environment.
-     * Use the callback_url option (see: https://www.rev.ai/docs#section/Node-SDK)
+     * Use the callback_url option (see: https://docs.rev.ai/sdk/node/)
      * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)

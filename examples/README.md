@@ -5,7 +5,7 @@ In the `config/` directory,  rename `sample.config.json` to `config.json`<br>
 Open `config.json` and paste your access token where specified.
 
 ## Asynchronous Examples
-View the [asynchronous API documentation](https://www.rev.ai/docs)
+View the [asynchronous API documentation](https://docs.rev.ai/api/asynchronous/)
 ### Transcription from a Local File
 View the [source code](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples/async_transcribe_local_media_file.js).<br>
 **Run:**<br>
@@ -24,7 +24,7 @@ View the [source code](https://github.com/revdotcom/revai-node-sdk/tree/develop/
 `node async_get_job_details.js`
 
 ## Streaming Examples
-View the [streaming API documentation](https://www.rev.ai/docs/streaming)
+View the [streaming API documentation](https://docs.rev.ai/api/streaming/)
 ### Streaming from a Local File
 View the [source code](https://github.com/revdotcom/revai-node-sdk/tree/develop/examples/streaming_transcribe_from_local_file.js).<br>
 **Run:**<br>
