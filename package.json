@@ -1,7 +1,7 @@
 {
   "name": "revai-node-sdk",
   "version": "3.1.0",
-  "description": "Rev.ai makes speech applications easy to build!",
+  "description": "Rev AI makes speech applications easy to build!",
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
@@ -16,6 +16,7 @@
   },
   "keywords": [
     "rev_ai",
+    "Rev AI",
     "speech",
     "to",
     "text",

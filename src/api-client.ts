@@ -17,7 +17,7 @@ const enum TranscriptContentTypes {
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
- * Client which handles connection to the rev.ai API.
+ * Client which handles connection to the Rev AI API.
  */
 export class RevAiApiClient {
     apiHandler: ApiRequestHandler;
