@@ -1,4 +1,4 @@
-# Rev.ai Node SDK Examples
+# Rev AI Node SDK Examples
 ### Setup:
 From the `examples/` directory run `npm install`<br>
 In the `config/` directory,  rename `sample.config.json` to `config.json`<br>

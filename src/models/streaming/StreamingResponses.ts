@@ -1,14 +1,14 @@
 import { Element } from '../RevAiApiTranscript';
 
 /**
- * Represents a response from the rev.ai streaming service
+ * Represents a response from the Rev AI streaming service
  */
 export interface StreamingResponse {
     type: string;
 }
 
 /**
- * Represents a hypothesis response from the rev.ai streaming service. Both final and partial.
+ * Represents a hypothesis response from the Rev AI streaming service. Both final and partial.
  */
 export interface StreamingHypothesis extends StreamingResponse {
     ts?: number;
@@ -17,7 +17,7 @@ export interface StreamingHypothesis extends StreamingResponse {
 }
 
 /**
- * Represents a connected message from the rev.ai streaming service. Id is the id of the created job.
+ * Represents a connected message from the Rev AI streaming service. Id is the id of the created job.
  */
 export interface StreamingConnected extends StreamingResponse {
     id: string;

@@ -1,4 +1,4 @@
-# Rev.ai Node SDK
+# Rev AI Node SDK
 
 ![CI](https://github.com/revdotcom/revai-node-sdk/workflows/CI/badge.svg)
 
@@ -212,7 +212,7 @@ const customVocabularyInformations = await client.getListOfCustomVocabularyInfor
 await client.deleteCustomVocabulary(customVocabularySubmission.id)
 ```
 
-# For Rev.ai Node SDK Developers
+# For Rev AI Node SDK Developers
 
 After cloning and installing required npm modules, you should follow these practices when developing:
 

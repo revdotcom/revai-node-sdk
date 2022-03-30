@@ -5,7 +5,7 @@ import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
 
 /**
 * Client to submit and retrieve status of custom vocabularies
-* from the rev.ai api. Check https://docs.rev.ai/api/custom-vocabulary/ for more information.
+* from the Rev AI api. Check https://docs.rev.ai/api/custom-vocabulary/ for more information.
 */
 export class RevAiCustomVocabulariesClient {
     apiHandler: ApiRequestHandler;

@@ -16,7 +16,7 @@ import {
 const sdkVersion = require('../package.json').version;
 
 /**
- * Client which handles a streaming connection to the Rev.ai API.
+ * Client which handles a streaming connection to the Rev AI API.
  * @event httpResponse emitted when the client fails to start a websocket connection and
  *      receives an http response. Event contains the http status code of the response.
  * @event connectFailed emitted when the client fails to begin a websocket connection and
@@ -41,7 +41,7 @@ export class RevAiStreamingClient extends EventEmitter {
     /**
      * @param accessToken Access token associated with the user's account
      * @param config Configuration of the audio the user will send from this client
-     * @param version (optional) Version of the Rev.ai API the user wants to use
+     * @param version (optional) Version of the Rev AI API the user wants to use
      */
     constructor(accessToken: string, config: AudioConfig, version = 'v1') {
         super();
