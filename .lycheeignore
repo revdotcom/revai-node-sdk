@@ -1,5 +1,8 @@
 # API Domain stubs used as url partials in the api clients
 api.rev.ai
+https:// + ${configHelper.getBaseUrl()} + /speechtotext/v1/
+wss:// + ${configHelper.getBaseUrl()} + /speechtotext/v1/stream
+https:// + ${configHelper.getBaseUrl()} + /speechtotext/v1/vocabularies
 
 # example domains used in unit tests
 www.example.com

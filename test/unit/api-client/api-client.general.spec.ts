@@ -25,7 +25,7 @@ describe('api-client', () => {
 
     describe('getAccount', () => {
         it('get account email and balance', async () => {
-            const accountEmail = 'test@rev.com';
+            const accountEmail = 'example.com';
             const balanceSeconds = 300;
             const data = { email: accountEmail, balance_seconds: balanceSeconds};
             mockMakeApiRequest.mockResolvedValueOnce(data);
