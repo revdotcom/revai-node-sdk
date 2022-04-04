@@ -11,7 +11,7 @@ describe('api-client job submission', () => {
     let mockMakeApiRequest: jest.Mock;
 
     const jobId = 'Umx5c6F7pH7r';
-    const mediaUrl = 'https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3';
+    const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
     const jobDetails = {
         id: jobId,
         status: 'in_progress',
