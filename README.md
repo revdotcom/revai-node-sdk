@@ -29,7 +29,7 @@ given Access Token:
 ```javascript
 import { RevAiApiClient } from 'revai-node-sdk';
 
-// Initialize your client with your revai access token
+// Initialize your client with your Rev AI access token
 const accessToken = "Your Access Token";
 const client = new RevAiApiClient(accessToken);
 ```
