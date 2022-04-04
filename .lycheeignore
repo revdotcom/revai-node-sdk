@@ -1,6 +1,9 @@
 # API Domain stubs used as url partials in the api clients
 api.rev.ai
-getBaseUrl
+getbaseurl
 
 # example domains used in unit tests
 www.example.com
+
+# emails used in unit tests
+^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$

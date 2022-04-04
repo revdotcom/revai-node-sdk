@@ -43,7 +43,7 @@ export const setupFakeApiError = (
 export const setupFakeInvalidStateError = (): AxiosError => {
     let err = setupFakeApiError(409,
         'Job is in invalid state',
-        'https://www.example.com/api/speech/v1/errors/invalid-job-state',
+        'https://www.rev.ai/api/v1/errors/invalid-job-state',
         'Job is in invalid state to obtain the transcript'
     );
     err.response.data.allowed_values = ['transcribed'];
@@ -54,7 +54,7 @@ export const setupFakeInvalidStateError = (): AxiosError => {
 export const setupFakeInsufficientCreditsError = (): AxiosError => {
     let err = setupFakeApiError(403,
         'You do not have enough credits',
-        'https://www.example.com/api/speech/v1/errors/out-of-credit',
+        'https://www.rev.ai/api/v1/errors/out-of-credit',
         'You only have 60 seconds remaining'
     );
     err.response.data.current_balance = 60;
@@ -64,7 +64,7 @@ export const setupFakeInsufficientCreditsError = (): AxiosError => {
 export const setupFakeInvalidParametersError = (): AxiosError => {
     let err = setupFakeApiError(400,
         "Your request parameters didn't validate",
-        'https://www.example.com/api/speech/v1/errors/invalid-parameters'
+        'https://www.rev.ai/api/v1/errors/invalid-parameters'
     );
     err.response.data.parameters = {
         'media_url': [
