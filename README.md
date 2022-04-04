@@ -194,7 +194,7 @@ For more information, check out our [examples](https://github.com/revdotcom/reva
 ```javascript
 import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
 
-// Initialize your client with your revai access token
+// Initialize your client with your Rev AI access token
 const accessToken = "Your Access Token";
 const client = new RevAiCustomVocabulariesClient(accessToken);
 

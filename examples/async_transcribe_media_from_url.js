@@ -3,7 +3,7 @@ const fs = require('fs');
 const token = require('./config/config.json').access_token;
 
 (async () => {
-    // Initialize your client with your revai access token
+    // Initialize your client with your Rev AI access token
     var client = new revai.RevAiApiClient(token);
 
     // Get account details
