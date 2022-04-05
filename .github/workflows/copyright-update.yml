@@ -1,8 +1,6 @@
 name: Update copyright year(s) in license file
 
 on:
-  push:
-    branches: [ feature/AISDK-188 ]
   workflow_dispatch:
   schedule:
     - cron: "0 3 1 1 *" # 03:00 AM on January 1
@@ -17,4 +15,4 @@ jobs:
       - uses: FantasticFiasco/action-update-license-year@771ff9afdc55b09e1fb649cf03e312d0cf86b4a6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          transform: (?<from>\d{4})?-?(\d{4})?
+          transform: (?<=my own copyright )(?<from>\d{4})?-?(\d{4})?
