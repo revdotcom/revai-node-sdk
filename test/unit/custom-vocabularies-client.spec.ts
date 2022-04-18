@@ -11,9 +11,12 @@ describe('custom-vocabularies-client', () => {
     ];
     const callbackUrl = 'example.com';
     const metadata = 'my metadata';
+    const notificationConfig = {
+        url: callbackUrl
+    }
     const customVocabularyOptions = {
         custom_vocabularies: customVocabularies,
-        callback_url: callbackUrl,
+        callback_url: notificationConfig,
         metadata: metadata
     };
 
@@ -37,6 +40,7 @@ describe('custom-vocabularies-client', () => {
             const customVocabularyInformation = await sut.submitCustomVocabularies(
                 customVocabularies,
                 callbackUrl,
+                null,
                 metadata
             );
 

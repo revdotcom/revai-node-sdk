@@ -27,15 +27,15 @@ export class RevAiCustomVocabulariesClient {
      * useful for using the custom vocabulary with streaming jobs.
      * @param customVocabularies array of CustomVocabulary objects.
      *                           For more information visit https://docs.rev.ai/api/custom-vocabulary/reference/#operation/SubmitCustomVocabulary!path=custom_vocabularies&t=request
-     * @param callbackUrl (optional) string url to be called when custom
-     *                    vocabulary submission is completed
-     * @param metadata (optional) string to include with this custom
-     *                 vocabulary submission
+     * @param notificationUrl (optional) string url to be called when custom vocabulary submission is completed
+     * @param notificationAuth (optional) authentication header to use when calling the notification url
+     * @param metadata (optional) string to include with this custom vocabulary submission
      * @returns Submitted custom vocabulary information
      */
     async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
-        callbackUrl: string = undefined,
+        notificationUrl: string = undefined,
+        notificationAuth: string = undefined,
         metadata: string = undefined
     ): Promise<CustomVocabularyInformation> {
         if (!customVocabularies) {
@@ -43,8 +43,11 @@ export class RevAiCustomVocabulariesClient {
         }
 
         let options: CustomVocabularyOptions = {custom_vocabularies: customVocabularies};
-        if (callbackUrl) {
-            options.callback_url = callbackUrl;
+        if (notificationUrl) {
+            options.notification_config = { 
+                url: notificationUrl,
+                auth_headers: notificationAuth
+            };
         }
         if (metadata) {
             options.metadata = metadata;
