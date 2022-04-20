@@ -1,4 +1,5 @@
 import { ApiRequestHandler } from './api-request-handler';
+import { CustomerUrlData } from './models/CustomerUrlData';
 import { CustomVocabulary } from './models/CustomVocabulary';
 import { CustomVocabularyInformation } from './models/CustomVocabularyInformation';
 import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
@@ -34,8 +35,8 @@ export class RevAiCustomVocabulariesClient {
      */
     async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
-        notificationUrl: string = undefined,
-        notificationAuth: string = undefined,
+        callbackUrl: string = undefined,
+        notificationConfig: CustomerUrlData = undefined,
         metadata: string = undefined
     ): Promise<CustomVocabularyInformation> {
         if (!customVocabularies) {
@@ -43,11 +44,11 @@ export class RevAiCustomVocabulariesClient {
         }
 
         let options: CustomVocabularyOptions = {custom_vocabularies: customVocabularies};
-        if (notificationUrl) {
-            options.notification_config = { 
-                url: notificationUrl,
-                auth_headers: notificationAuth
-            };
+        if (callbackUrl) {
+            options.callback_url = callbackUrl;
+        }
+        if (notificationConfig) {
+            options.notification_config = notificationConfig;
         }
         if (metadata) {
             options.metadata = metadata;

@@ -6,9 +6,9 @@ import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
+import { CustomerUrlData } from './models/CustomerUrlData';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
-import { CustomerUrlData } from './models/CustomerUrlData';
 
 
 const enum TranscriptContentTypes {
@@ -88,10 +88,28 @@ export class RevAiApiClient {
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * Submit media given a URL for transcription. The audio data is downloaded from the URL.
+     * @param mediaUrl Web location of media to be downloaded and transcribed
+     * @param options Options submitted with the job: see RevAiJobOptions object
+     * @returns Details of the submitted job
+     * @deprecated Use submitJob and provide a source config to the job options
+     */
+    async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
+        options = this.filterNullOptions({
+            media_url: mediaUrl,
+            ...(options || {})
+        });
+
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+            { 'Content-Type': 'application/json' }, 'json', options);
+    }
+
+        /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
+     * Submit a job with a remote source URL for transcription. The audio data is downloaded from the URL.
      * @param options Options submitted with the job: see RevAiJobOptions object
      * @returns Details of the submitted job
      */
-    async submitJobUrl(options?: RevAiJobOptions): Promise<RevAiApiJob> {
+    async submitJob(options?: RevAiJobOptions): Promise<RevAiApiJob> {
         options = this.filterNullOptions({
             ...(options || {})
         });

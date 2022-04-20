@@ -11,8 +11,10 @@ export interface SegmentToTranscribe {
  * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob for more details.
  */
 export interface RevAiJobOptions {
+    media_url?: string;
     source_config?: CustomerUrlData;
     metadata?: string;
+    callback_url?: string;
     notification_config?: CustomerUrlData;
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
