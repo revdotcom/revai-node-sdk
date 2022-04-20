@@ -5,7 +5,6 @@ import { ApiRequestHandler } from '../../../src/api-request-handler';
 import { RevAiJobOptions } from '../../../src/models/async/RevAiJobOptions';
 import { CustomerUrlData } from '../../../src/models/CustomerUrlData';
 
-
 jest.mock('../../../src/api-request-handler');
 
 describe('api-client job submission', () => {
@@ -15,7 +14,16 @@ describe('api-client job submission', () => {
     const jobId = 'Umx5c6F7pH7r';
     const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
     const callbackUrl = 'https://www.example.com/callback';
-    const authHeaders = 'Authentication: Bearer <token>';
+    const sourceAuth = 'source auth headers';
+    const callbackAuth = 'callback auth headers';
+    const sourceConfig : CustomerUrlData = {
+        url: mediaUrl,
+        auth_headers: sourceAuth
+    }
+    const notificationConfig : CustomerUrlData = {
+        url: callbackUrl,
+        auth_headers: callbackAuth
+    }
     const jobDetails = {
         id: jobId,
         status: 'in_progress',
@@ -34,10 +42,37 @@ describe('api-client job submission', () => {
     });
 
     describe('submitJobUrl', () => {
-        it('submit job url with legacy options', async () => {
+        it('submit job with media url without options', async () => {
+            const job = await sut.submitJobUrl(mediaUrl);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url with null options', async () => {
+            const job = await sut.submitJobUrl(mediaUrl, null);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url with empty options', async () => {
+            const job = await sut.submitJobUrl(mediaUrl, {});
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url with all options null', async () => {
             const options: RevAiJobOptions = {
-                callback_url: callbackUrl,
                 metadata: null,
+                callback_url: null,
                 custom_vocabulary_id: null,
                 custom_vocabularies: null,
                 skip_punctuation: null,
@@ -53,29 +88,21 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl});
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job url with all options', async () => {
-            const sourceConfig: CustomerUrlData = {
-                url: mediaUrl,
-                auth_headers: authHeaders
-            }
-            const notificationConfig: CustomerUrlData = {
-                url: callbackUrl,
-                auth_headers: authHeaders
-            }
+        it('submit job with media url with options', async () => {
             const options: RevAiJobOptions = {
                 metadata: 'This is a sample submit jobs option',
-                media_url: mediaUrl,
-                callback_url: callbackUrl,
+                callback_url: 'https://www.example.com/callback',
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
                 filter_profanity: true,
+                media_url: mediaUrl,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
                 language: 'en',
@@ -91,33 +118,22 @@ describe('api-client job submission', () => {
         });
 
         it('submit job with media url with custom vocabulary id', async () => {
-            const sourceConfig: CustomerUrlData = {
-                url: mediaUrl
-            }
             const options: RevAiJobOptions = {
-                source_config: sourceConfig,
                 custom_vocabulary_id: 'cvId'
             };
 
-            const job = await sut.submitJobUrl(options);
+            const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { ...options, sourceConfig: {mediaUrl} });
+                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
         it('submit human transcription job with options', async () => {
-            const sourceConfig: CustomerUrlData = {
-                url: mediaUrl
-            }
-            const notificationConfig: CustomerUrlData = {
-                url: callbackUrl
-            }
             const options: RevAiJobOptions = {
-                source_config: sourceConfig,
                 metadata: 'This is a sample submit jobs option',
-                notification_config: notificationConfig,
+                callback_url: 'https://www.example.com/callback',
                 transcriber: 'human',
                 verbatim: true,
                 rush: true,
@@ -130,10 +146,64 @@ describe('api-client job submission', () => {
                 }]
             };
 
-            const job = await sut.submitJobUrl(options);
+            const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { ...options, sourceConfig: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+    });
+
+    describe('submitJob', () => {
+        it('submit job with legacy options', async () => {
+            const options: RevAiJobOptions = {
+                metadata: null,
+                media_url: mediaUrl,
+                callback_url: callbackUrl,
+                custom_vocabulary_id: null,
+                custom_vocabularies: null,
+                skip_punctuation: null,
+                skip_diarization: null,
+                speaker_channels_count: null,
+                filter_profanity: null,
+                remove_disfluencies: null,
+                delete_after_seconds: null,
+                language: null,
+                transcriber: null
+            };
+
+            const job = await sut.submitJob(options);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json',
+                { media_url: mediaUrl, callbackUrl: callbackUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+
+        it('submit job with with authentication support options', async () => {
+            const options: RevAiJobOptions = {
+                source_config: sourceConfig,
+                metadata: 'This is a sample submit jobs option',
+                notification_config: notificationConfig,
+                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                skip_punctuation: true,
+                skip_diarization: true,
+                speaker_channels_count: 1,
+                filter_profanity: true,
+                media_url: mediaUrl,
+                remove_disfluencies: true,
+                delete_after_seconds: 0,
+                language: 'en',
+                transcriber: 'machine_v2'
+            };
+
+            const job = await sut.submitJobUrl(mediaUrl, options);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', options);
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
