@@ -193,7 +193,6 @@ describe('api-client job submission', () => {
                 skip_diarization: true,
                 speaker_channels_count: 1,
                 filter_profanity: true,
-                media_url: mediaUrl,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
                 language: 'en',
