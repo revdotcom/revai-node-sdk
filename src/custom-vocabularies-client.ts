@@ -36,8 +36,8 @@ export class RevAiCustomVocabulariesClient {
     async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
         callbackUrl: string = undefined,
-        notificationConfig: CustomerUrlData = undefined,
-        metadata: string = undefined
+        metadata: string = undefined,
+        notificationConfig: CustomerUrlData = undefined
     ): Promise<CustomVocabularyInformation> {
         if (!customVocabularies) {
             throw Error('customVocabularies is a required parameter');

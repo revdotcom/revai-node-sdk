@@ -34,16 +34,10 @@ describe('api-client job submission', () => {
     });
 
     describe('submitJobUrl', () => {
-        it('submit job with only source_config option', async () => {
-
-            const sourceConfig: CustomerUrlData = {
-                url: mediaUrl,
-                auth_headers: authHeaders
-            }
+        it('submit job url with legacy options', async () => {
             const options: RevAiJobOptions = {
-                source_config: sourceConfig,
+                callback_url: callbackUrl,
                 metadata: null,
-                notification_config: null,
                 custom_vocabulary_id: null,
                 custom_vocabularies: null,
                 skip_punctuation: null,
@@ -56,15 +50,15 @@ describe('api-client job submission', () => {
                 transcriber: null
             };
 
-            const job = await sut.submitJobUrl(options);
+            const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { sourceConfig: { mediaUrl, authHeaders} });
+                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl});
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with all options', async () => {
+        it('submit job url with all options', async () => {
             const sourceConfig: CustomerUrlData = {
                 url: mediaUrl,
                 auth_headers: authHeaders
@@ -75,8 +69,8 @@ describe('api-client job submission', () => {
             }
             const options: RevAiJobOptions = {
                 metadata: 'This is a sample submit jobs option',
-                source_config: sourceConfig,
-                notification_config: notificationConfig,
+                media_url: mediaUrl,
+                callback_url: callbackUrl,
                 custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
                 skip_punctuation: true,
                 skip_diarization: true,
@@ -88,7 +82,7 @@ describe('api-client job submission', () => {
                 transcriber: 'machine_v2'
             };
 
-            const job = await sut.submitJobUrl(options);
+            const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', options);

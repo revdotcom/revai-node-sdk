@@ -10,16 +10,23 @@ describe('custom-vocabularies-client', () => {
         { phrases: ['my', 'test', 'custom', 'vocabularies'] }
     ];
     const callbackUrl = 'example.com';
+    const callbackAuth = "auth header"
     const metadata = 'my metadata';
     const notificationConfig = {
-        url: callbackUrl
+        url: callbackUrl,
+        auth_headers: callbackAuth
     }
-    const customVocabularyOptions = {
+    const customVocabularyLegacyOptions = {
         custom_vocabularies: customVocabularies,
-        callback_url: notificationConfig,
+        callback_url: callbackUrl,
         metadata: metadata
     };
 
+    const customVocabularyOptions = {
+        custom_vocabularies: customVocabularies,
+        notification_config: notificationConfig,
+        metadata: metadata
+    };
     const customVocabularyId = 'myUniqueID';
     const customVocabularyDetails = {
         id: customVocabularyId,
@@ -32,16 +39,39 @@ describe('custom-vocabularies-client', () => {
         sut = new RevAiCustomVocabulariesClient('testtoken');
     });
 
-    describe('submitCustomVocabularies', () => {
-        it('submit custom vocabularies', async () => {
+    describe('submitCustomVocabulariesCallbackOnly', () => {
+        it('submit custom vocabularies with the callback url', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
 
             const customVocabularyInformation = await sut.submitCustomVocabularies(
                 customVocabularies,
                 callbackUrl,
-                null,
                 metadata
+            );
+
+            expect(mockHandler.makeApiRequest).toBeCalledWith(
+                'post',
+                '',
+                { 'Content-Type': 'application/json' },
+                'json',
+                customVocabularyLegacyOptions
+            );
+            expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
+            expect(customVocabularyInformation).toEqual(customVocabularyDetails);
+        });
+    });
+
+    describe('submitCustomVocabulariesNotificationConfigOnly', () => {
+        it('submit custom vocabularies with the notification config', async () => {
+            const mockHandler = ApiRequestHandler.mock.instances[0];
+            mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
+
+            const customVocabularyInformation = await sut.submitCustomVocabularies(
+                customVocabularies,
+                null,
+                metadata,
+                notificationConfig
             );
 
             expect(mockHandler.makeApiRequest).toBeCalledWith(
