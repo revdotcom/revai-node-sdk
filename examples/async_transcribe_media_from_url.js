@@ -11,9 +11,17 @@ const token = require('./config/config.json').access_token;
     console.log(`Account: ${account.email}`);
     console.log(`Credits remaining: ${account.balance_seconds} seconds`);
 
+    // Configure your source media url
+    // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on adding auth headers
+    var sourceConfig = CustomerUrlData('https://www.rev.ai/FTC_Sample_1.mp3');
+    // Optionally configure a callback url, which can also take auth headers
+    var notificationConfig = CustomerUrlData('https://jsonplaceholder.typicode.com/posts');
+
+
     const jobOptions = {
+        source_config: sourceConfig,
         metadata: 'InternalOrderNumber=123456789',
-        callback_url: 'https://jsonplaceholder.typicode.com/posts',
+        notification_config: notificationConfig,
         skip_diarization: false,
         skip_punctuation: false,
         speaker_channels_count: null, // Optional value available with some languages
@@ -34,7 +42,7 @@ const token = require('./config/config.json').access_token;
     };
 
     // Media may be submitted from a url
-    var job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', jobOptions);
+    var job = await client.submitJob(jobOptions);
 
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
