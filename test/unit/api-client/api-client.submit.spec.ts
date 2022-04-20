@@ -177,7 +177,7 @@ describe('api-client job submission', () => {
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json',
-                { media_url: mediaUrl, callbackUrl: callbackUrl });
+                { media_url: mediaUrl, callback_url: callbackUrl });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
