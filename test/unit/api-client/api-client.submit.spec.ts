@@ -199,7 +199,7 @@ describe('api-client job submission', () => {
                 transcriber: 'machine_v2'
             };
 
-            const job = await sut.submitJobUrl(mediaUrl, options);
+            const job = await sut.submitJob(options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', options);
