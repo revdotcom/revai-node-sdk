@@ -28,9 +28,9 @@ export class RevAiCustomVocabulariesClient {
      * useful for using the custom vocabulary with streaming jobs.
      * @param customVocabularies array of CustomVocabulary objects.
      *                           For more information visit https://docs.rev.ai/api/custom-vocabulary/reference/#operation/SubmitCustomVocabulary!path=custom_vocabularies&t=request
-     * @param notificationUrl (optional) string url to be called when custom vocabulary submission is completed
-     * @param notificationAuth (optional) authentication header to use when calling the notification url
+     * @param callbackUrl (optional) string url to be called when custom vocabulary submission is completed
      * @param metadata (optional) string to include with this custom vocabulary submission
+     * @param notificationConfig (optional) Object including notification url and authentication header to use when calling the url
      * @returns Submitted custom vocabulary information
      */
     async submitCustomVocabularies(
