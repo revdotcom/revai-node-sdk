@@ -10,7 +10,6 @@ import { CustomerUrlData } from './models/CustomerUrlData';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
-
 const enum TranscriptContentTypes {
     JSON = 'application/vnd.rev.transcript.v1.0+json',
     TEXT = 'text/plain'
@@ -89,7 +88,7 @@ export class RevAiApiClient {
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * Submit media given a URL for transcription. The audio data is downloaded from the URL.
      * @param mediaUrl Web location of media to be downloaded and transcribed
-     * @param options Options submitted with the job: see RevAiJobOptions object
+     * @param options (optional) Options submitted with the job: see RevAiJobOptions object
      * @returns Details of the submitted job
      * @deprecated Use submitJob and provide a source config to the job options
      */
@@ -103,7 +102,7 @@ export class RevAiApiClient {
             { 'Content-Type': 'application/json' }, 'json', options);
     }
 
-        /**
+    /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob
      * Submit a job with a remote source URL for transcription. The audio data is downloaded from the URL.
      * @param options Options submitted with the job: see RevAiJobOptions object
