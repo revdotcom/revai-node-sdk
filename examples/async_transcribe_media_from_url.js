@@ -12,9 +12,13 @@ const token = require('./config/config.json').access_token;
     console.log(`Credits remaining: ${account.balance_seconds} seconds`);
 
     // Configure your source media url
-    // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on adding auth headers
+    // If authorization headers are needed to access the url they can be provided as an argument, e.g.
+    // var sourceConfig CustomerUrlData('source url', {"Authorization": "Bearer <token>"});
     var sourceConfig = CustomerUrlData('https://www.rev.ai/FTC_Sample_1.mp3');
-    // Optionally configure a callback url, which can also take auth headers
+    // Set an optional notification url 
+    // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on setting up a webhook
+    // Authorization headers url can also be added to this url, e.g. 
+    // var notificationConfig CustomerUrlData('webhook url', {"Authorization": "Bearer <token>"});
     var notificationConfig = CustomerUrlData('https://jsonplaceholder.typicode.com/posts');
 
 
