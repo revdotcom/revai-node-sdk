@@ -1,4 +1,5 @@
 const revai = require('revai-node-sdk');
+const CustomerUrlData = require('revai-node-sdk');
 const fs = require('fs');
 const token = require('./config/config.json').access_token;
 
@@ -13,14 +14,13 @@ const token = require('./config/config.json').access_token;
 
     // Configure your source media url
     // If authorization headers are needed to access the url they can be provided as an argument, e.g.
-    // var sourceConfig CustomerUrlData('source url', {"Authorization": "Bearer <token>"});
-    var sourceConfig = CustomerUrlData('https://www.rev.ai/FTC_Sample_1.mp3');
+    // var sourceConfig  {url: 'source url', auth_headers: {"Authorization": "Bearer <token>"}});
+    var sourceConfig = {url: 'https://www.rev.ai/FTC_Sample_1.mp3'};
     // Set an optional notification url 
     // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on setting up a webhook
     // Authorization headers url can also be added to this url, e.g. 
-    // var notificationConfig CustomerUrlData('webhook url', {"Authorization": "Bearer <token>"});
-    var notificationConfig = CustomerUrlData('https://jsonplaceholder.typicode.com/posts');
-
+    // var notificationConfig {url: 'webhook url', auth_headers: {"Authorization": "Bearer <token>"}});
+    var notificationConfig = {url: 'https://jsonplaceholder.typicode.com/posts', auth_headers: {"Authorization": "Bearer <token>"}};
 
     const jobOptions = {
         source_config: sourceConfig,
