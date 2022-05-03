@@ -1,6 +1,6 @@
 {
   "name": "revai-node-sdk",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Rev AI makes speech applications easy to build!",
   "main": "src/index.js",
   "scripts": {
@@ -37,6 +37,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "form-data": "^2.3.3",
+    "revai-node-sdk": "^3.1.0",
     "websocket": "^1.0.34"
   },
   "devDependencies": {
