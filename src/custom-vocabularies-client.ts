@@ -30,7 +30,8 @@ export class RevAiCustomVocabulariesClient {
      *                           For more information visit https://docs.rev.ai/api/custom-vocabulary/reference/#operation/SubmitCustomVocabulary!path=custom_vocabularies&t=request
      * @param callbackUrl (optional) string url to be called when custom vocabulary submission is completed
      * @param metadata (optional) string to include with this custom vocabulary submission
-     * @param notificationConfig (optional) Object including notification url and authorization header to use when calling the url
+     * @param notificationConfig (optional) Object including notification url and authorization header
+     *                           to use when calling the url
      * @returns Submitted custom vocabulary information
      */
     async submitCustomVocabularies(
