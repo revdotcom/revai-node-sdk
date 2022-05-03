@@ -14,8 +14,8 @@ describe('api-client job submission', () => {
     const jobId = 'Umx5c6F7pH7r';
     const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
     const callbackUrl = 'https://www.example.com/callback';
-    const sourceAuth = {"Authentication": "Bearer source_token"};
-    const callbackAuth = {"Authentication": "Bearer callback_token"};
+    const sourceAuth = {"Authorization": "Bearer source_token"};
+    const callbackAuth = {"Authorization": "Bearer callback_token"};
     const sourceConfig : CustomerUrlData = {
         url: mediaUrl,
         auth_headers: sourceAuth
