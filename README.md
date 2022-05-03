@@ -77,6 +77,17 @@ const job = await client.submitJobLocalFile("./path/to/file.mp4", {
 If you want to get fancy, both send job methods can take a `RevAiJobOptions` object containing optional parameters.
 These are described in the request body of the [Submit Job](https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob) endpoint.
 
+### Submitting urls with authorization headers
+
+Both the source_config and notification_config job options support using a customer-provided authoriztion header to access the urls.
+This optional argument should be in the format `{"Authorization": "TokenScheme TokenValue"}`
+
+Example:
+```
+var notificationConfig = {url: 'https://example.com', auth_headers: {"Authorization": "Bearer <token>"}};
+```
+For more information see https://github.com/revdotcom/revai-node-sdk/blob/develop/examples/async_transcribe_media_from_url.js
+
 ### Checking your job's status
 
 You can check the status of your transcription job using its `id`
