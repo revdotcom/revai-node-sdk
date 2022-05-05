@@ -14,7 +14,7 @@ const token = require('./config/config.json').access_token;
     // Configure your source media url
     // If authorization headers are needed to access the url they can be provided as an argument, e.g.
     // var sourceConfig  {url: 'source url', auth_headers: {"Authorization": "Bearer <token>"}});
-    var sourceConfig = {url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null};
+    const sourceConfig = {url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null};
     // Set an optional notification url 
     // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on setting up a webhook
     // Authorization headers url can also be added to this url, e.g. 
