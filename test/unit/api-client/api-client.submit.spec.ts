@@ -14,8 +14,8 @@ describe('api-client job submission', () => {
     const jobId = 'Umx5c6F7pH7r';
     const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
     const callbackUrl = 'https://www.example.com/callback';
-    const sourceAuth = {"Authorization": "Bearer source_token"};
-    const callbackAuth = {"Authorization": "Bearer callback_token"};
+    const sourceAuth = { "Authorization": "Bearer source_token" };
+    const callbackAuth = { "Authorization": "Bearer callback_token" };
     const sourceConfig : CustomerUrlData = {
         url: mediaUrl,
         auth_headers: sourceAuth
@@ -163,7 +163,7 @@ describe('api-client job submission', () => {
                 source_config: sourceConfig,
                 metadata: 'This is a sample submit jobs option',
                 notification_config: notificationConfig,
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                custom_vocabularies: [{ phrases: ['word1', 'word2'] }, { phrases: ['word3', 'word4'] }],
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
@@ -241,10 +241,9 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with all options null', async () => {
+        it('submit job with all options undefined', async () => {
             const fakeStream = Buffer.alloc(10);
-            const options = { };
-            const job = await sut.submitJobAudioData(fakeStream, null, options);
+            const job = await sut.submitJobAudioData(fakeStream, null, {});
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
@@ -337,10 +336,8 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with local file with all options null', async () => {
-            const options = { };
-
-            const job = await sut.submitJobLocalFile(filename, options);
+        it('submit job with local file with all options undefined', async () => {
+            const job = await sut.submitJobLocalFile(filename, {});
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
