@@ -3,6 +3,7 @@ import { Readable } from 'stream';
 import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
 import { RevAiJobOptions } from '../../../src/models/async/RevAiJobOptions';
+import { CustomerUrlData } from '../../../src/models/CustomerUrlData';
 
 jest.mock('../../../src/api-request-handler');
 
@@ -12,6 +13,17 @@ describe('api-client job submission', () => {
 
     const jobId = 'Umx5c6F7pH7r';
     const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
+    const callbackUrl = 'https://www.example.com/callback';
+    const sourceAuth = { "Authorization": "Bearer source_token" };
+    const callbackAuth = { "Authorization": "Bearer callback_token" };
+    const sourceConfig : CustomerUrlData = {
+        url: mediaUrl,
+        auth_headers: sourceAuth
+    }
+    const notificationConfig : CustomerUrlData = {
+        url: callbackUrl,
+        auth_headers: callbackAuth
+    }
     const jobDetails = {
         id: jobId,
         status: 'in_progress',
@@ -58,20 +70,7 @@ describe('api-client job submission', () => {
         });
 
         it('submit job with media url with all options null', async () => {
-            const options: RevAiJobOptions = {
-                metadata: null,
-                callback_url: null,
-                custom_vocabulary_id: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
-            };
+            const options: RevAiJobOptions = { };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
@@ -143,6 +142,47 @@ describe('api-client job submission', () => {
         });
     });
 
+    describe('submitJob', () => {
+        it('submit job with legacy options', async () => {
+            const options: RevAiJobOptions = {
+                media_url: mediaUrl,
+                callback_url: callbackUrl,
+            };
+
+            const job = await sut.submitJob(options);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json',
+                { media_url: mediaUrl, callback_url: callbackUrl });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with with authentication support options', async () => {
+            const options: RevAiJobOptions = {
+                source_config: sourceConfig,
+                metadata: 'This is a sample submit jobs option',
+                notification_config: notificationConfig,
+                custom_vocabularies: [{ phrases: ['word1', 'word2'] }, { phrases: ['word3', 'word4'] }],
+                skip_punctuation: true,
+                skip_diarization: true,
+                speaker_channels_count: 1,
+                filter_profanity: true,
+                remove_disfluencies: true,
+                delete_after_seconds: 0,
+                language: 'en',
+                transcriber: 'machine_v2'
+            };
+
+            const job = await sut.submitJob(options);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', options);
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+    });
+
     describe('submitJobFileStream', () => {
         it('submit job with Readable', async () => {
             const fakeStream = new Readable();
@@ -201,22 +241,9 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with all options null', async () => {
+        it('submit job with all options undefined', async () => {
             const fakeStream = Buffer.alloc(10);
-            const options = {
-                metadata: null,
-                callback_url: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
-            };
-            const job = await sut.submitJobAudioData(fakeStream, null, options);
+            const job = await sut.submitJobAudioData(fakeStream, null, {});
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),
@@ -309,22 +336,8 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with local file with all options null', async () => {
-            const options = {
-                metadata: null,
-                callback_url: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
-            };
-
-            const job = await sut.submitJobLocalFile(filename, options);
+        it('submit job with local file with all options undefined', async () => {
+            const job = await sut.submitJobLocalFile(filename, {});
 
             const expectedPayload = expect.objectContaining({
                 '_boundary': expect.anything(),

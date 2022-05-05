@@ -1,4 +1,5 @@
 import { ApiRequestHandler } from './api-request-handler';
+import { CustomerUrlData } from './models/CustomerUrlData';
 import { CustomVocabulary } from './models/CustomVocabulary';
 import { CustomVocabularyInformation } from './models/CustomVocabularyInformation';
 import { CustomVocabularyOptions } from './models/CustomVocabularyOptions';
@@ -27,16 +28,17 @@ export class RevAiCustomVocabulariesClient {
      * useful for using the custom vocabulary with streaming jobs.
      * @param customVocabularies array of CustomVocabulary objects.
      *                           For more information visit https://docs.rev.ai/api/custom-vocabulary/reference/#operation/SubmitCustomVocabulary!path=custom_vocabularies&t=request
-     * @param callbackUrl (optional) string url to be called when custom
-     *                    vocabulary submission is completed
-     * @param metadata (optional) string to include with this custom
-     *                 vocabulary submission
+     * @param callbackUrl (optional) string url to be called when custom vocabulary submission is completed
+     * @param metadata (optional) string to include with this custom vocabulary submission
+     * @param notificationConfig (optional) Object including notification url and authorization header
+     *                           to use when calling the url
      * @returns Submitted custom vocabulary information
      */
     async submitCustomVocabularies(
         customVocabularies: CustomVocabulary[],
         callbackUrl: string = undefined,
-        metadata: string = undefined
+        metadata: string = undefined,
+        notificationConfig: CustomerUrlData = undefined
     ): Promise<CustomVocabularyInformation> {
         if (!customVocabularies) {
             throw Error('customVocabularies is a required parameter');
@@ -45,6 +47,9 @@ export class RevAiCustomVocabulariesClient {
         let options: CustomVocabularyOptions = {custom_vocabularies: customVocabularies};
         if (callbackUrl) {
             options.callback_url = callbackUrl;
+        }
+        if (notificationConfig) {
+            options.notification_config = notificationConfig;
         }
         if (metadata) {
             options.metadata = metadata;

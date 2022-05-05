@@ -21,7 +21,7 @@ const token = require('./config/config.json').access_token;
     /**
      * Waits 5 seconds between each status check to see if the custom vocabulary
      * is complete. note: polling for custom vocabulary status is not recommended in a
-     * non-testing environment. Use the callback_url option
+     * non-testing environment. Use the notification_config option
      * (see: https://docs.rev.ai/sdk/node/) to receive the response
      * asynchronously on custom vocabulary completion.
      */

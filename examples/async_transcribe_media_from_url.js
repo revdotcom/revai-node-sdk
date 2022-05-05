@@ -11,9 +11,23 @@ const token = require('./config/config.json').access_token;
     console.log(`Account: ${account.email}`);
     console.log(`Credits remaining: ${account.balance_seconds} seconds`);
 
+    // Configure your source media url
+    // If authorization headers are needed to access the url they can be provided as an argument, e.g.
+    // var sourceConfig  {url: 'source url', auth_headers: {"Authorization": "Bearer <token>"}});
+    const sourceConfig = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
+    // Set an optional notification url 
+    // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on setting up a webhook
+    // Authorization headers url can also be added to this url, e.g. 
+    // var notificationConfig {url: 'webhook url', auth_headers: {"Authorization": "Bearer <token>"}});
+    const notificationConfig = {
+        url: 'https://www.example.com/callback',
+        auth_headers: { "Authorization": "Bearer <token>" }
+    };
+
     const jobOptions = {
+        source_config: sourceConfig,
         metadata: 'InternalOrderNumber=123456789',
-        callback_url: 'https://jsonplaceholder.typicode.com/posts',
+        notification_config: notificationConfig,
         skip_diarization: false,
         skip_punctuation: false,
         speaker_channels_count: null, // Optional value available with some languages
@@ -34,7 +48,7 @@ const token = require('./config/config.json').access_token;
     };
 
     // Media may be submitted from a url
-    var job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', jobOptions);
+    var job = await client.submitJob(jobOptions);
 
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
@@ -43,7 +57,7 @@ const token = require('./config/config.json').access_token;
     /**
      * Waits 5 seconds between each status check to see if job is complete.
      * note: polling for job status is not recommended in a non-testing environment.
-     * Use the callback_url option (see: https://docs.rev.ai/sdk/node/)
+     * Use the notification_config option (see: https://docs.rev.ai/sdk/node/)
      * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)

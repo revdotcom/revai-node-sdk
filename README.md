@@ -49,7 +49,8 @@ Once you've set up your client with your Access Token sending a file is easy!
 const job = await client.submitJobLocalFile("./path/to/file.mp4");
 
 // or submit via a public url
-const job = await client.submitJobUrl("https://www.rev.ai/FTC_Sample_1.mp3");
+const jobOptions = { source_config: { url: "https://www.rev.ai/FTC_Sample_1.mp3" } }
+const job = await client.submitJob(jobOptions);
 
 // or from audio data, the filename is optional
 const stream = fs.createReadStream("./path/to/file.mp3");
@@ -58,7 +59,7 @@ const job = await client.submitJobAudioData(stream, "file.mp3");
 
 You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://docs.rev.ai/api/asynchronous/transcribers/#human-transcription) option.
 ```javascript
-const job = await client.submitJobUrl("./path/to/file.mp4", {
+const job = await client.submitJobLocalFile("./path/to/file.mp4", {
     transcriber: "human",
     verbatim: false,
     rush: false,
@@ -75,6 +76,17 @@ const job = await client.submitJobUrl("./path/to/file.mp4", {
 
 If you want to get fancy, both send job methods can take a `RevAiJobOptions` object containing optional parameters.
 These are described in the request body of the [Submit Job](https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob) endpoint.
+
+### Submitting urls with authorization headers
+
+Both the `source_config` and `notification_config` job options support using a customer-provided authorization header to access the URLs.
+This optional argument should be in the format `{ "Authorization": "TokenScheme TokenValue" }`
+
+Example:
+```
+var notificationConfig = { url: 'https://example.com', auth_headers: { "Authorization": "Bearer <token>" } };
+```
+For more information see https://github.com/revdotcom/revai-node-sdk/blob/develop/examples/async_transcribe_media_from_url.js
 
 ### Checking your job's status
 

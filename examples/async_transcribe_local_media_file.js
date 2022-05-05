@@ -13,7 +13,7 @@ const token = require('./config/config.json').access_token;
 
     const jobOptions = {
         metadata: 'InternalOrderNumber=123456789',
-        callback_url: 'https://jsonplaceholder.typicode.com/posts',
+        notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' },
         skip_diarization: false,
         skip_punctuation: false, // Optional value available with some languages
         speaker_channels_count: null, // Optional value available with some languages
@@ -49,7 +49,7 @@ const token = require('./config/config.json').access_token;
     /**
      * Waits 5 seconds between each status check to see if job is complete.
      * note: polling for job status is not recommended in a non-testing environment.
-     * Use the callback_url option (see: https://docs.rev.ai/sdk/node/)
+     * Use the notification_config option (see: https://docs.rev.ai/sdk/node/)
      * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
