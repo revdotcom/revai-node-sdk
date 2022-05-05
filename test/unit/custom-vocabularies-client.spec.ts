@@ -10,7 +10,7 @@ describe('custom-vocabularies-client', () => {
         { phrases: ['my', 'test', 'custom', 'vocabularies'] }
     ];
     const callbackUrl = 'example.com';
-    const callbackAuth = {"Authorization": "bearer token"}
+    const callbackAuth = { "Authorization": "Bearer token" }
     const metadata = 'my metadata';
     const notificationConfig = {
         url: callbackUrl,
@@ -21,7 +21,6 @@ describe('custom-vocabularies-client', () => {
         callback_url: callbackUrl,
         metadata: metadata
     };
-
     const customVocabularyOptions = {
         custom_vocabularies: customVocabularies,
         notification_config: notificationConfig,
