@@ -158,7 +158,6 @@ describe('api-client job submission', () => {
             expect(job).toEqual(jobDetails);
         });
 
-
         it('submit job with with authentication support options', async () => {
             const options: RevAiJobOptions = {
                 source_config: sourceConfig,
