@@ -19,7 +19,10 @@ const token = require('./config/config.json').access_token;
     // See https://docs.rev.ai/api/asynchronous/webhooks/ for details on setting up a webhook
     // Authorization headers url can also be added to this url, e.g. 
     // var notificationConfig {url: 'webhook url', auth_headers: {"Authorization": "Bearer <token>"}});
-    var notificationConfig = {url: 'https://jsonplaceholder.typicode.com/posts', auth_headers: {"Authorization": "Bearer <token>"}};
+    const notificationConfig = {
+        url: 'https://jsonplaceholder.typicode.com/posts',
+        auth_headers: { "Authorization": "Bearer <token>" }
+    };
 
     const jobOptions = {
         source_config: sourceConfig,
