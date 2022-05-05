@@ -49,7 +49,7 @@ Once you've set up your client with your Access Token sending a file is easy!
 const job = await client.submitJobLocalFile("./path/to/file.mp4");
 
 // or submit via a public url
-const jobOptions = {source_config: {url: "https://www.rev.ai/FTC_Sample_1.mp3"}}
+const jobOptions = { source_config: { url: "https://www.rev.ai/FTC_Sample_1.mp3" } }
 const job = await client.submitJob(jobOptions);
 
 // or from audio data, the filename is optional
