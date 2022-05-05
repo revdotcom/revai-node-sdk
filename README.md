@@ -49,7 +49,7 @@ Once you've set up your client with your Access Token sending a file is easy!
 const job = await client.submitJobLocalFile("./path/to/file.mp4");
 
 // or submit via a public url
-const jobOptions = {source_config: {url: "https://www.rev.ai/FTC_Sample_1.mp3"}}
+const jobOptions = { source_config: { url: "https://www.rev.ai/FTC_Sample_1.mp3" } }
 const job = await client.submitJob(jobOptions);
 
 // or from audio data, the filename is optional
@@ -80,11 +80,11 @@ These are described in the request body of the [Submit Job](https://docs.rev.ai/
 ### Submitting urls with authorization headers
 
 Both the source_config and notification_config job options support using a customer-provided authoriztion header to access the urls.
-This optional argument should be in the format `{"Authorization": "TokenScheme TokenValue"}`
+This optional argument should be in the format `{ "Authorization": "TokenScheme TokenValue" }`
 
 Example:
 ```
-var notificationConfig = {url: 'https://example.com', auth_headers: {"Authorization": "Bearer <token>"}};
+var notificationConfig = { url: 'https://example.com', auth_headers: { "Authorization": "Bearer <token>" } };
 ```
 For more information see https://github.com/revdotcom/revai-node-sdk/blob/develop/examples/async_transcribe_media_from_url.js
 
