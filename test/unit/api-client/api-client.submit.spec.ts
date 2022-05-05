@@ -70,20 +70,7 @@ describe('api-client job submission', () => {
         });
 
         it('submit job with media url with all options null', async () => {
-            const options: RevAiJobOptions = {
-                metadata: null,
-                callback_url: null,
-                custom_vocabulary_id: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
-            };
+            const options: RevAiJobOptions = { };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
 
@@ -158,19 +145,8 @@ describe('api-client job submission', () => {
     describe('submitJob', () => {
         it('submit job with legacy options', async () => {
             const options: RevAiJobOptions = {
-                metadata: null,
                 media_url: mediaUrl,
                 callback_url: callbackUrl,
-                custom_vocabulary_id: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
             };
 
             const job = await sut.submitJob(options);
@@ -268,19 +244,7 @@ describe('api-client job submission', () => {
 
         it('submit job with all options null', async () => {
             const fakeStream = Buffer.alloc(10);
-            const options = {
-                metadata: null,
-                callback_url: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
-            };
+            const options = { };
             const job = await sut.submitJobAudioData(fakeStream, null, options);
 
             const expectedPayload = expect.objectContaining({
@@ -375,19 +339,7 @@ describe('api-client job submission', () => {
         });
 
         it('submit job with local file with all options null', async () => {
-            const options = {
-                metadata: null,
-                callback_url: null,
-                custom_vocabularies: null,
-                skip_punctuation: null,
-                skip_diarization: null,
-                speaker_channels_count: null,
-                filter_profanity: null,
-                remove_disfluencies: null,
-                delete_after_seconds: null,
-                language: null,
-                transcriber: null
-            };
+            const options = { };
 
             const job = await sut.submitJobLocalFile(filename, options);
 
