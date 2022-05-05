@@ -79,7 +79,7 @@ These are described in the request body of the [Submit Job](https://docs.rev.ai/
 
 ### Submitting urls with authorization headers
 
-Both the source_config and notification_config job options support using a customer-provided authoriztion header to access the urls.
+Both the `source_config` and `notification_config` job options support using a customer-provided authorization header to access the URLs.
 This optional argument should be in the format `{ "Authorization": "TokenScheme TokenValue" }`
 
 Example:
