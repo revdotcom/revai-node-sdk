@@ -84,7 +84,7 @@ This optional argument should be in the format `{ "Authorization": "TokenScheme 
 
 Example:
 ```
-var notificationConfig = {url: 'https://example.com', auth_headers: {"Authorization": "Bearer <token>"}};
+var notificationConfig = { url: 'https://example.com', auth_headers: { "Authorization": "Bearer <token>" } };
 ```
 For more information see https://github.com/revdotcom/revai-node-sdk/blob/develop/examples/async_transcribe_media_from_url.js
 
