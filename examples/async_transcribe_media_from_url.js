@@ -20,7 +20,7 @@ const token = require('./config/config.json').access_token;
     // Authorization headers url can also be added to this url, e.g. 
     // var notificationConfig {url: 'webhook url', auth_headers: {"Authorization": "Bearer <token>"}});
     const notificationConfig = {
-        url: 'https://jsonplaceholder.typicode.com/posts',
+        url: 'https://example.com/callback',
         auth_headers: { "Authorization": "Bearer <token>" }
     };
 
