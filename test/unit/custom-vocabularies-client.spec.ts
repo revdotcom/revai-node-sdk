@@ -39,7 +39,7 @@ describe('custom-vocabularies-client', () => {
         sut = new RevAiCustomVocabulariesClient('testtoken');
     });
 
-    describe('submitCustomVocabulariesCallbackOnly', () => {
+    describe('submitCustomVocabularies', () => {
         it('submit custom vocabularies with the callback url', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
@@ -60,9 +60,7 @@ describe('custom-vocabularies-client', () => {
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(customVocabularyInformation).toEqual(customVocabularyDetails);
         });
-    });
-
-    describe('submitCustomVocabulariesNotificationConfigOnly', () => {
+        
         it('submit custom vocabularies with the notification config', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);
