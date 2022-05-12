@@ -2,6 +2,9 @@ import { SegmentToTranscribe } from './async/RevAiJobOptions';
 import { JobStatus } from './JobStatus';
 import { JobType } from './JobType';
 
+/**
+ * 
+ */
 export interface RevAiApiJob {
     id: string;
     status: JobStatus;
