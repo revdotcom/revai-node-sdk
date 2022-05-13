@@ -1,16 +1,16 @@
 import { ApiRequestHandler } from './api-request-handler';
 
-export type ServiceApi = 'speechtotext' | 'topic_extraction' | 'sentiment_analysis';
+export type ServiceApi = 'topic_extraction' | 'sentiment_analysis';
 
 /**
- * 
+ * Base client implementation
  */
-export class BaseApiClient {
+export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
     apiHandler: ApiRequestHandler;
 
     /**
      * @param accessToken Access token used to validate API requests
-     * @param serviceApi Type of 
+     * @param serviceApi Type of api service
      * @param version (optional) version of the API to be used
      */
     constructor (accessToken: string, serviceApi: ServiceApi, version = 'v1') {
@@ -18,21 +18,23 @@ export class BaseApiClient {
     }
 
     /**
-     * 
+     * Get information about a specific job
      * @param id Id of job whose details are to be retrieved
      * @returns Job details
      */
-    protected async _getJobDetails<TJob>(id: string): Promise<TJob> {
+    protected async getJobDetails(id: string): Promise<TJob> {
         return await this.apiHandler.makeApiRequest<TJob>('get', `/jobs/${id}`, {}, 'json');
     }
 
     /**
-     * 
+     * Get a list of jobs submitted within the last 30 days in reverse chronological order 
+     * (last submitted first) up to the provided limit number of jobs per call. Pagination is supported via passing
+     * the last job id from previous call into starting_after.
      * @param limit (optional) maximum number of jobs to retrieve, default is 100
      * @param startingAfter (optional) returns only jobs created after the job with this id, exclusive
      * @returns List of job details
      */
-    protected async _getListOfJobs<TJob>(limit?: number, startingAfter?: string): Promise<TJob[]> {
+    protected async getListOfJobs(limit?: number, startingAfter?: string): Promise<TJob[]> {
         const params = [];
         if (limit) {
             params.push(`limit=${limit}`);
@@ -47,20 +49,21 @@ export class BaseApiClient {
     }
 
     /**
-     * 
+     * Delete a specific job.
+     * All data related to the job will be permanently deleted.
+     * A job can only by deleted once it's completed.
      * @param id Id of job to be deleted
      */
-    protected async _deleteJob(id: string): Promise<void> {
+    protected async deleteJob(id: string): Promise<void> {
         return await this.apiHandler.makeApiRequest('delete', `/jobs/${id}`, {}, 'text');
     }
 
     /**
-     * 
-     * @param mediaUrl Web location of media to be downloaded and transcribed
-     * @param options (optional) Options submitted with the job: see RevAiJobOptions object
+     * Submit a job to the api. 
+     * @param options (optional) Options submitted with the job
      * @returns Details of the submitted job
      */
-    protected async _submitJob<TJob>(options?: any): Promise<TJob> {
+    protected async submitJob(options?: TSubmitOptions): Promise<TJob> {
         options = this.filterNullOptions({
             ...(options || {})
         });
@@ -70,17 +73,23 @@ export class BaseApiClient {
     }
 
     /**
-     * 
-     * @param params 
-     * @returns 
+     * Get the result of a job. 
+     * @param id id of job to get result of
+     * @param options (optional) Options submitted with the request
+     * @returns Job result object
      */
-     protected async _getResult<TResult>(id: string, params?: any): Promise<TResult> {
-        const query = this.buildQueryParams(params);
+    protected async getResult(id: string, options?: TResultOptions, headers: any = {}): Promise<TResult> {
+        options = this.filterNullOptions({
+            ...(options || {})
+        });
+        const query = this.buildQueryParams({
+            ...(options || {})
+        });
         return await this.apiHandler.makeApiRequest<TResult>('get',
-            `/jobs/${id}/result${query ?? ''}`, {}, 'json');
+            `/jobs/${id}/result${query ? `?${query}` : ''}`, headers, 'json');
     }
 
-    private buildQueryParams(params?: any): string {
+    private buildQueryParams(params: any): string {
         return Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
     }
 
