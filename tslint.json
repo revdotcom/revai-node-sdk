@@ -53,7 +53,10 @@
       ],
       "max-line-length": [
         true,
-        120
+        {
+          "limit": 120,
+          "ignore-pattern": "https://docs.rev.ai"
+        }
       ],
       "no-require-imports": false,
       "no-trailing-whitespace": true,
