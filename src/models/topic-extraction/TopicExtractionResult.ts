@@ -1,13 +1,11 @@
-/**
- *
- */
+/** Topic extraction result model*/
 export interface TopicExtractionResult {
     topics: Topic[];
 }
 
 /** Topic extraction topic */
 export interface Topic {
-    topicName: string;
+    topic_name: string;
     score: number;
     informants: Informant[];
 }
@@ -16,12 +14,8 @@ export interface Topic {
 export interface Informant {
     content: string;
     ts?: number;
-    endTs?: number;
+    end_ts?: number;
     offset?: number;
     length?: number;
 }
 
-/** Query results options */
-export interface TopicExtractionResultsOptions {
-    threshold?: number;
-}

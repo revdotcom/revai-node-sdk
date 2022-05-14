@@ -64,9 +64,7 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * @returns Details of the submitted job
      */
     protected async submitJob(options?: TSubmitOptions): Promise<TJob> {
-        options = this.filterNullOptions({
-            ...(options || {})
-        });
+        options = this.filterNullOptions(options || {});
 
         return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
             { 'Content-Type': 'application/json' }, 'json', options);
@@ -79,12 +77,8 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * @returns Job result object
      */
     protected async getResult(id: string, options?: TResultOptions, headers: any = {}): Promise<TResult> {
-        options = this.filterNullOptions({
-            ...(options || {})
-        });
-        const query = this.buildQueryParams({
-            ...(options || {})
-        });
+        options = this.filterNullOptions(options || {});
+        const query = this.buildQueryParams(options || {});
         return await this.apiHandler.makeApiRequest<TResult>('get',
             `/jobs/${id}/result${query ? `?${query}` : ''}`, headers, 'json');
     }

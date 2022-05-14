@@ -13,9 +13,7 @@ const token = require('./config/config.json').access_token;
     };
     let job;
     
-    /**
-     * Submit a job with whatever text you want by changing this input
-     */
+    /** Submit a job with whatever text you want by changing this input */
     const text = "An umbrella or parasol is a folding canopy supported by wooden or metal ribs that is  \
         usually mounted on a wooden, metal, or plastic pole. It is designed to protect a person \
         against rain or sunlight. The term umbrella is traditionally used when protecting oneself from \
@@ -29,9 +27,7 @@ const token = require('./config/config.json').access_token;
         'text': text
     });
 
-    /**
-     * Or submit from an existing transcript from a completed speech to text job
-     */
+    /** Or submit from an existing transcript from a completed speech to text job */
     // const asyncJobId = 'your_job_id';
     // const asyncApiClient = new revai.RevAiApiClient(token);
     // const transcript = await asyncApiClient.getTranscriptObject(asyncJobId);
@@ -55,7 +51,7 @@ const token = require('./config/config.json').access_token;
     console.log(JSON.stringify(topics))
 
     /**
-     * Delete a job
+     * Delete a job.
      * Job deletion will remove all information about the job from the servers
      */
     // await client.deleteJob(job.id);

@@ -2,9 +2,7 @@ import { SegmentToTranscribe } from './async/RevAiJobOptions';
 import { JobStatus } from './JobStatus';
 import { JobType } from './JobType';
 
-/**
- * 
- */
+/** Speech to text job model */
 export interface RevAiApiJob {
     id: string;
     status: JobStatus;

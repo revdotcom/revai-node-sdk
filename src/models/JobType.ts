@@ -1,4 +1,6 @@
+/** Speech to text job types */
 export enum JobType {
     Async = 'async',
-    Stream = 'stream'
+    Stream = 'stream',
+    Human = 'human_tc'
 }

@@ -6,8 +6,8 @@ import { RevAiApiTranscript } from "../RevAiApiTranscript";
  */
 export interface TopicExtractionJobOptions {
     metadata?: string;
-    callbackUrl?: string;
-    deleteAfterSeconds?: number;
+    callback_url?: string;
+    delete_after_seconds?: number;
     language?: string;
     text?: string;
     json?: RevAiApiTranscript;

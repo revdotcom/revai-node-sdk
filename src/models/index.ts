@@ -16,3 +16,4 @@ export * from './streaming/StreamingResponses';
 export * from './topic-extraction/TopicExtractionJob';
 export * from './topic-extraction/TopicExtractionJobOptions';
 export * from './topic-extraction/TopicExtractionResult';
+export * from './topic-extraction/TopicExtractionResultOptions';

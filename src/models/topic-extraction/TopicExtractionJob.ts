@@ -1,19 +1,17 @@
 import { JobStatus } from '../JobStatus';
 
-/**
- * 
- */
+/** Topic extraction job model */
 export interface TopicExtractionJob {
-    type: 'topic_extraction';
     id: string;
     status: JobStatus;
-    createdOn: string;
-    completedOn?: string;
+    type: string;
+    created_on: string;
+    completed_on?: string;
     metadata?: string;
-    callbackUrl?: string;
-    deleteAfterSeconds?: number;
+    callback_url?: string;
+    delete_after_seconds?: number;
     failure?: string;
-    failureDetail?: string;
-    wordCount?: number;
+    failure_detail?: string;
+    word_count?: number;
     language?: string;
 }
