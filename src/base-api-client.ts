@@ -3,7 +3,7 @@ import { ApiRequestHandler } from './api-request-handler';
 export type ServiceApi = 'topic_extraction' | 'sentiment_analysis';
 
 /**
- * Base client implementation
+ * Base client implementation. Intended to be extended by a specific client per API
  */
 export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
     apiHandler: ApiRequestHandler;
