@@ -122,6 +122,30 @@ const handleStreamError = (error) => {
     file.once('readable', () => file.pipe(stream));
 })();
 
+// Test Streaming Client's With Language Parameter
+(async () => {
+    const expectedReason = "No data has been transferred, closing connection";
+    const client = clientHelper.getStreamingClient(audioConfig);
+
+    client.on('close', (code, reason) => {
+        assert.equal(code, 1000, `Expected close code to be [1000] but was [${code}]`);
+        assert.equal(reason, expectedReason, `Expected close reason to be [${expectedReason}] but was [${reason}]`);
+        printPassStatement("Stream Keeps Alive Until Server Closes Connection");
+        return;
+    });
+    client.on('httpResponse', handleHttpResponse);
+    client.on('connectFailed', handleConnectFailed);
+    client.on('connect', connectionMessage => {
+        console.log(`Connected with job id: ${connectionMessage.id}`);
+    });
+
+    const stream = client.start(new SessionConfig(language="es"));
+    stream.on('error', handleStreamError);
+
+    const file = fs.createReadStream('./test/integration/resources/english_test.raw');
+    file.once('readable', () => file.pipe(stream));
+})();
+
 const assertPartialHypothesis = (partial) => {
     partial.elements.forEach(element => {
         assert.equal(element.type, 'text', 'Expected element type to be [text]: ' + JSON.stringify(element));
