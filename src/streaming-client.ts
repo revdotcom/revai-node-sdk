@@ -92,19 +92,19 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.removeDisfluencies) {
                 url += '&remove_disfluencies=true';
             }
-            if (config.deleteAfterSeconds !== null && config.deleteAfterSeconds !== undefined) {
+            if (config.deleteAfterSeconds) {
                 url += `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds.toString())}`;
             }
             if (config.detailedPartials) {
                 url += '&detailed_partials=true';
             }
-            if (config.startTs !== null && config.startTs !== undefined) {
+            if (config.startTs) {
                 url += `&start_ts=${encodeURIComponent(config.startTs.toString())}`;
             }
-            if (config.transcriber !== null && config.transcriber !== undefined) {
+            if (config.transcriber) {
                 url += `&transcriber=${encodeURIComponent(config.transcriber)}`;
             }
-            if (config.language !== null && config.language !== undefined) {
+            if (config.language) {
                 url += `&language=${encodeURIComponent(config.language)}`;
             }
         }
