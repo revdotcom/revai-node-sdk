@@ -10,6 +10,7 @@ export class SessionConfig {
     startTs?: number;
     transcriber?: string;
     detailedPartials?: boolean;
+    language: string;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -25,6 +26,7 @@ export class SessionConfig {
      * @param transcriber (Optional) type of transcriber to use to transcribe the
      *      media file
      * @param detailedPartials (Optional) whether to return detailed partials
+     * @param language (Optional) language to use for the streaming job
      */
     constructor(
         metadata?: string,
@@ -34,7 +36,8 @@ export class SessionConfig {
         deleteAfterSeconds?: number,
         startTs?: number,
         transcriber?: string,
-        detailedPartials?: boolean
+        detailedPartials?: boolean,
+        language?: string
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
@@ -44,5 +47,6 @@ export class SessionConfig {
         this.startTs = startTs;
         this.transcriber = transcriber;
         this.detailedPartials = detailedPartials;
+        this.language = language;
     }
 }

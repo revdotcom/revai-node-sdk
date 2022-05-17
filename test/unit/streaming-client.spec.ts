@@ -36,7 +36,8 @@ describe('streaming-client', () => {
                 0,
                 10,
                 'machine',
-                true
+                true,
+                'en'
             );
 
             // Act
@@ -54,7 +55,8 @@ describe('streaming-client', () => {
                 `&delete_after_seconds=${encodeURIComponent(config.deleteAfterSeconds)}` +
                 `&detailed_partials=${encodeURIComponent(config.detailedPartials)}` +
                 `&start_ts=${encodeURIComponent(config.startTs)}` +
-                `&transcriber=${encodeURIComponent(config.transcriber)}`
+                `&transcriber=${encodeURIComponent(config.transcriber)}` +
+                `&language=${encodeURIComponent(config.language)}`
             );
             expect(mockClient.connect).toBeCalledTimes(1);
             expect(res.writable).toBe(true);

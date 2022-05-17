@@ -104,6 +104,9 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.transcriber !== null && config.transcriber !== undefined) {
                 url += `&transcriber=${encodeURIComponent(config.transcriber)}`;
             }
+            if (config.language !== null && config.language !== undefined) {
+                url += `&language=${encodeURIComponent(config.language)}`;
+            }
         }
 
         this.client.connect(url);
