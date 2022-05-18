@@ -36,7 +36,8 @@ const sessionConfig = new revai.SessionConfig(
     deleteAfterSeconds=0,     /* (optional) delete_after_seconds */
     startTs=0,                /* (optional) start_ts */
     transcriber='machine',    /* (optional) transcriber */
-    detailedPartials=false    /* (optional) detailed_partials */
+    detailedPartials=false,   /* (optional) detailed_partials */
+    language='en',            /* (optional) language */
 );
 
 // Begin streaming session
