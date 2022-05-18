@@ -1,4 +1,4 @@
-# [Rev AI Node SDK](https://docs.rev.ai/sdk/node/) &middot; [![npm version](https://img.shields.io/npm/v/revai-node-sdk.svg?style=flat)](https://www.npmjs.com/package/react) ![CI](https://github.com/revdotcom/revai-node-sdk/workflows/CI/badge.svg)
+# [Rev AI Node SDK](https://docs.rev.ai/sdk/node/) &middot; [![npm version](https://img.shields.io/npm/v/revai-node-sdk.svg?style=flat)](https://www.npmjs.com/package/revai-node-sdk) ![CI](https://github.com/revdotcom/revai-node-sdk/workflows/CI/badge.svg)
 
 ## Documentation
 
