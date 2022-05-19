@@ -1,11 +1,11 @@
 import { ApiRequestHandler } from './api-request-handler';
 
-export type ServiceApi = 'topic_extraction' | 'sentiment_analysis';
+type ServiceApi = 'topic_extraction' | 'sentiment_analysis';
 
 /**
  * Base client implementation. Intended to be extended by a specific client per API
  */
-export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
+export class BaseApiClient<TJob, TResult> {
     apiHandler: ApiRequestHandler;
 
     /**
@@ -22,7 +22,7 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * @param id Id of job whose details are to be retrieved
      * @returns Job details
      */
-    protected async getJobDetails(id: string): Promise<TJob> {
+    protected async _getJobDetails(id: string): Promise<TJob> {
         return await this.apiHandler.makeApiRequest<TJob>('get', `/jobs/${id}`, {}, 'json');
     }
 
@@ -30,22 +30,13 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * Get a list of jobs submitted within the last 30 days in reverse chronological order 
      * (last submitted first) up to the provided limit number of jobs per call. Pagination is supported via passing
      * the last job id from previous call into starting_after.
-     * @param limit (optional) maximum number of jobs to retrieve, default is 100
-     * @param startingAfter (optional) returns only jobs created after the job with this id, exclusive
+     * @param params
      * @returns List of job details
      */
-    protected async getListOfJobs(limit?: number, startingAfter?: string): Promise<TJob[]> {
-        const params = [];
-        if (limit) {
-            params.push(`limit=${limit}`);
-        }
-        if (startingAfter) {
-            params.push(`starting_after=${startingAfter}`);
-        }
-
-        const query = `?${params.join('&')}`;
+    protected async _getListOfJobs(params?: {}): Promise<TJob[]> {
+        const query = this.buildQueryParams(params || {});
         return await this.apiHandler.makeApiRequest<TJob[]>('get',
-            `/jobs${params.length > 0 ? query : ''}`, {}, 'json');
+            `/jobs${query ? `?${query}` : ''}`, {}, 'json');
     }
 
     /**
@@ -54,7 +45,7 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * A job can only by deleted once it's completed.
      * @param id Id of job to be deleted
      */
-    protected async deleteJob(id: string): Promise<void> {
+    protected async _deleteJob(id: string): Promise<void> {
         return await this.apiHandler.makeApiRequest('delete', `/jobs/${id}`, {}, 'text');
     }
 
@@ -63,7 +54,7 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * @param options (optional) Options submitted with the job
      * @returns Details of the submitted job
      */
-    protected async submitJob(options?: TSubmitOptions): Promise<TJob> {
+    protected async _submitJob(options?: {}): Promise<TJob> {
         options = this.filterNullOptions(options || {});
 
         return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
@@ -76,18 +67,18 @@ export class BaseApiClient<TJob, TSubmitOptions, TResult, TResultOptions> {
      * @param options (optional) Options submitted with the request
      * @returns Job result object
      */
-    protected async getResult(id: string, options?: TResultOptions, headers: any = {}): Promise<TResult> {
-        options = this.filterNullOptions(options || {});
+    protected async _getResult(id: string, options?: {}, headers?: {}): Promise<TResult> {
+        options = this.filterNullOptions(options);
         const query = this.buildQueryParams(options || {});
         return await this.apiHandler.makeApiRequest<TResult>('get',
             `/jobs/${id}/result${query ? `?${query}` : ''}`, headers, 'json');
     }
 
-    private buildQueryParams(params: any): string {
+    private buildQueryParams(params: {}): string {
         return Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
     }
 
-    private filterNullOptions(options: any): any {
+    private filterNullOptions(options: {}): any {
         const filteredOptions: any = {};
         Object.keys(options).forEach((option) => {
             if (options[option] !== null && options[option] !== undefined) {

@@ -1,10 +1,11 @@
 import { JobStatus } from '../JobStatus';
+import { JobType } from '../JobType';
 
 /** Topic extraction job model */
 export interface TopicExtractionJob {
     id: string;
     status: JobStatus;
-    type: string;
+    type: JobType;
     created_on: string;
     completed_on?: string;
     metadata?: string;
