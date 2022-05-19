@@ -1,5 +1,5 @@
-import { ApiRequestHandler } from '../../../src/api-request-handler';
-import { BaseApiClient } from '../../../src/base-api-client';
+import { ApiRequestHandler } from '../../src/api-request-handler';
+import { BaseApiClient } from '../../src/base-api-client';
 
 jest.mock('../../../src/api-request-handler');
 
