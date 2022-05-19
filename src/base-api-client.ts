@@ -68,10 +68,10 @@ export class BaseApiClient<TJob, TResult> {
      * @returns Job result object
      */
     protected async _getResult(id: string, options?: {}, headers?: {}): Promise<TResult> {
-        options = this.filterNullOptions(options);
+        options = this.filterNullOptions(options || {});
         const query = this.buildQueryParams(options || {});
         return await this.apiHandler.makeApiRequest<TResult>('get',
-            `/jobs/${id}/result${query ? `?${query}` : ''}`, headers, 'json');
+            `/jobs/${id}/result${query ? `?${query}` : ''}`, headers || {}, 'json');
     }
 
     private buildQueryParams(params: {}): string {

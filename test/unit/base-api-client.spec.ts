@@ -1,7 +1,7 @@
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { BaseApiClient } from '../../src/base-api-client';
 
-jest.mock('../../../src/api-request-handler');
+jest.mock('../../src/api-request-handler');
 
 interface TJob {
     id: string;
@@ -101,7 +101,40 @@ describe('base-api-client', () => {
         });
     });
 
-    describe('deleteJob', () => {
+    describe('_getResult', () => {
+        const jobResult = {
+            jobContent: "asdf"
+        } as TResult;
+
+        it('get job result', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobResult);
+
+            const res = await (sut as any)._getResult(jobId);
+
+            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/result`,
+                {}, 'json');
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(res).toEqual(jobResult);
+        });
+
+        it('get job result with options and header', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobResult);
+            const options = {
+                some_option: 'asdf',
+                another_options: 5
+            }
+            const headers = { 'Accept': 'text/plain' };
+
+            const res = await (sut as any)._getResult(jobId, options, headers);
+
+            expect(mockMakeApiRequest).toBeCalledWith('get', 
+                `/jobs/${jobId}/result?some_option=asdf&another_options=5`, headers, 'json');
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(res).toEqual(jobResult);
+        });
+    });
+
+    describe('_deleteJob', () => {
         it('delete job by id', async () => {
             mockMakeApiRequest.mockResolvedValue(null);
 
