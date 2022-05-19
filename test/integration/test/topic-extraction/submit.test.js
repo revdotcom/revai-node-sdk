@@ -1,6 +1,6 @@
-const clientHelper = require('../src/client-helper');
-const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
-const TopicExtractionJob = require('../../../dist/src/models/topic-extraction/TopicExtractionJob')
+const clientHelper = require('../../src/client-helper');
+const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
+const TopicExtractionJob = require('../../../../dist/src/models/topic-extraction/TopicExtractionJob')
 const client = clientHelper.getTopicExtractionClient();
 const fs = require('fs');
 
@@ -32,18 +32,3 @@ test('Can submit topic extraction job from json', async () => {
     expect(res.id).not.toBeNull();
     expect(res.failure).toBeUndefined();
 }, 30000);
-
-test('Can get list of jobs', async () => {
-    const jobList = await client.getListOfJobs();
-    jobList.forEach((topicExtractionJob) => {
-        expect(topicExtractionJob).toMatchObject(TopicExtractionJob);
-    });
-}, 30000);
-
-test('Can retreive topic extraction job results', async (done) => {
-
-}, 300000);
-
-test('Can delete topic extraction job', async (done) => {
-
-}, 300000);

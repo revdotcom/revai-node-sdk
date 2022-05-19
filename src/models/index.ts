@@ -13,6 +13,7 @@ export * from './streaming/AudioConfig';
 export * from './streaming/BufferedDuplex';
 export * from './streaming/SessionConfig';
 export * from './streaming/StreamingResponses';
+export * from './topic-extraction/TopicExtractionGetListOfJobsOptions';
 export * from './topic-extraction/TopicExtractionJob';
 export * from './topic-extraction/TopicExtractionJobOptions';
 export * from './topic-extraction/TopicExtractionResult';
