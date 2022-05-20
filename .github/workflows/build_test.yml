@@ -29,7 +29,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run build --if-present
     - run: npm run lint
   unit-tests:
     runs-on: ubuntu-latest
@@ -46,7 +45,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
-    - run: node build_release_package_json.js
     - run: npm run unit-test
   integration-tests:
     if: github.ref == 'refs/heads/develop'
