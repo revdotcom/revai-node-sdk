@@ -49,6 +49,8 @@ jobs:
     - run: node build_release_package_json.js
     - run: npm run unit-test
   integration-tests:
+    if: github.ref == 'refs/heads/develop'
+
     runs-on: ubuntu-latest
 
     strategy:
