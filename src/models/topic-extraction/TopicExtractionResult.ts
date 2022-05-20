@@ -18,4 +18,3 @@ export interface Informant {
     offset?: number;
     length?: number;
 }
-

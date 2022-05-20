@@ -27,7 +27,7 @@ export class BaseApiClient<TJob, TResult> {
     }
 
     /**
-     * Get a list of jobs submitted within the last 30 days in reverse chronological order 
+     * Get a list of jobs submitted within the last 30 days in reverse chronological order
      * (last submitted first) up to the provided limit number of jobs per call. Pagination is supported via passing
      * the last job id from previous call into starting_after.
      * @param params
@@ -50,7 +50,7 @@ export class BaseApiClient<TJob, TResult> {
     }
 
     /**
-     * Submit a job to the api. 
+     * Submit a job to the api.
      * @param options (optional) Options submitted with the job
      * @returns Details of the submitted job
      */
@@ -62,7 +62,7 @@ export class BaseApiClient<TJob, TResult> {
     }
 
     /**
-     * Get the result of a job. 
+     * Get the result of a job.
      * @param id id of job to get result of
      * @param options (optional) Options submitted with the request
      * @returns Job result object

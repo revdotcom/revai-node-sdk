@@ -1,4 +1,4 @@
-import { RevAiApiTranscript } from "../RevAiApiTranscript";
+import { RevAiApiTranscript } from '../RevAiApiTranscript';
 
 /**
  * Options that can used when submitting Rev AI topic extraction job.
