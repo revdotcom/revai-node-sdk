@@ -1,8 +1,6 @@
 const clientHelper = require('../../src/client-helper');
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
-const TopicExtractionJob = require('../../../../dist/src/models/topic-extraction/TopicExtractionJob')
 const client = clientHelper.getTopicExtractionClient();
-const fs = require('fs');
 
 test('Can submit topic extraction job from text', async () => {
     const text = 'An umbrella or parasol is a folding canopy supported by wooden or metal ribs that is \
