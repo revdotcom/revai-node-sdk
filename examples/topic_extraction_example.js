@@ -22,20 +22,14 @@ const token = require('./config/config.json').access_token;
         are not waterproof, and some umbrellas are transparent. Umbrella canopies may be made of \
         fabric or flexible plastic. There are also combinations of parasol and umbrella that are \
         called en-tout-cas (French for 'in any case').";
-    job = await client.submitJob({
-        ...jobOptions, 
-        'text': text
-    });
+    job = await client.submitJobFromText(text, jobOptions);
 
     /** Or submit from an existing transcript from a completed speech to text job */
     // const asyncJobId = 'your_job_id';
     // const asyncApiClient = new revai.RevAiApiClient(token);
     // const transcript = await asyncApiClient.getTranscriptObject(asyncJobId);
     // console.log(`Pulling transcript from async job ${asyncJobId}...`);
-    // job = await client.submitJob({
-    //     ...jobOptions, 
-    //     'json': transcript
-    // });
+    // job = await client.submitJobFromTranscript(transcript, jobOptions);
 
     console.log('Topic extraction job submitted.');
     console.log(`Job Id: ${job.id}`);
@@ -54,5 +48,5 @@ const token = require('./config/config.json').access_token;
      * Delete a job.
      * Job deletion will remove all information about the job from the servers
      */
-    // await client.deleteJob(job.id);
+    await client.deleteJob(job.id);
 })();
