@@ -37,7 +37,8 @@ export class TopicExtractionClient extends BaseApiClient<TopicExtractionJob, Top
         return super._submitJob(options);
     }
 
-    async submitJobFromJson(json: RevAiApiTranscript, options: TopicExtractionJobOptions = {}): Promise<TopicExtractionJob> {
+    async submitJobFromJson(json: RevAiApiTranscript,
+        options: TopicExtractionJobOptions = {}): Promise<TopicExtractionJob> {
         options = { ...options, json: json };
         return super._submitJob(options);
     }
