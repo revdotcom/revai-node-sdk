@@ -11,7 +11,6 @@ const token = require('./config/config.json').access_token;
         delete_after_seconds: 2592000, // 30 days in seconds
         callback_url: 'https://www.example.com/callback'
     };
-    let job;
     
     /** Submit a job with whatever text you want by changing this input */
     const text = "An umbrella or parasol is a folding canopy supported by wooden or metal ribs that is  \
@@ -22,14 +21,14 @@ const token = require('./config/config.json').access_token;
         are not waterproof, and some umbrellas are transparent. Umbrella canopies may be made of \
         fabric or flexible plastic. There are also combinations of parasol and umbrella that are \
         called en-tout-cas (French for 'in any case').";
-    job = await client.submitJobFromText(text, jobOptions);
+    const job = await client.submitJobFromText(text, jobOptions);
 
     /** Or submit from an existing transcript from a completed speech to text job */
     // const asyncJobId = 'your_job_id';
     // const asyncApiClient = new revai.RevAiApiClient(token);
     // const transcript = await asyncApiClient.getTranscriptObject(asyncJobId);
     // console.log(`Pulling transcript from async job ${asyncJobId}...`);
-    // job = await client.submitJobFromTranscript(transcript, jobOptions);
+    // const job = await client.submitJobFromTranscript(transcript, jobOptions);
 
     console.log('Topic extraction job submitted.');
     console.log(`Job Id: ${job.id}`);
@@ -38,7 +37,7 @@ const token = require('./config/config.json').access_token;
     while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
     {
         console.log(`Job ${job.id} is ${jobStatus}`);
-        await new Promise( resolve => setTimeout(resolve, 5000));
+        await new Promise( resolve => setTimeout(resolve, 1000));
     }
 
     const topics = await client.getResult(job.id);

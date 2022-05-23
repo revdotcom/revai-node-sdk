@@ -16,8 +16,8 @@ export class TopicExtractionClient extends BaseApiClient<TopicExtractionJob, Top
      * @param accessToken Access token used to validate API requests
      * @param version (optional) version of the API to be used
      */
-    constructor (accessToken: string, version = 'v1') {
-        super(accessToken, 'topic_extraction', version);
+    constructor (accessToken: string) {
+        super(accessToken, 'topic_extraction', 'v1');
     }
 
     async getJobDetails(id: string): Promise<TopicExtractionJob> {

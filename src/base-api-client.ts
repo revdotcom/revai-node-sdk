@@ -1,7 +1,5 @@
 import { ApiRequestHandler } from './api-request-handler';
 
-type ServiceApi = 'topic_extraction' | 'sentiment_analysis';
-
 /**
  * Base client implementation. Intended to be extended by a specific client per API
  */
@@ -13,7 +11,7 @@ export abstract class BaseApiClient<TJob, TResult> {
      * @param serviceApi Type of api service
      * @param version (optional) version of the API to be used
      */
-    constructor (accessToken: string, serviceApi: ServiceApi, version = 'v1') {
+    constructor (accessToken: string, serviceApi: string, version: string) {
         this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/${serviceApi}/${version}/`, accessToken);
     }
 

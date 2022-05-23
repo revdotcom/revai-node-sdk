@@ -11,7 +11,7 @@ beforeAll(async (done) => {
 
     while((jobStatus = (await client.getJobDetails(job.id)).status) == JobStatus.InProgress)
     {
-        await new Promise( resolve => setTimeout(resolve, 5000));
+        await new Promise( resolve => setTimeout(resolve, 1000));
     }
     done();
 }, 60000);
