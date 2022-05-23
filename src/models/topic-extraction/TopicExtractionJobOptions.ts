@@ -1,3 +1,4 @@
+import { CustomerUrlData } from '../CustomerUrlData';
 import { RevAiApiTranscript } from '../RevAiApiTranscript';
 
 /**
@@ -6,9 +7,8 @@ import { RevAiApiTranscript } from '../RevAiApiTranscript';
  */
 export interface TopicExtractionJobOptions {
     metadata?: string;
-    callback_url?: string;
+    notification_config?: CustomerUrlData;
     delete_after_seconds?: number;
-    language?: string;
     text?: string;
     json?: RevAiApiTranscript;
 }
