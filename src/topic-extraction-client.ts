@@ -1,6 +1,6 @@
 import { BaseApiClient } from './base-api-client';
+import { GetListOfJobsOptions } from './models/GetListOfJobsOptions';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
-import { TopicExtractionGetListOfJobsOptions } from './models/topic-extraction/TopicExtractionGetListOfJobsOptions';
 import { TopicExtractionJob } from './models/topic-extraction/TopicExtractionJob';
 import { TopicExtractionJobOptions } from './models/topic-extraction/TopicExtractionJobOptions';
 import { TopicExtractionResult } from './models/topic-extraction/TopicExtractionResult';
@@ -24,7 +24,7 @@ export class TopicExtractionClient extends BaseApiClient<TopicExtractionJob, Top
         return super._getJobDetails(id);
     }
 
-    async getListOfJobs(options?: TopicExtractionGetListOfJobsOptions): Promise<TopicExtractionJob[]> {
+    async getListOfJobs(options?: GetListOfJobsOptions): Promise<TopicExtractionJob[]> {
         return super._getListOfJobs(options);
     }
 
