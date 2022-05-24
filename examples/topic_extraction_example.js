@@ -40,8 +40,8 @@ const token = require('./config/config.json').access_token;
         await new Promise( resolve => setTimeout(resolve, 1000));
     }
 
-    const topics = await client.getResult(job.id);
-    console.log(JSON.stringify(topics))
+    const topics = await client.getResult(job.id, { threshold: 0 });
+    // console.log(JSON.stringify(topics, null, 2));
 
     /**
      * Delete a job.

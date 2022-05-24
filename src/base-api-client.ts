@@ -28,7 +28,7 @@ export abstract class BaseApiClient<TJob, TResult> {
      * Get a list of jobs submitted within the last 30 days in reverse chronological order
      * (last submitted first) up to the provided limit number of jobs per call. Pagination is supported via passing
      * the last job id from previous call into starting_after.
-     * @param params
+     * @param params Query params for this request
      * @returns List of job details
      */
     protected async _getListOfJobs(params?: {}): Promise<TJob[]> {
@@ -63,6 +63,7 @@ export abstract class BaseApiClient<TJob, TResult> {
      * Get the result of a job.
      * @param id id of job to get result of
      * @param options (optional) Options submitted with the request
+     * @param headers (optional) Http headers to be used for the request
      * @returns Job result object
      */
     protected async _getResult(id: string, options?: {}, headers?: {}): Promise<TResult> {
