@@ -1,4 +1,7 @@
-/** Topic extraction result model*/
+/**
+ * Topic extraction result model.
+ * See https://docs.rev.ai/api/topic-extraction/reference/#operation/GetTopicExtractionResultById for more details.
+ */
 export interface TopicExtractionResult {
     topics: Topic[];
 }

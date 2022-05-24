@@ -41,7 +41,7 @@ const token = require('./config/config.json').access_token;
     }
 
     const topics = await client.getResult(job.id, { threshold: 0 });
-    // console.log(JSON.stringify(topics, null, 2));
+    console.log(JSON.stringify(topics, null, 2));
 
     /**
      * Delete a job.

@@ -1,7 +1,10 @@
 import { JobStatus } from '../JobStatus';
 import { JobType } from '../JobType';
 
-/** Topic extraction job model */
+/**
+ * Topic extraction job details model.
+ * See https://docs.rev.ai/api/topic-extraction/reference/#operation/GetTopicExtractionJobById for more details.
+ */
 export interface TopicExtractionJob {
     id: string;
     status: JobStatus;
