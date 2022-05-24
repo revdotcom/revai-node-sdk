@@ -7,9 +7,9 @@ const token = require('./config/config.json').access_token;
 
     // Configure job submission options.
     const jobOptions = {
-        metadata: 'node sdk topic extraction example',
+        metadata: 'Node SDK Topic Extraction example',
         delete_after_seconds: 2592000, // 30 days in seconds
-        callback_url: 'https://www.example.com/callback'
+        notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' }
     };
     
     /** Submit a job with whatever text you want by changing this input */
