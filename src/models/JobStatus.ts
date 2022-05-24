@@ -1,5 +1,6 @@
 export enum JobStatus {
     Failed = 'failed',
     InProgress = 'in_progress',
-    Transcribed = 'transcribed'
+    Transcribed = 'transcribed',
+    Completed = 'completed'
 }

@@ -1,4 +1,7 @@
+/** Job types */
 export enum JobType {
     Async = 'async',
-    Stream = 'stream'
+    Stream = 'stream',
+    Human = 'human_tc',
+    TopicExtraction = 'topic_extraction'
 }

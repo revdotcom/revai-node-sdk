@@ -17,7 +17,7 @@ const enum TranscriptContentTypes {
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
- * Client which handles connection to the Rev AI API.
+ * Client which handles connection to the Rev AI speech to text API.
  */
 export class RevAiApiClient {
     apiHandler: ApiRequestHandler;
@@ -51,7 +51,7 @@ export class RevAiApiClient {
 
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetListOfJobs
-     * Get a list of transcription jobs submitted within the last week in reverse chronological order
+     * Get a list of transcription jobs submitted within the last 30 days in reverse chronological order
      * (last submitted first) up to the provided limit number of jobs per call. Pagination is supported via passing
      * the last job id from previous call into starting_after.
      * @param limit (optional) maximum number of jobs to retrieve, default is 100
