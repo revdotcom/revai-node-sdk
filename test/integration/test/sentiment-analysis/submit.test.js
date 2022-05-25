@@ -1,6 +1,7 @@
 const clientHelper = require('../../src/client-helper');
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getSentimentAnalysisClient();
+const fs = require('fs');
 
 test('Can submit sentiment analysis job from text', async () => {
     const text = 'An umbrella or parasol is a folding canopy supported by wooden or metal ribs that is \
