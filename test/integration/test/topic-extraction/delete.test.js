@@ -22,5 +22,5 @@ test('Can delete completed job', async () => {
 
     await client.deleteJob(jobId);
 
-    expect(() => client.getJobDetails(jobId)).toThrowError(RevAiApiError);
+    expect(() => await client.getJobDetails(jobId)).toThrowError(RevAiApiError);
 }, 30000);
