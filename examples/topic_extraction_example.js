@@ -34,7 +34,7 @@ const token = require('./config/config.json').access_token;
     console.log(`Job Id: ${job.id}`);
     console.log('Polling for job completion...');
 
-    while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
+    while((jobStatus = (await client.getJobDetails(job.id)).status) === revai.JobStatus.InProgress)
     {
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise(resolve => setTimeout(resolve, 1000));

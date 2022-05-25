@@ -1,6 +1,7 @@
 const configHelper = require('./config-helper');
 const revaiAsync = require('../../../dist/src/api-client');
 const revaiCustomVocabularies = require('../../../dist/src/custom-vocabularies-client');
+const revaiSentimentAnalysis = require('../../../dist/src/sentiment-analysis-client');
 const revaiStreaming = require('../../../dist/src/streaming-client');
 const revaiTopicExtraction = require('../../../dist/src/topic-extraction-client');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
@@ -35,5 +36,10 @@ module.exports = {
         const client = new revaiTopicExtraction.TopicExtractionClient(apiKey);
         client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/topic_extraction/v1/`;
         return client;
-    }
+    },
+    getSentimentAnalysisClient: (apiKey = configHelper.getApiKey()) => {
+        const client = new revaiSentimentAnalysis.SentimentAnalysisClient(apiKey);
+        client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/sentiment_analysis/v1/`;
+        return client;
+    },
 }

@@ -1,6 +1,6 @@
 const clientHelper = require('../../src/client-helper');
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
-const client = clientHelper.getTopicExtractionClient();
+const client = clientHelper.getSentimentAnalysisClient();
 
 let jobId;
 
@@ -21,5 +21,5 @@ test('Can get result of completed job', async () => {
 
     const res = await client.getResult(jobId);
 
-    expect(res).toHaveProperty('topics');
+    expect(res).toHaveProperty('messages');
 }, 30000);
