@@ -24,6 +24,6 @@ test('Can delete completed job', async () => {
     try {
         await client.getJobDetails(jobId);
     } catch (error) {
-        expect(error.response.status).toBe(404);
+        expect(error.statusCode).toBe(404);
     }
 }, 30000);
