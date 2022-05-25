@@ -1,5 +1,5 @@
 const clientHelper = require('../../src/client-helper');
-const TopicExtractionJob = require('../../../dist/src/models/topic-extraction/TopicExtractionJob')
+const TopicExtractionJob = require('../../../../dist/src/models/topic-extraction/TopicExtractionJob');
 const client = clientHelper.getTopicExtractionClient();
 
 beforeAll(async (done) => {

@@ -1,5 +1,5 @@
 const clientHelper = require('../../src/client-helper');
-const SentimentAnalysisJob = require('../../../dist/src/models/sentiment-analysis/SentimentAnalysisJob')
+const SentimentAnalysisJob = require('../../../../dist/src/models/sentiment-analysis/SentimentAnalysisJob')
 const client = clientHelper.getSentimentAnalysisClient();
 
 beforeAll(async (done) => {
