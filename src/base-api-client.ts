@@ -84,7 +84,7 @@ export abstract class BaseApiClient<TJob, TResult> {
             payload.append('options', JSON.stringify(options));
         }
 
-        return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<TJob>('post', '/jobs',
             payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
