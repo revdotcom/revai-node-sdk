@@ -1,5 +1,10 @@
+import * as FormData from 'form-data';
+import * as fs from 'fs';
+import { Readable } from 'stream';
+
 import { ApiRequestHandler } from './api-request-handler';
 
+const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 /**
  * Base client implementation. Intended to be extended by a specific client per API
  */
@@ -57,6 +62,47 @@ export abstract class BaseApiClient<TJob, TResult> {
 
         return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
             { 'Content-Type': 'application/json' }, 'json', options);
+    }
+
+    /**
+     * Submit audio data for job submission.
+     * @param audioData Audio data to be submitted for job.
+     * @param filename (optional) Name of file associated with audio.
+     * @param options (optional) Options submitted with the job.
+     * @returns Details of submitted job
+     */
+     async _submitJobAudioData(
+        audioData: Buffer | Readable,
+        filename?: string,
+        options?: {}
+    ): Promise<TJob> {
+        const payload = new FormData();
+        payload.append('media', audioData, { filename: filename || 'audio_file' });
+        if (options) {
+            options = this.filterNullOptions(options);
+            payload.append('options', JSON.stringify(options));
+        }
+
+        return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
+    }
+
+    /**
+     * Send local file for job submission.
+     * @param filepath Path to local file to be submitted for job. Assumes the process has access to read this file.
+     * @param options (optional) Options submitted with the job.
+     * @returns Details of submitted job
+     */
+     async _submitJobLocalFile(filepath: string, options?: {}): Promise<TJob> {
+        const payload = new FormData();
+        payload.append('media', fs.createReadStream(filepath));
+        if (options) {
+            options = this.filterNullOptions(options);
+            payload.append('options', JSON.stringify(options));
+        }
+
+        return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
     /**
