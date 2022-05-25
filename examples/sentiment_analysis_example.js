@@ -8,11 +8,11 @@ const token = require('./config/config.json').access_token;
     // Configure job submission options.
     const jobOptions = {
         metadata: 'Node SDK Sentiment Analysis example',
-        delete_after_seconds: 2592000, // 30 days in seconds
+        delete_after_seconds: 30 * 60 * 60, // 30 days in seconds
         notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' }
     };
     
-    /** Submit a job with whatever text you want by changing this input */
+    // Submit a job with whatever text you want by changing this input
     const text = "An umbrella or parasol is a folding canopy supported by wooden or metal ribs that is  \
         usually mounted on a wooden, metal, or plastic pole. It is designed to protect a person \
         against rain or sunlight. The term umbrella is traditionally used when protecting oneself from \
@@ -34,8 +34,7 @@ const token = require('./config/config.json').access_token;
     console.log(`Job Id: ${job.id}`);
     console.log('Polling for job completion...');
 
-    while((jobStatus = (await client.getJobDetails(job.id)).status) == revai.JobStatus.InProgress)
-    {
+    while((jobStatus = (await client.getJobDetails(job.id)).status) === revai.JobStatus.InProgress) {
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise(resolve => setTimeout(resolve, 1000));
     }

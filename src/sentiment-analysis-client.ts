@@ -44,7 +44,7 @@ export class SentimentAnalysisClient extends BaseApiClient<SentimentAnalysisJob,
      * See https://docs.rev.ai/api/sentiment-analysis/reference/#operation/DeleteSentimentAnalysisJobById
      * Delete a specific sentiment analysis job.
      * All data related to the job, such as input and result, will be permanently deleted.
-     * A job can only by deleted once it's completed.
+     * A job can only by deleted once it's in a terminal state.
      * @param id Id of job to be deleted
      */
     async deleteJob(id: string): Promise<void> {
