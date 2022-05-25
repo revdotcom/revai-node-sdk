@@ -10,6 +10,7 @@ export * from './JobType';
 export * from './RevAiApiError';
 export * from './RevAiApiJob';
 export * from './RevAiApiTranscript';
+export * from './sentiment-analysis/Sentiment';
 export * from './sentiment-analysis/SentimentAnalysisJob';
 export * from './sentiment-analysis/SentimentAnalysisJobOptions';
 export * from './sentiment-analysis/SentimentAnalysisResult';

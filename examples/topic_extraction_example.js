@@ -8,7 +8,7 @@ const token = require('./config/config.json').access_token;
     // Configure job submission options.
     const jobOptions = {
         metadata: 'Node SDK Topic Extraction example',
-        delete_after_seconds: 2592000, // 30 days in seconds
+        delete_after_seconds: 30 * 60 * 60, // 30 days in seconds
         notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' }
     };
     
@@ -33,7 +33,7 @@ const token = require('./config/config.json').access_token;
     console.log('Topic extraction job submitted.');
     console.log(`Job Id: ${job.id}`);
     console.log('Polling for job completion...');
-    
+
     while((jobStatus = (await client.getJobDetails(job.id)).status) === revai.JobStatus.InProgress) {
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise(resolve => setTimeout(resolve, 2000));
