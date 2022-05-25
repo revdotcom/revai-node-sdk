@@ -1,5 +1,4 @@
 const clientHelper = require('../../src/client-helper');
-const RevAiApiError = require('../../../../dist/src/models/RevAiApiError').RevAiApiError;
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getTopicExtractionClient();
 
@@ -22,5 +21,9 @@ test('Can delete completed job', async () => {
 
     await client.deleteJob(jobId);
 
-    expect(() => await client.getJobDetails(jobId)).toThrowError(RevAiApiError);
+    try {
+        await client.getJobDetails(jobId);
+    } catch (error) {
+        expect(error.response.status).toBe(404);
+    }
 }, 30000);
