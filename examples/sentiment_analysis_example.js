@@ -36,7 +36,7 @@ const token = require('./config/config.json').access_token;
 
     while((jobStatus = (await client.getJobDetails(job.id)).status) === revai.JobStatus.InProgress) {
         console.log(`Job ${job.id} is ${jobStatus}`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     const sentiments = await client.getResult(job.id);

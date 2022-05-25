@@ -12,7 +12,7 @@ const token = require('./config/config.json').access_token;
         notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' }
     };
     
-    /** Submit a job with whatever text you want by changing this input */
+    // Submit a job with whatever text you want by changing this input
     const text = "An umbrella or parasol is a folding canopy supported by wooden or metal ribs that is  \
         usually mounted on a wooden, metal, or plastic pole. It is designed to protect a person \
         against rain or sunlight. The term umbrella is traditionally used when protecting oneself from \
@@ -33,10 +33,10 @@ const token = require('./config/config.json').access_token;
     console.log('Topic extraction job submitted.');
     console.log(`Job Id: ${job.id}`);
     console.log('Polling for job completion...');
-
+    
     while((jobStatus = (await client.getJobDetails(job.id)).status) === revai.JobStatus.InProgress) {
         console.log(`Job ${job.id} is ${jobStatus}`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
     }
 
     const topics = await client.getResult(job.id, { threshold: 0 });
