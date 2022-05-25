@@ -1,4 +1,4 @@
-import { Sentiment } from "./Sentiment";
+import { Sentiment } from './Sentiment';
 
 /** Sentiment analysis query results options */
 export interface SentimentAnalysisResultOptions {
