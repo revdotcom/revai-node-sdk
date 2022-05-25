@@ -19,7 +19,7 @@ test('Can get list of jobs', async () => {
 }, 30000);
 
 test('Can get single job and job by id', async () => {
-    const jobList = await client.getListOfJobs(1);
+    const jobList = await client.getListOfJobs({limit: 1});
     expect(jobList.length).toEqual(1);
     expect(jobList[0]).toMatchObject(TopicExtractionJob);
 
