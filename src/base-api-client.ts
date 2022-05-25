@@ -5,6 +5,7 @@ import { Readable } from 'stream';
 import { ApiRequestHandler } from './api-request-handler';
 
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
+
 /**
  * Base client implementation. Intended to be extended by a specific client per API
  */
