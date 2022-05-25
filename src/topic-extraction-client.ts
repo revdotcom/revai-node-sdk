@@ -44,7 +44,7 @@ export class TopicExtractionClient extends BaseApiClient<TopicExtractionJob, Top
      * See https://docs.rev.ai/api/topic-extraction/reference/#operation/DeleteTopicExtractionJobById
      * Delete a specific topic extraction job.
      * All data related to the job, such as input and result, will be permanently deleted.
-     * A job can only by deleted once it's completed.
+     * A job can only by deleted once it's in a terminal state.
      * @param id Id of job to be deleted
      */
     async deleteJob(id: string): Promise<void> {

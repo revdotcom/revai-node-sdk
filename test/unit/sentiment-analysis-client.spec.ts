@@ -1,11 +1,11 @@
-import { TopicExtractionClient, TopicExtractionJob, TopicExtractionJobOptions, TopicExtractionResult, TopicExtractionResultOptions } from '../../src';
+import { SentimentAnalysisClient, SentimentAnalysisJob, SentimentAnalysisJobOptions, SentimentAnalysisResult, SentimentAnalysisResultOptions } from '../../src';
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { GetListOfJobsOptions } from '../../src/models/GetListOfJobsOptions';
 
 jest.mock('../../src/api-request-handler');
 
-describe('topic-extraction-client', () => {
-    let sut: TopicExtractionClient;
+describe('sentiment-analysis-client', () => {
+    let sut: SentimentAnalysisClient;
     let mockMakeApiRequest: jest.Mock;
 
     const jobId = 'Umx5c6F7pH7r';
@@ -14,15 +14,15 @@ describe('topic-extraction-client', () => {
         id: jobId,
         status: 'completed',
         created_on: '2018-05-05T23:23:22.29Z',
-        type: 'topic_extraction'
-    } as TopicExtractionJob;
+        type: 'sentiment_analysis'
+    } as SentimentAnalysisJob;
 
     beforeEach(() => {
         mockMakeApiRequest = jest.fn();
         (ApiRequestHandler as jest.Mock<ApiRequestHandler>).mockImplementationOnce(() => ({
             makeApiRequest: mockMakeApiRequest
         }));
-        sut = new TopicExtractionClient('testtoken');
+        sut = new SentimentAnalysisClient('testtoken');
     });
 
     describe('getJobDetails', () => {
@@ -42,8 +42,8 @@ describe('topic-extraction-client', () => {
             id: otherJobId,
             status: 'completed',
             created_on: '2013-05-05T23:23:22.29Z',
-            type: 'topic_extraction'
-        } as TopicExtractionJob;
+            type: 'sentiment_analysis'
+        } as SentimentAnalysisJob;
 
         it('get list of jobs', async () => {
             mockMakeApiRequest.mockResolvedValue([jobDetails, jobDetails2]);
@@ -89,7 +89,7 @@ describe('topic-extraction-client', () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'metadata field',
-            } as TopicExtractionJobOptions;
+            } as SentimentAnalysisJobOptions;
 
             const job = await sut.submitJobFromText(text, options);
 
@@ -143,7 +143,7 @@ describe('topic-extraction-client', () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: 'metadata field',
-            } as TopicExtractionJobOptions;
+            } as SentimentAnalysisJobOptions;
             const expectedOptions = { ...options, 'json': transcript };
 
             const job = await sut.submitJobFromJson(transcript, options);
@@ -157,17 +157,14 @@ describe('topic-extraction-client', () => {
 
     describe('getResult', () => {
         const jobResult = {
-            topics: [
+            messages: [
                 {
-                    topic_name: "apples",
-                    score: 0.9,
-                    informants: [
-                        { content: "Apples are tasty." }, 
-                        { content: "Apples are very sweet." } 
-                    ]
+                    score: 0.5,
+                    sentiment: 'neutral',
+                    content: 'that apple was okay'
                 }
             ]
-        } as TopicExtractionResult;
+        } as SentimentAnalysisResult;
 
         it('get job result', async () => {
             mockMakeApiRequest.mockResolvedValue(jobResult);
@@ -175,7 +172,7 @@ describe('topic-extraction-client', () => {
             const res = await sut.getResult(jobId);
 
             expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/result`,
-                { 'Accept': 'application/vnd.rev.topic.v1.0+json' }, 'json');
+                { 'Accept': 'application/vnd.rev.sentiment.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(res).toEqual(jobResult);
         });
@@ -183,14 +180,14 @@ describe('topic-extraction-client', () => {
         it('get job result with options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobResult);
             const options = {
-                threshold: 0.5
-            } as TopicExtractionResultOptions;
+                filter_for: 'neutral'
+            } as SentimentAnalysisResultOptions;
 
             const res = await sut.getResult(jobId, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('get', 
-                `/jobs/${jobId}/result?threshold=0.5`, 
-                { 'Accept': 'application/vnd.rev.topic.v1.0+json' }, 'json');
+                `/jobs/${jobId}/result?filter_for=neutral`, 
+                { 'Accept': 'application/vnd.rev.sentiment.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(res).toEqual(jobResult);
         });
