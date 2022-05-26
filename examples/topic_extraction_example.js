@@ -47,4 +47,5 @@ const token = require('./config/config.json').access_token;
      * Job deletion will remove all information about the job from the servers
      */
     // await client.deleteJob(job.id);
+    // console.log('Job was deleted.');
 })();
