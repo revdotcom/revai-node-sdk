@@ -1,3 +1,5 @@
+import * as FormData from 'form-data';
+import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { BaseApiClient } from './base-api-client';
@@ -7,6 +9,8 @@ import { LanguageIdJobOptions } from './models/language-id/LanguageIdJobOptions'
 import { LanguageIdResult } from './models/language-id/LanguageIdResult';
 
 const LanguageIdContentType = 'application/vnd.rev.languageid.v1.0+json';
+
+const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
  * Client which handles connection to the Rev AI language id API.
@@ -87,7 +91,15 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
         filename?: string,
         options?: LanguageIdJobOptions
     ): Promise<LanguageIdJob> {
-        return super._submitJobAudioData(audioData, filename, options);
+        const payload = new FormData();
+        payload.append('media', audioData, { filename: filename || 'audio_file' });
+        if (options) {
+            options = this.filterNullOptions(options);
+            payload.append('options', JSON.stringify(options));
+        }
+
+        return await this.apiHandler.makeApiRequest<LanguageIdJob>('post', '/jobs',
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
     /**
@@ -100,7 +112,15 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
      * @returns Details of submitted job
      */
     async submitJobLocalFile(filepath: string, options?: LanguageIdJobOptions): Promise<LanguageIdJob> {
-        return super._submitJobLocalFile(filepath, options);
+        const payload = new FormData();
+        payload.append('media', fs.createReadStream(filepath));
+        if (options) {
+            options = this.filterNullOptions(options);
+            payload.append('options', JSON.stringify(options));
+        }
+
+        return await this.apiHandler.makeApiRequest<LanguageIdJob>('post', `/jobs`,
+            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
     /**

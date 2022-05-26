@@ -1,10 +1,4 @@
-import * as FormData from 'form-data';
-import * as fs from 'fs';
-import { Readable } from 'stream';
-
 import { ApiRequestHandler } from './api-request-handler';
-
-const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
  * Base client implementation. Intended to be extended by a specific client per API
@@ -12,7 +6,7 @@ const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 export abstract class BaseApiClient<TJob, TResult> {
     apiHandler: ApiRequestHandler;
 
-    /**
+    /**s
      * @param accessToken Access token used to validate API requests
      * @param serviceApi Type of api service
      * @param version (optional) version of the API to be used
@@ -66,47 +60,6 @@ export abstract class BaseApiClient<TJob, TResult> {
     }
 
     /**
-     * Submit audio data for job submission.
-     * @param audioData Audio data to be submitted for job.
-     * @param filename (optional) Name of file associated with audio.
-     * @param options (optional) Options submitted with the job.
-     * @returns Details of submitted job
-     */
-     async _submitJobAudioData(
-        audioData: Buffer | Readable,
-        filename?: string,
-        options?: {}
-    ): Promise<TJob> {
-        const payload = new FormData();
-        payload.append('media', audioData, { filename: filename || 'audio_file' });
-        if (options) {
-            options = this.filterNullOptions(options);
-            payload.append('options', JSON.stringify(options));
-        }
-
-        return await this.apiHandler.makeApiRequest<TJob>('post', '/jobs',
-            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
-    }
-
-    /**
-     * Send local file for job submission.
-     * @param filepath Path to local file to be submitted for job. Assumes the process has access to read this file.
-     * @param options (optional) Options submitted with the job.
-     * @returns Details of submitted job
-     */
-     async _submitJobLocalFile(filepath: string, options?: {}): Promise<TJob> {
-        const payload = new FormData();
-        payload.append('media', fs.createReadStream(filepath));
-        if (options) {
-            options = this.filterNullOptions(options);
-            payload.append('options', JSON.stringify(options));
-        }
-
-        return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
-            payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
-    }
-
-    /**
      * Get the result of a job.
      * @param id id of job to get result of
      * @param options (optional) Options submitted with the request
@@ -124,7 +77,7 @@ export abstract class BaseApiClient<TJob, TResult> {
         return Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
     }
 
-    private filterNullOptions(options: {}): any {
+    protected filterNullOptions(options: {}): any {
         const filteredOptions: any = {};
         Object.keys(options).forEach((option) => {
             if (options[option] !== null && options[option] !== undefined) {

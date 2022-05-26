@@ -22,7 +22,7 @@ const token = require('./config/config.json').access_token;
         source_config: sourceConfig,
         metadata: 'node example language id url submission',
         notification_config: notificationConfig,
-        delete_after_seconds: 2592000 // 30 days in seconds
+        delete_after_seconds: 30 * 24 * 60 * 60 // 30 days in seconds
     };
 
     // Media may be submitted from a url
