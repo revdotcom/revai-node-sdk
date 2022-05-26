@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { BaseApiClient } from './base-api-client';
+import { CustomerUrlData } from './models/CustomerUrlData';
 import { GetListOfJobsOptions } from './models/GetListOfJobsOptions';
 import { LanguageIdJob } from './models/language-id/LanguageIdJob';
 import { LanguageIdJobOptions } from './models/language-id/LanguageIdJobOptions';
@@ -68,12 +69,15 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
     /**
      * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
      * Submits a language id job with a media url as input.
-     * @param mediaUrl Media url to be submitted for language id.
+     * @param sourceConfig Source config to be submitted for language id.
      * @param options Options submitted with the job: see LanguageIdJobOptions object
      * @returns Details of the submitted job
      */
-    async submitJobUrl(mediaUrl: string, options: LanguageIdJobOptions = {}): Promise<LanguageIdJob> {
-        options = { ...options, media_url: mediaUrl };
+    async submitJobSourceConfig(
+        sourceConfig: CustomerUrlData = {url: null, auth_headers: null},
+        options: LanguageIdJobOptions = {}
+    ): Promise<LanguageIdJob> {
+        options = { ...options, source_config: sourceConfig };
         return super._submitJob(options);
     }
 

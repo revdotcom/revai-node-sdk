@@ -32,7 +32,6 @@ const token = require('./config/config.json').access_token;
      * to receive the response asynchronously on job completion
      */
     while((jobStatus = (await client.getJobDetails(job.id)).status) === revai.JobStatus.InProgress) {
-    {
         console.log(`Job ${job.id} is ${jobStatus}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
     }

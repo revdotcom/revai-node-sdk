@@ -11,17 +11,15 @@ describe('language-id-client', () => {
 
     const jobId = 'Umx5c6F7pH7r';
     const otherJobId = 'EMx5c67p3dr';
-    const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
     const metadata = 'This is a sample submit jobs option';
-    const callbackUrl = 'https://www.example.com/callback';
     const sourceAuth = { 'Authorization': 'Bearer source_token' };
     const callbackAuth = { 'Authorization': 'Bearer callback_token' };
     const sourceConfig: CustomerUrlData = {
-        url: mediaUrl,
+        url: 'https://www.rev.ai/FTC_Sample_1.mp3',
         auth_headers: sourceAuth
     };
     const notificationConfig: CustomerUrlData = {
-        url: callbackUrl,
+        url: 'https://www.example.com/callback',
         auth_headers: callbackAuth
     };
     const filename = 'path/to/test.mp3';
@@ -87,62 +85,62 @@ describe('language-id-client', () => {
         });
     });
 
-    describe('submitJobUrl', () => {
-        it('submit job with media url without options', async () => {
+    describe('submitJobSourceConfig', () => {
+        it('submit job with source config without options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
 
-            const job = await sut.submitJobUrl(mediaUrl);
+            const job = await sut.submitJobSourceConfig(sourceConfig);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: sourceConfig });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with null options', async () => {
+        it('submit job with source config with null options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
 
-            const job = await sut.submitJobUrl(mediaUrl, null);
+            const job = await sut.submitJobSourceConfig(sourceConfig, null);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: sourceConfig });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with empty options', async () => {
+        it('submit job with source config with empty options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
 
-            const job = await sut.submitJobUrl(mediaUrl, {});
+            const job = await sut.submitJobSourceConfig(sourceConfig, {});
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: sourceConfig });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with all options null', async () => {
+        it('submit job with source config with all options null', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options: LanguageIdJobOptions = {};
 
-            const job = await sut.submitJobUrl(mediaUrl, options);
+            const job = await sut.submitJobSourceConfig(sourceConfig, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: sourceConfig });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
 
-        it('submit job with media url with options', async () => {
+        it('submit job with source config with options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options: LanguageIdJobOptions = {
                 metadata: metadata,
-                callback_url: callbackUrl,
-                media_url: mediaUrl,
+                notification_config: notificationConfig,
+                source_config: sourceConfig,
                 delete_after_seconds: 0
             };
 
-            const job = await sut.submitJobUrl(mediaUrl, options);
+            const job = await sut.submitJobSourceConfig(sourceConfig, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
                 { 'Content-Type': 'application/json' }, 'json', options);
@@ -245,7 +243,7 @@ describe('language-id-client', () => {
                     expect.stringContaining('Content-Type: application/octet-stream'),
                     expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
                     expect.not.stringContaining('metadata'),
-                    expect.not.stringContaining('callback_url'),
+                    expect.not.stringContaining('notification_config'),
                     expect.not.stringContaining('delete_after_seconds')
                 ])
             });
@@ -261,7 +259,6 @@ describe('language-id-client', () => {
             const fakeStream = Buffer.alloc(10);
             const options = {
                 metadata: metadata,
-                callback_url: callbackUrl,
                 delete_after_seconds: 0
             };
 
@@ -273,8 +270,7 @@ describe('language-id-client', () => {
                     expect.anything(),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"'),
                     expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
-                    expect.stringContaining(`"metadata":"${metadata}",`),
-                    expect.stringContaining(`"callback_url":"${callbackUrl}",`),
+                    expect.stringContaining(`"metadata":"${metadata}",`)
                     expect.stringContaining('"delete_after_seconds":0')
                 ])
             });
@@ -315,7 +311,7 @@ describe('language-id-client', () => {
                     expect.stringContaining('Content-Type: audio/mpeg'),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
                     expect.not.stringContaining('metadata'),
-                    expect.not.stringContaining('callback_url'),
+                    expect.not.stringContaining('notification_config'),
                     expect.not.stringContaining('delete_after_seconds')
                 ])
             });
@@ -330,7 +326,6 @@ describe('language-id-client', () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: metadata,
-                callback_url: callbackUrl,
                 delete_after_seconds: 0
             };
             const expectedPayload = expect.objectContaining({
@@ -340,7 +335,6 @@ describe('language-id-client', () => {
                     expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"'),
                     expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
                     expect.stringContaining(`"metadata":"${metadata}",`),
-                    expect.stringContaining(`"callback_url":"${callbackUrl}",`),
                     expect.stringContaining('"delete_after_seconds":0')
                 ])
             });

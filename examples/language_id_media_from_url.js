@@ -25,7 +25,8 @@ const token = require('./config/config.json').access_token;
         delete_after_seconds: 30 * 24 * 60 * 60 // 30 days in seconds
     };
 
-    // Media may be submitted from a url
+    // Media may be submitted from a source config
+    // var job = await client.submitJobSourceConfig(sourceConfig);
     var job = await client.submitJob(jobOptions);
 
     console.log('Language id job submitted.');
