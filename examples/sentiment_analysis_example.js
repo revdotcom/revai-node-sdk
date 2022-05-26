@@ -8,7 +8,7 @@ const token = require('./config/config.json').access_token;
     // Configure job submission options.
     const jobOptions = {
         metadata: 'Node SDK Sentiment Analysis example',
-        delete_after_seconds: 30 * 60 * 60, // 30 days in seconds
+        delete_after_seconds: 30 * 24 * 60 * 60, // 30 days in seconds
         notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' }
     };
     
@@ -28,7 +28,7 @@ const token = require('./config/config.json').access_token;
     // const asyncApiClient = new revai.RevAiApiClient(token);
     // const transcript = await asyncApiClient.getTranscriptObject(asyncJobId);
     // console.log(`Pulling transcript from async job ${asyncJobId}...`);
-    // const job = await client.submitJobFromTranscript(transcript, jobOptions);
+    // const job = await client.submitJobFromJson(transcript, jobOptions);
 
     console.log('Sentiment analysis job submitted.');
     console.log(`Job Id: ${job.id}`);
@@ -47,4 +47,5 @@ const token = require('./config/config.json').access_token;
      * Job deletion will remove all information about the job from the servers
      */
     // await client.deleteJob(job.id);
+    // console.log('Job was deleted.');
 })();
