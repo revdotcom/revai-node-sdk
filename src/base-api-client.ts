@@ -6,7 +6,7 @@ import { ApiRequestHandler } from './api-request-handler';
 export abstract class BaseApiClient<TJob, TResult> {
     apiHandler: ApiRequestHandler;
 
-    /**s
+    /**
      * @param accessToken Access token used to validate API requests
      * @param serviceApi Type of api service
      * @param version (optional) version of the API to be used
