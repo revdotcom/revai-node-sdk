@@ -1,4 +1,3 @@
-import * as FormData from 'form-data';
 import { Readable } from 'stream';
 
 import { BaseApiClient } from './base-api-client';
@@ -9,8 +8,6 @@ import { LanguageIdResult } from './models/language-id/LanguageIdResult';
 
 const LanguageIdContentType = 'application/vnd.rev.languageid.v1.0+json';
 
-const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
-
 /**
  * Client which handles connection to the Rev AI language id API.
  */
@@ -19,8 +16,8 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
      * @param accessToken Access token used to validate API requests
      * @param version (optional) version of the API to be used
      */
-     constructor (accessToken: string) {
-        super(accessToken, 'language_id', 'v1');
+     constructor(accessToken: string) {
+        super(accessToken, 'languageid', 'v1');
     }
 
     /**
@@ -56,7 +53,18 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
 
     /**
      * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
+     * Submits a language id job with options.
+     * @param options Options submitted with the job: see LanguageIdJobOptions object
+     * @returns Details of the submitted job
+     */
+     async submitJob(options: LanguageIdJobOptions = {}): Promise<LanguageIdJob> {
+        return super._submitJob(options);
+    }
+
+    /**
+     * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
      * Submits a language id job with a media url as input.
+     * @param mediaUrl Media url to be submitted for language id.
      * @param options Options submitted with the job: see LanguageIdJobOptions object
      * @returns Details of the submitted job
      */
@@ -102,6 +110,6 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
      * @returns Language id job result
      */
     async getResult(id: string): Promise<LanguageIdResult> {
-        return super._getResult(id, { 'Accept': LanguageIdContentType });
+        return super._getResult(id, {}, { 'Accept': LanguageIdContentType });
     }
 }

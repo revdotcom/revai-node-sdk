@@ -9,7 +9,6 @@ describe('language-id-client', () => {
     let sut: LanguageIdClient;
     let mockMakeApiRequest: jest.Mock;
 
-    const LanguageIdContentType = 'application/vnd.rev.languageid.v1.0+json';
     const jobId = 'Umx5c6F7pH7r';
     const otherJobId = 'EMx5c67p3dr';
     const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
@@ -90,6 +89,8 @@ describe('language-id-client', () => {
 
     describe('submitJobUrl', () => {
         it('submit job with media url without options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
+
             const job = await sut.submitJobUrl(mediaUrl);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
@@ -99,6 +100,8 @@ describe('language-id-client', () => {
         });
 
         it('submit job with media url with null options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
+
             const job = await sut.submitJobUrl(mediaUrl, null);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
@@ -108,6 +111,8 @@ describe('language-id-client', () => {
         });
 
         it('submit job with media url with empty options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
+
             const job = await sut.submitJobUrl(mediaUrl, {});
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
@@ -117,6 +122,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with media url with all options null', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options: LanguageIdJobOptions = {};
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -128,6 +134,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with media url with options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options: LanguageIdJobOptions = {
                 metadata: metadata,
                 callback_url: callbackUrl,
@@ -146,6 +153,7 @@ describe('language-id-client', () => {
 
     describe('submitJob', () => {
         it('submit job with with authentication support options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options: LanguageIdJobOptions = {
                 source_config: sourceConfig,
                 metadata: metadata,
@@ -164,6 +172,7 @@ describe('language-id-client', () => {
 
     describe('submitJobFileStream', () => {
         it('submit job with Readable', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const fakeStream = new Readable();
 
             const job = await sut.submitJobAudioData(fakeStream);
@@ -183,6 +192,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with Buffer', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream);
@@ -202,6 +212,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with name', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream, 'example.mp3');
@@ -221,6 +232,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with all options undefined', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const fakeStream = Buffer.alloc(10);
 
             const job = await sut.submitJobAudioData(fakeStream, null, {});
@@ -245,6 +257,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const fakeStream = Buffer.alloc(10);
             const options = {
                 metadata: metadata,
@@ -275,6 +288,7 @@ describe('language-id-client', () => {
 
     describe('submitJobLocalFile', () => {
         it('submit job with local file without options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const job = await sut.submitJobLocalFile(filename);
 
             const expectedPayload = expect.objectContaining({
@@ -292,6 +306,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with local file with all options undefined', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const job = await sut.submitJobLocalFile(filename, {});
 
             const expectedPayload = expect.objectContaining({
@@ -312,6 +327,7 @@ describe('language-id-client', () => {
         });
 
         it('submit job with local file with options', async () => {
+            mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
                 metadata: metadata,
                 callback_url: callbackUrl,
@@ -372,7 +388,7 @@ describe('language-id-client', () => {
             const res = await sut.getResult(jobId);
 
             expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/result`,
-                { 'Accept': LanguageIdContentType }, 'json');
+                { 'Accept': 'application/vnd.rev.languageid.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(res).toEqual(jobResult);
         });
