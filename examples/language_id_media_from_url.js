@@ -28,6 +28,7 @@ const token = require('./config/config.json').access_token;
     // Media may be submitted from a url
     var job = await client.submitJob(jobOptions);
 
+    console.log('Language id job submitted.');
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
     console.log(`Created On: ${job.created_on}`);

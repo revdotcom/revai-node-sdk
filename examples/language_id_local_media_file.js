@@ -20,6 +20,7 @@ const token = require('./config/config.json').access_token;
         console.dir(e);
     }
 
+    console.log('Language id job submitted.');
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
     console.log(`Created On: ${job.created_on}`);
