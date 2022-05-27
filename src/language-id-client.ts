@@ -68,21 +68,6 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
 
     /**
      * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
-     * Submits a language id job with a media url as input.
-     * @param sourceConfig Source config to be submitted for language id.
-     * @param options Options submitted with the job: see LanguageIdJobOptions object
-     * @returns Details of the submitted job
-     */
-    async submitJobSourceConfig(
-        sourceConfig: CustomerUrlData = {url: null, auth_headers: null},
-        options: LanguageIdJobOptions = {}
-    ): Promise<LanguageIdJob> {
-        options = { ...options, source_config: sourceConfig };
-        return super._submitJob(options);
-    }
-
-    /**
-     * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
      * Submit audio data for language id.
      * @param audioData Audio data to be submitted for language id.
      * @param filename (optional) Name of file associated with audio.

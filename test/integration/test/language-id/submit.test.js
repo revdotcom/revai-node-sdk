@@ -2,10 +2,11 @@ const clientHelper = require('../../src/client-helper');
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getLanguageIdClient();
 
-test('Can submit url', async () => {
+test('Can submit job', async () => {
     const options = new Object();
     options.metadata = 'Node sdk submit url';
-    const res = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', options);
+    options.sourceConfig = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
+    const res = await client.submitJob(options);
 
     expect(res.status).toBe(JobStatus.InProgress);
     expect(res.created_on).not.toBeNull();

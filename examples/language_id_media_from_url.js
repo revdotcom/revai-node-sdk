@@ -26,7 +26,6 @@ const token = require('./config/config.json').access_token;
     };
 
     // Media may be submitted from a source config
-    // var job = await client.submitJobSourceConfig(sourceConfig);
     var job = await client.submitJob(jobOptions);
 
     console.log('Language id job submitted.');
