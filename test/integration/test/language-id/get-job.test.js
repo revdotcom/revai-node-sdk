@@ -23,8 +23,8 @@ beforeAll(async (done) => {
 test('Can get list of jobs', async () => {
     const jobList = await client.getListOfJobs();
     jobList.forEach((languageIdJob, index) => {
-        languageIdJob.metadata === metadatas[index];
         expect(languageIdJob).toMatchObject(LanguageIdJob);
+        expect(languageIdJob.metadata).toEqual(metadatas[index]);
     });
 }, 30000);
 
