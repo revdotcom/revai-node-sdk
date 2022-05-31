@@ -5,12 +5,15 @@ const client = clientHelper.getLanguageIdClient();
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
     if (jobList === undefined || jobList.length < 2) {
+        const sourceConfig = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
         const options1 = new Object();
         options1.metadata = 'Node sdk submit url 1';
+        options1.source_config = sourceConfig;
         const options2 = new Object();
         options2.metadata = 'Node sdk submit url 2';
-        await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', options1);
-        await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', options2);
+        options2.source_config = sourceConfig;
+        await client.submitJob(options1);
+        await client.submitJob(options2);
     }
     done();
 }, 60000);

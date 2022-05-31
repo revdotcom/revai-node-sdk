@@ -25,13 +25,17 @@ const token = require('./config/config.json').access_token;
         delete_after_seconds: 30 * 24 * 60 * 60 // 30 days in seconds
     };
 
-    // Media may be submitted from a source config
-    var job = await client.submitJob(jobOptions);
-
-    console.log('Language id job submitted.');
-    console.log(`Job Id: ${job.id}`);
-    console.log(`Status: ${job.status}`);
-    console.log(`Created On: ${job.created_on}`);
+    // Submitting job via source config
+    var job;
+    try {
+        var job = await client.submitJob(jobOptions);
+        console.log('Language id job submitted.');
+        console.log(`Job Id: ${job.id}`);
+        console.log(`Status: ${job.status}`);
+        console.log(`Created On: ${job.created_on}`);
+    } catch (e) {
+        console.dir(e);
+    }
 
     /**
      * Waits 5 seconds between each status check to see if job is complete.
@@ -47,13 +51,20 @@ const token = require('./config/config.json').access_token;
     /**
      * Get language id result as an Object
      */
-    var languageIdResult = await client.getResult(job.id);
-    console.log(JSON.stringify(languageIdResult, null, 2));
+    var jobStatus = (await client.getJobDetails(job.id)).status;
+    if (jobStatus === revai.JobStatus.Completed) {
+        var languageIdResult = await client.getResult(job.id);
+        console.log(`Language id job ${job.id} completed successfully.`);
+        console.log(JSON.stringify(languageIdResult, null, 2));
+    } else {
+        console.log(`Language id job ${job.id} failed with ${job.failure_detail}.`);
+    }
 
     /**
      * Delete a job
      * Job deletion will remove all information about the job from the servers
      */
     // await client.deleteJob(job.id);
+    // console.log(`Deleted language id job ${job.id}`);
 })();
 

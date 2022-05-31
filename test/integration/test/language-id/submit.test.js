@@ -5,7 +5,7 @@ const client = clientHelper.getLanguageIdClient();
 test('Can submit job', async () => {
     const options = new Object();
     options.metadata = 'Node sdk submit url';
-    options.sourceConfig = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
+    options.source_config = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
     const res = await client.submitJob(options);
 
     expect(res.status).toBe(JobStatus.InProgress);

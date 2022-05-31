@@ -13,7 +13,7 @@ const LanguageIdContentType = 'application/vnd.rev.languageid.v1.0+json';
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
- * Client which handles connection to the Rev AI language id API.
+ * Client which handles connection to the Rev AI Language Id API.
  */
 export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdResult> {
     /**
@@ -57,7 +57,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
 
     /**
      * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
-     * Submits a language id job with options.
+     * Submits a language id job from url with options.
      * @param options Options submitted with the job: see LanguageIdJobOptions object
      * @returns Details of the submitted job
      */
@@ -67,7 +67,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
 
     /**
      * See https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
-     * Submit audio data for language id.
+     * Submit local audio data for language id.
      * @param audioData Audio data to be submitted for language id.
      * @param filename (optional) Name of file associated with audio.
      * @param options (optional) Options submitted with the job, see LanguageIdJobOptions object
@@ -113,7 +113,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
 
     /**
      * See https://docs.rev.ai/api/language-identification/reference/#operation/GetLanguageIdentificationResultById
-     * Get the result of a language id job.
+     * Get the result of a successful language id job.
      * @param id Id of job to get result of
      * @returns Language id job result
      */

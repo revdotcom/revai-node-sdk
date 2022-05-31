@@ -6,8 +6,9 @@ let jobId;
 
 beforeAll(async (done) => {
     const options = new Object();
-    options.metadata = 'Node sdk submit url for get result';
-    const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', options);
+    options.metadata = 'Node sdk submit url for deletion';
+    options.source_config = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
+    const job = await client.submitJob(options);
     jobId = job.id;
 
     while((jobStatus = (await client.getJobDetails(job.id)).status) == JobStatus.InProgress)

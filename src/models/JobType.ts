@@ -4,5 +4,6 @@ export enum JobType {
     Stream = 'stream',
     Human = 'human_tc',
     TopicExtraction = 'topic_extraction',
-    SentimentAnalysis = 'sentiment_analysis'
+    SentimentAnalysis = 'sentiment_analysis',
+    LanguageId = 'language_id'
 }
