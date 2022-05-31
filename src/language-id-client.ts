@@ -3,7 +3,6 @@ import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { BaseApiClient } from './base-api-client';
-import { CustomerUrlData } from './models/CustomerUrlData';
 import { GetListOfJobsOptions } from './models/GetListOfJobsOptions';
 import { LanguageIdJob } from './models/language-id/LanguageIdJob';
 import { LanguageIdJobOptions } from './models/language-id/LanguageIdJobOptions';
