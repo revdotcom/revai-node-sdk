@@ -2,17 +2,15 @@ const clientHelper = require('../../src/client-helper');
 const LanguageIdJob = require('../../../../dist/src/models/language-id/LanguageIdJob');
 const client = clientHelper.getLanguageIdClient();
 
-const metadatas = ['Node sdk submit url 1', 'Node sdk submit url 2'];
-
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
     if (jobList === undefined || jobList.length < 2) {
         const sourceConfig = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
         const options1 = new Object();
-        options1.metadata = metadatas[0];
+        options1.metadata = 'Node sdk submit url 1';
         options1.source_config = sourceConfig;
         const options2 = new Object();
-        options2.metadata = metadatas[1];
+        options2.metadata = 'Node sdk submit url 2';
         options2.source_config = sourceConfig;
         await client.submitJob(options1);
         await client.submitJob(options2);
@@ -22,9 +20,8 @@ beforeAll(async (done) => {
 
 test('Can get list of jobs', async () => {
     const jobList = await client.getListOfJobs();
-    jobList.forEach((languageIdJob, index) => {
+    jobList.forEach((languageIdJob) => {
         expect(languageIdJob).toMatchObject(LanguageIdJob);
-        expect(languageIdJob.metadata).toEqual(metadatas[index]);
     });
 }, 30000);
 
