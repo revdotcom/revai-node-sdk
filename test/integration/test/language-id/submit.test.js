@@ -19,7 +19,7 @@ test('Can submit local file', async () => {
     const options = new Object();
     options.metadata = 'Node sdk submit local file';
 
-    const res = await client.submitJobLocalFile('../../resources/test_mp3.mp3', options);
+    const res = await client.submitJobLocalFile('./test/integration/resources/test_mp3.mp3', options);
 
     expect(res.status).toBe(JobStatus.InProgress);
     expect(res.created_on).not.toBeNull();
@@ -30,7 +30,7 @@ test('Can submit local file', async () => {
 test('Can submit buffer', async (done) => {
     const options = new Object();
     options.metadata = 'Node sdk submit buffer';
-    fs.readFile('../../resources/test_mp3.mp3', async (_, data) => {
+    fs.readFile('./test/integration/resources/test_mp3.mp3', async (_, data) => {
         const res = await client.submitJobAudioData(data, undefined, options);
 
         expect(res.status).toBe(JobStatus.InProgress);
@@ -44,7 +44,7 @@ test('Can submit buffer', async (done) => {
 test('Can submit buffer with filename', async (done) => {
     const options = new Object();
     options.metadata = 'Node sdk submit buffer with filename';
-    fs.readFile('../../resources/test_mp3.mp3', async (err, data) => {
+    fs.readFile('./test/integration/resources/test_mp3.mp3', async (err, data) => {
         const res = await client.submitJobAudioData(data, "test_file.mp3", options);
 
         expect(res.status).toBe(JobStatus.InProgress);
@@ -57,7 +57,7 @@ test('Can submit buffer with filename', async (done) => {
 
 test('Can submit ReadableStream', async () => {
     const options = new Object();
-    const fileStream = fs.createReadStream('../../resources/test_mp3.mp3');
+    const fileStream = fs.createReadStream('./test/integration/resources/test_mp3.mp3');
     options.metadata = 'Node sdk submit ReadableStream';
 
     const res = await client.submitJobAudioData(fileStream, 'test_mp3.mp3', options);

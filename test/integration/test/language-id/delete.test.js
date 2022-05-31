@@ -1,5 +1,4 @@
 const clientHelper = require('../../src/client-helper');
-const RevAiApiError = require('../../../../dist/src/models/RevAiApiError').RevAiApiError;
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getLanguageIdClient();
 
@@ -25,5 +24,9 @@ test('Can delete completed job', async () => {
 
     await client.deleteJob(jobId);
 
-    expect(client.getJobDetails(jobId)).toThrow(RevAiApiError);
+    try {
+        await client.getJobDetails(jobId);
+    } catch (error) {
+        expect(error.statusCode).toBe(404);
+    }
 }, 30000);
