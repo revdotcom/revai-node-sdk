@@ -20,8 +20,12 @@ beforeAll(async (done) => {
 
 test('Can get list of jobs', async () => {
     const jobList = await client.getListOfJobs();
+    var date = new Date(jobList[0].created_on);
     jobList.forEach((languageIdJob) => {
         expect(languageIdJob).toMatchObject(LanguageIdJob);
+        var createdOn = new Date(langaugeIdJob.created_on);
+        expect(createdOn).toBeLessThanOrEqual(date);
+        date = createdOn;
     });
 }, 30000);
 
