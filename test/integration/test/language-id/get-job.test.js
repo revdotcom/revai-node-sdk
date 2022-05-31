@@ -23,7 +23,7 @@ test('Can get list of jobs', async () => {
     var date = new Date(jobList[0].created_on);
     jobList.forEach((languageIdJob) => {
         expect(languageIdJob).toMatchObject(LanguageIdJob);
-        var createdOn = new Date(langaugeIdJob.created_on);
+        var createdOn = new Date(languageIdJob.created_on);
         expect(createdOn).toBeLessThanOrEqual(date);
         date = createdOn;
     });
