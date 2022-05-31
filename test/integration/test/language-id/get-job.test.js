@@ -6,11 +6,12 @@ beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
     if (jobList === undefined || jobList.length < 2) {
         const sourceConfig = { url: 'https://www.rev.ai/FTC_Sample_1.mp3', auth_headers: null };
+        const metadatas = ['Node sdk submit url 1', 'Node sdk submit url 2'];
         const options1 = new Object();
-        options1.metadata = 'Node sdk submit url 1';
+        options1.metadata = metadatas[0];
         options1.source_config = sourceConfig;
         const options2 = new Object();
-        options2.metadata = 'Node sdk submit url 2';
+        options2.metadata = metadatas[1];;
         options2.source_config = sourceConfig;
         await client.submitJob(options1);
         await client.submitJob(options2);
@@ -20,7 +21,8 @@ beforeAll(async (done) => {
 
 test('Can get list of jobs', async () => {
     const jobList = await client.getListOfJobs();
-    jobList.forEach((languageIdJob) => {
+    jobList.forEach((languageIdJob, index) => {
+        languageIdJob.metadata === metadatas[index];
         expect(languageIdJob).toMatchObject(LanguageIdJob);
     });
 }, 30000);
