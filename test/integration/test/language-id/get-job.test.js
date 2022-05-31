@@ -35,4 +35,5 @@ test('Can get single job and job by id', async () => {
 
     expect(job).toMatchObject(LanguageIdJob);
     expect(job.id).toEqual(jobId);
+    expect(job.metadata).toEqual('Node sdk submit url 2');
 }, 30000);

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const clientHelper = require('../../src/client-helper');
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
+const JobType = require('../../../../dist/src/models/JobType').JobType;
 const client = clientHelper.getLanguageIdClient();
 
 test('Can submit job', async () => {
@@ -13,6 +14,7 @@ test('Can submit job', async () => {
     expect(res.created_on).not.toBeNull();
     expect(res.id).not.toBeNull();
     expect(res.failure).toBeUndefined();
+    expect(res.type).toBe(JobType.LanguageId);
 }, 30000);
 
 test('Can submit local file', async () => {
@@ -25,6 +27,7 @@ test('Can submit local file', async () => {
     expect(res.created_on).not.toBeNull();
     expect(res.id).not.toBeNull();
     expect(res.failure).toBeUndefined();
+    expect(res.type).toBe(JobType.LanguageId);
 }, 30000);
 
 test('Can submit buffer', async (done) => {
@@ -37,6 +40,7 @@ test('Can submit buffer', async (done) => {
         expect(res.created_on).not.toBeNull();
         expect(res.id).not.toBeNull();
         expect(res.failure).toBeUndefined();
+        expect(res.type).toBe(JobType.LanguageId);
         done();
     });
 }, 30000);
@@ -51,6 +55,7 @@ test('Can submit buffer with filename', async (done) => {
         expect(res.created_on).not.toBeNull();
         expect(res.id).not.toBeNull();
         expect(res.failure).toBeUndefined();
+        expect(res.type).toBe(JobType.LanguageId);
         done();
     });
 }, 30000);
@@ -66,4 +71,5 @@ test('Can submit ReadableStream', async () => {
     expect(res.created_on).not.toBeNull();
     expect(res.id).not.toBeNull();
     expect(res.failure).toBeUndefined();
+    expect(res.type).toBe(JobType.LanguageId);
 }, 30000);
