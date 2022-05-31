@@ -1,5 +1,5 @@
 const clientHelper = require('../../src/client-helper');
-const LanguageIdJob = require('../../../dist/src/models/language-id/LanguageIdJob')
+const LanguageIdJob = require('../../../../dist/src/models/language-id/LanguageIdJob');
 const client = clientHelper.getLanguageIdClient();
 
 beforeAll(async (done) => {

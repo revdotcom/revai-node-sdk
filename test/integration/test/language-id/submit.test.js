@@ -1,3 +1,4 @@
+const fs = require('fs');
 const clientHelper = require('../../src/client-helper');
 const JobStatus = require('../../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getLanguageIdClient();
