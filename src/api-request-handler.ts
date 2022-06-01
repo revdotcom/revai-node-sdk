@@ -68,7 +68,11 @@ export class ApiRequestHandler {
                 case 404:
                     throw new RevAiApiError(error);
                 case 403:
-                    throw new InsufficientCreditsError(error);
+                    if (error.response.data.error.includes("Not enough credits for payment")) {
+                        throw new InsufficientCreditsError(error);
+                    } else {
+                        throw new RevAiApiError(error)
+                    }
                 case 409:
                     throw new InvalidStateError(error);
                 default:

@@ -3,14 +3,14 @@ import { AxiosError } from 'axios';
 export class RevAiApiError {
     statusCode: number;
     title: string;
-    detail?: string;
+    error?: string;
     type?: string;
 
     constructor(e: AxiosError) {
         if (e.response) {
             this.statusCode = e.response.status;
             this.title = e.response.data.title || '';
-            this.detail = e.response.data.detail || '';
+            this.error = e.response.data.error || '';
             this.type = e.response.data.type || '';
         }
     }
