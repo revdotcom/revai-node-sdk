@@ -2,6 +2,7 @@ const configHelper = require('./config-helper');
 const revaiAsync = require('../../../dist/src/api-client');
 const revaiCustomVocabularies = require('../../../dist/src/custom-vocabularies-client');
 const revaiSentimentAnalysis = require('../../../dist/src/sentiment-analysis-client');
+const revaiLanguageId = require('../../../dist/src/language-id-client');
 const revaiStreaming = require('../../../dist/src/streaming-client');
 const revaiTopicExtraction = require('../../../dist/src/topic-extraction-client');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
@@ -42,4 +43,9 @@ module.exports = {
         client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/sentiment_analysis/v1/`;
         return client;
     },
+    getLanguageIdClient: (apiKey = configHelper.getApiKey()) => {
+        const client = new revaiLanguageId.LanguageIdClient(apiKey);
+        client.apiHandler.instance.defaults.baseURL = `https://${configHelper.getBaseUrl()}/languageid/v1/`;
+        return client;
+    }
 }

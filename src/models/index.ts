@@ -23,3 +23,6 @@ export * from './topic-extraction/TopicExtractionJob';
 export * from './topic-extraction/TopicExtractionJobOptions';
 export * from './topic-extraction/TopicExtractionResult';
 export * from './topic-extraction/TopicExtractionResultOptions';
+export * from './language-id/LanguageIdJob';
+export * from './language-id/LanguageIdJobOptions';
+export * from './language-id/LanguageIdResult';

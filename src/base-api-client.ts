@@ -77,7 +77,7 @@ export abstract class BaseApiClient<TJob, TResult> {
         return Object.keys(params).map((key) => `${key}=${params[key]}`).join('&');
     }
 
-    private filterNullOptions(options: {}): any {
+    protected filterNullOptions(options: {}): any {
         const filteredOptions: any = {};
         Object.keys(options).forEach((option) => {
             if (options[option] !== null && options[option] !== undefined) {
