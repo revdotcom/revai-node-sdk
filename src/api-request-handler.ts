@@ -63,14 +63,10 @@ export class ApiRequestHandler {
             switch (error.response.status) {
                 case 400:
                     throw new InvalidParameterError(error);
-                case 401:
-                case 403:
-                case 404:
-                    throw new RevAiApiError(error);
                 case 409:
                     throw new InvalidStateError(error);
                 default:
-                    throw error;
+                    throw new RevAiApiError(error);
             }
         }
     }
