@@ -35,12 +35,3 @@ export class InvalidStateError extends RevAiApiError {
         this.allowedValues = e.response.data.allowed_values;
     }
 }
-
-export class InsufficientCreditsError extends RevAiApiError {
-    currentBalance: number;
-
-    constructor(e: AxiosError) {
-        super(e);
-        this.currentBalance = e.response.data.current_balance;
-    }
-}
