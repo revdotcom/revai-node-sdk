@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
 import {
-    InsufficientCreditsError,
     InvalidParameterError,
     InvalidStateError,
     RevAiApiError
