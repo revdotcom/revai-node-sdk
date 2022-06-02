@@ -2,16 +2,12 @@ import { AxiosError } from 'axios';
 
 export class RevAiApiError {
     statusCode: number;
-    title: string;
-    error?: string;
-    type?: string;
+    details: string;
 
     constructor(e: AxiosError) {
         if (e.response) {
             this.statusCode = e.response.status;
-            this.title = e.response.data.title || '';
-            this.error = e.response.data.error || '';
-            this.type = e.response.data.type || '';
+            this.details = e.response.data || '';
         }
     }
 }
