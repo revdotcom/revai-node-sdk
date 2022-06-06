@@ -14,7 +14,8 @@ test('Cannot authenticate with invalid token', async () => {
     try {
         await client.getAccount();
     } catch (error) {
+        console.log(error)
         expect(error.statusCode).toEqual(401);
-        expect(error.title).toBe('Authorization has been denied for this request.');
+        expect(error.details).toContain('Authorization has been denied for this request.');
     }
 }, 15000);
