@@ -3,7 +3,6 @@ import { Readable, Transform, Writable } from 'stream';
 
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {
-    InsufficientCreditsError,
     InvalidParameterError,
     InvalidStateError,
     RevAiApiError
@@ -12,7 +11,6 @@ import {
 import {
     objectToStream,
     setupFakeApiError,
-    setupFakeInsufficientCreditsError,
     setupFakeInvalidParametersError,
     setupFakeInvalidStateError
 } from './testhelpers';
@@ -174,29 +172,6 @@ describe('api-request-handler', () => {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
             } catch (e) {
                 expect(e).toEqual(new InvalidStateError(fakeError));
-            }
-            expect(axios.request).toBeCalledTimes(1);
-            expect(axios.request).toBeCalledWith({
-                method: method,
-                url: endpoint,
-                data: undefined,
-                headers: headers,
-                responseType: responseType
-            });
-        });
-
-        it('handles when api returns insufficient credits', async () => {
-            const method = 'get';
-            const endpoint = '/test';
-            const headers = { 'Header1' : 'test' };
-            const responseType = 'text';
-            const fakeError = setupFakeInsufficientCreditsError();
-            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
-
-            try {
-                await sut.makeApiRequest(method, endpoint, headers, responseType);
-            } catch (e) {
-                expect(e).toEqual(new InsufficientCreditsError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({

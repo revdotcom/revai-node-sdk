@@ -51,16 +51,6 @@ export const setupFakeInvalidStateError = (): AxiosError => {
     return err;
 };
 
-export const setupFakeInsufficientCreditsError = (): AxiosError => {
-    let err = setupFakeApiError(403,
-        'You do not have enough credits',
-        'https://www.rev.ai/api/v1/errors/out-of-credit',
-        'You only have 60 seconds remaining'
-    );
-    err.response.data.current_balance = 60;
-    return err;
-};
-
 export const setupFakeInvalidParametersError = (): AxiosError => {
     let err = setupFakeApiError(400,
         "Your request parameters didn't validate",
