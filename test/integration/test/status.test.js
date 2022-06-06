@@ -7,6 +7,6 @@ test('Job not found', async() => {
         await client.getJobDetails(randomString);
     } catch (error) {
         expect(error.statusCode).toEqual(404);
-        expect(error.details).toContain('could not find job');
+        expect(error.details.title).toBe('could not find job');
     }
 }, 30000);
