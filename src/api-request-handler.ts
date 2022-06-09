@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from 'axios';
 
 import {
     InvalidParameterError,
+    ForbiddenAccessError,
+    UnsupportedApiError,
     InvalidStateError,
     RevAiApiError
 } from './models/RevAiApiError';
@@ -63,6 +65,10 @@ export class ApiRequestHandler {
             switch (error.response.status) {
                 case 400:
                     throw new InvalidParameterError(error);
+                case 403:
+                    throw new ForbiddenAccessError(error);
+                case 404:
+                    throw new UnsupportedApiError(error);
                 case 409:
                     throw new InvalidStateError(error);
                 default:

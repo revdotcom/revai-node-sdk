@@ -6,6 +6,7 @@ import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
+import { BaseUrls } from './models/BaseUrls';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
@@ -25,9 +26,10 @@ export class RevAiApiClient {
     /**
      * @param accessToken Access token used to validate API requests
      * @param version (optional) version of the API to be used
+     * @param baseUrl (optional) base url of the API to be used. Note that non-US global deployments have a different base url
      */
-    constructor (accessToken: string, version = 'v1') {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/speechtotext/${version}/`, accessToken);
+    constructor (accessToken: string, version = 'v1', baseUrl = BaseUrls.US) {
+        this.apiHandler = new ApiRequestHandler(`${baseUrl}/speechtotext/${version}/`, accessToken);
     }
 
     /**
