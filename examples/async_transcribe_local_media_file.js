@@ -4,7 +4,8 @@ const token = require('./config/config.json').access_token;
 
 (async () => {
     // Initialize your client with your Rev AI access token
-    var client = new revai.RevAiApiClient(token);
+    // Make sure the base url matches the deployment for your Rev AI access token
+    var client = new revai.RevAiApiClient(accessToken: token, version: 'v1', baseUrl: BaseUrl.US);
 
     // Get account details
     var account = await client.getAccount();

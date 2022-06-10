@@ -6,7 +6,7 @@ import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
-import { BaseUrls } from './models/BaseUrls';
+import { BaseUrl } from './models/BaseUrl';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
