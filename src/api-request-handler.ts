@@ -1,11 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 
 import {
-    InvalidParameterError,
     ForbiddenAccessError,
-    UnsupportedApiError,
+    InvalidParameterError,
     InvalidStateError,
-    RevAiApiError
+    RevAiApiError,
+    UnsupportedApiError
 } from './models/RevAiApiError';
 
 export type HttpMethodTypes = 'post' | 'get' | 'delete';
