@@ -26,7 +26,7 @@ export class RevAiApiClient {
     /**
      * @param accessToken Access token used to validate API requests
      * @param version (optional) version of the API to be used
-     * @param baseUrl (optional) base url of the API to be used. 
+     * @param baseUrl (optional) base url of the API to be used.
      *     Note that non-US global deployments have a different base url
      */
     constructor (accessToken: string, version = 'v1', baseUrl = BaseUrls.US) {
