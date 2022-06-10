@@ -2,7 +2,7 @@ export * from './async/CaptionType';
 export * from './async/RevAiAccount';
 export * from './async/RevAiJobOptions';
 export * from './CustomVocabulary';
-export * from './BaseUrls';
+export * from './BaseUrl';
 export * from './CustomVocabularyOptions';
 export * from './CustomVocabularyStatus';
 export * from './GetListOfJobsOptions';
