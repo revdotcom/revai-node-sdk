@@ -29,7 +29,7 @@ export class RevAiApiClient {
      * @param baseUrl (optional) base url of the API to be used.
      *     Note that non-US global deployments have a different base url
      */
-    constructor (accessToken: string, version = 'v1', baseUrl = BaseUrls.US) {
+    constructor (accessToken: string, version = 'v1', baseUrl = BaseUrl.US) {
         this.apiHandler = new ApiRequestHandler(`${baseUrl}/speechtotext/${version}/`, accessToken);
     }
 
