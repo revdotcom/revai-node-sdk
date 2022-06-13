@@ -30,4 +30,5 @@ export interface RevAiJobOptions {
     rush?: boolean;
     test_mode?: boolean;
     segments_to_transcribe?: SegmentToTranscribe[];
+    speaker_names?: string[];
 }

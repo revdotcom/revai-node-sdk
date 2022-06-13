@@ -65,7 +65,8 @@ const job = await client.submitJobLocalFile("./path/to/file.mp4", {
     segments_to_transcribe: [{
         start: 1.0,
         end: 2.4
-    }]
+    }],
+    speaker_names: ['steve', 'alex']
 });
 ```
 
