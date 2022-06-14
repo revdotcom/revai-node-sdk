@@ -131,7 +131,11 @@ describe('api-client job submission', () => {
                     start: 240,
                     end: 300
                 }],
-                speaker_names: ['steve', 'alex']
+                speaker_names: [{
+                    display_name: "steve"
+                },{
+                    display_name: "alex"
+                }]
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);

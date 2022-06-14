@@ -66,7 +66,11 @@ const job = await client.submitJobLocalFile("./path/to/file.mp4", {
         start: 1.0,
         end: 2.4
     }],
-    speaker_names: ['steve', 'alex']
+    speaker_names: [{
+        display_name: "steve"
+    },{
+        display_name: "alex"
+    }]
 });
 ```
 
