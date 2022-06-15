@@ -6,7 +6,7 @@ export interface SegmentToTranscribe {
     end: number;
 }
 
-export interface SpeakerNames {
+export interface SpeakerName {
     display_name: string;
 }
 
@@ -34,5 +34,5 @@ export interface RevAiJobOptions {
     rush?: boolean;
     test_mode?: boolean;
     segments_to_transcribe?: SegmentToTranscribe[];
-    speaker_names?: SpeakerNames[];
+    speaker_names?: SpeakerName[];
 }
