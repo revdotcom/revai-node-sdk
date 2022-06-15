@@ -132,9 +132,9 @@ describe('api-client job submission', () => {
                     end: 300
                 }],
                 speaker_names: [{
-                    display_name: "John Smith"
+                    display_name: "Alan Mathison Turing"
                 },{
-                    display_name: "Jane Doe"
+                    display_name: "Augusta Ada Lovelace"
                 }]
             };
 

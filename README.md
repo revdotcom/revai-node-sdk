@@ -67,9 +67,9 @@ const job = await client.submitJobLocalFile("./path/to/file.mp4", {
         end: 2.4
     }],
     speaker_names: [{
-        display_name: "John Smith"
+        display_name: "Augusta Ada Lovelace"
     },{
-        display_name: "Jane Doe"
+        display_name: "Alan Mathison Turing"
     }]
 });
 ```
