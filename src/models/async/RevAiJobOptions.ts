@@ -6,6 +6,10 @@ export interface SegmentToTranscribe {
     end: number;
 }
 
+export interface SpeakerName {
+    display_name: string;
+}
+
 /**
  * Options that can used when submitting Rev AI speech-to-text job.
  * See https://docs.rev.ai/api/asynchronous/reference/#operation/SubmitTranscriptionJob for more details.
@@ -30,4 +34,5 @@ export interface RevAiJobOptions {
     rush?: boolean;
     test_mode?: boolean;
     segments_to_transcribe?: SegmentToTranscribe[];
+    speaker_names?: SpeakerName[];
 }
