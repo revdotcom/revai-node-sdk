@@ -4,33 +4,55 @@ import { Readable } from 'stream';
 
 import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
+import { TranscriptType } from './models/async/TranscriptType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
-import { BaseUrl } from './models/BaseUrl';
+import { RevAiBaseUrl } from './models/RevAiBaseUrl';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
-const enum TranscriptContentTypes {
-    JSON = 'application/vnd.rev.transcript.v1.0+json',
-    TEXT = 'text/plain'
-}
-
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
+
+/**
+ * Configuration objec to initialize RevAiApiClient with
+ * @param token Access token used to validate API requests, note access token should match the deployment
+ *    specified in @param baseUrl
+ * @param version version of the API to be used
+ * @param baseUrl base url of the API to be used, note base urls are different for Rev AI deployments in
+ *     different locations
+ */
+interface RevAiApiClientConfig {
+    token?: string;
+    version?: string;
+    baseUrl?: string;
+}
 
 /**
  * Client which handles connection to the Rev AI speech to text API.
  */
 export class RevAiApiClient {
+    private _config: Config = {};
+
     apiHandler: ApiRequestHandler;
 
     /**
-     * @param accessToken Access token used to validate API requests
+     * @param params either string Access token used to validate API requests or RevAiApiClientConfig object
      * @param version (optional) version of the API to be used
-     * @param baseUrl (optional) base url of the API to be used.
-     *     Note that non-US global deployments have a different base url
      */
-    constructor (accessToken: string, version = 'v1', baseUrl = BaseUrl.US) {
-        this.apiHandler = new ApiRequestHandler(`${baseUrl}/speechtotext/${version}/`, accessToken);
+    constructor(params: RevAiApiClientConfig | string, version: string = 'v1')
+    {
+        if (typeof params === 'object') {
+            this._config = Object.assign(this._config, params as RevAiApiClientConfig);
+            this._config.version ??= version;
+            this._config.baseUrl ??= RevAiBaseUrl.US;
+            assertNotNull(this._config.token);
+        } else {
+            this._config.token = params;
+            this._config.version = version;
+            this._config.baseUrl = RevAiBaseUrl.US
+        }
+
+        this.apiHandler = new ApiRequestHandler(`${this._config.baseUrl}/speechtotext/${this._config.version}/`, this._config.token);
     }
 
     /**
@@ -172,7 +194,7 @@ export class RevAiApiClient {
      */
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
         return await this.apiHandler.makeApiRequest<RevAiApiTranscript>('get', `/jobs/${id}/transcript`,
-            { 'Accept': TranscriptContentTypes.JSON }, 'json');
+            { 'Accept': TranscriptType.JSON }, 'json');
     }
 
     /**
@@ -184,7 +206,7 @@ export class RevAiApiClient {
      */
     async getTranscriptObjectStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.JSON }, 'stream');
+            `/jobs/${id}/transcript`, { 'Accept': TranscriptType.JSON }, 'stream');
     }
 
     /**
@@ -195,7 +217,7 @@ export class RevAiApiClient {
      */
     async getTranscriptText(id: string): Promise<string> {
         return await this.apiHandler.makeApiRequest<string>('get', `/jobs/${id}/transcript`,
-            { 'Accept': TranscriptContentTypes.TEXT }, 'text');
+            { 'Accept': TranscriptType.TEXT }, 'text');
     }
 
     /**
@@ -207,7 +229,7 @@ export class RevAiApiClient {
      */
     async getTranscriptTextStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.TEXT }, 'stream');
+            `/jobs/${id}/transcript`, { 'Accept': TranscriptType.TEXT }, 'stream');
     }
 
     /**
