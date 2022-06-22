@@ -57,7 +57,7 @@ describe('api-client', () => {
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails]);
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
+            expect(mockMakeApiRequest).toBeCalledWith('get', '/jobs', {}, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
 

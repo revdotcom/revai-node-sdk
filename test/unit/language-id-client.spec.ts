@@ -1,5 +1,10 @@
 import { Readable } from 'stream';
-import { GetListOfJobsOptions, LanguageIdClient, LanguageIdJob, LanguageIdJobOptions, LanguageIdResult } from '../../src';
+import {
+    GetListOfJobsOptions,
+    LanguageIdClient,
+    LanguageIdJob,
+    LanguageIdJobOptions,
+    LanguageIdResult } from '../../src';
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { CustomerUrlData } from '../../src/models/CustomerUrlData';
 
@@ -65,7 +70,7 @@ describe('language-id-client', () => {
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
+            expect(mockMakeApiRequest).toBeCalledWith('get', '/jobs', {}, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
 
@@ -175,9 +180,9 @@ describe('language-id-client', () => {
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([
                     expect.anything(),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename=\"audio_file\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="audio_file"'),
                     expect.stringContaining('Content-Type: application/octet-stream'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="options"'),
                     expect.not.stringContaining('metadata'),
                     expect.not.stringContaining('notification_config'),
                     expect.not.stringContaining('delete_after_seconds')
@@ -205,7 +210,7 @@ describe('language-id-client', () => {
                 '_streams': expect.arrayContaining([
                     expect.anything(),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="options"'),
                     expect.stringContaining(`"metadata":"${metadata}",`),
                     expect.stringContaining('"delete_after_seconds":0')
                 ])
@@ -268,8 +273,8 @@ describe('language-id-client', () => {
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([
                     expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="options"'),
                     expect.stringContaining(`"metadata":"${metadata}",`),
                     expect.stringContaining('"delete_after_seconds":0')
                 ])

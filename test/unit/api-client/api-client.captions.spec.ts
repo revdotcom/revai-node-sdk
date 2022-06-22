@@ -1,5 +1,3 @@
-import * as fs from 'fs';
-
 import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
 import { objectToStream } from '../testhelpers';

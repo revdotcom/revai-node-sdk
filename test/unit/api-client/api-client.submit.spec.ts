@@ -14,16 +14,16 @@ describe('api-client job submission', () => {
     const jobId = 'Umx5c6F7pH7r';
     const mediaUrl = 'https://www.rev.ai/FTC_Sample_1.mp3';
     const callbackUrl = 'https://www.example.com/callback';
-    const sourceAuth = { "Authorization": "Bearer source_token" };
-    const callbackAuth = { "Authorization": "Bearer callback_token" };
-    const sourceConfig : CustomerUrlData = {
+    const sourceAuth = { 'Authorization': 'Bearer source_token' };
+    const callbackAuth = { 'Authorization': 'Bearer callback_token' };
+    const sourceConfig: CustomerUrlData = {
         url: mediaUrl,
         auth_headers: sourceAuth
-    }
-    const notificationConfig : CustomerUrlData = {
+    };
+    const notificationConfig: CustomerUrlData = {
         url: callbackUrl,
         auth_headers: callbackAuth
-    }
+    };
     const jobDetails = {
         id: jobId,
         status: 'in_progress',
@@ -132,9 +132,9 @@ describe('api-client job submission', () => {
                     end: 300
                 }],
                 speaker_names: [{
-                    display_name: "Alan Mathison Turing"
+                    display_name: 'Alan Mathison Turing'
                 },{
-                    display_name: "Augusta Ada Lovelace"
+                    display_name: 'Augusta Ada Lovelace'
                 }]
             };
 
@@ -151,7 +151,7 @@ describe('api-client job submission', () => {
         it('submit job with legacy options', async () => {
             const options: RevAiJobOptions = {
                 media_url: mediaUrl,
-                callback_url: callbackUrl,
+                callback_url: callbackUrl
             };
 
             const job = await sut.submitJob(options);
@@ -254,9 +254,9 @@ describe('api-client job submission', () => {
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([
                     expect.anything(),
-                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename=\"audio_file\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="audio_file"'),
                     expect.stringContaining('Content-Type: application/octet-stream'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="options"'),
                     expect.not.stringContaining('metadata'),
                     expect.not.stringContaining('callback_url'),
                     expect.not.stringContaining('custom_vocabularies'),
@@ -300,7 +300,7 @@ describe('api-client job submission', () => {
                 '_streams': expect.arrayContaining([
                     expect.anything(),
                     expect.stringContaining('Content-Disposition: form-data; name="media"; filename="example.mp3"'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="options"'),
                     expect.stringContaining('"metadata":"This is a sample submit jobs option",'),
                     expect.stringContaining('"callback_url":"https://www.example.com/callback",'),
                     expect.stringContaining(
@@ -387,8 +387,8 @@ describe('api-client job submission', () => {
                 '_boundary': expect.anything(),
                 '_streams': expect.arrayContaining([
                     expect.stringContaining('Content-Type: audio/mpeg'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"media\"; filename=\"test.mp3\"'),
-                    expect.stringContaining('Content-Disposition: form-data; name=\"options\"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="media"; filename="test.mp3"'),
+                    expect.stringContaining('Content-Disposition: form-data; name="options"'),
                     expect.stringContaining('"metadata":"This is a sample submit jobs option",'),
                     expect.stringContaining('"callback_url":"https://www.example.com/callback",'),
                     expect.stringContaining(

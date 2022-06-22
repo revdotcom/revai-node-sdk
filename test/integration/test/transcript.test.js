@@ -1,11 +1,10 @@
 const clientHelper = require('../src/client-helper');
-const configHelper = require('../src/config-helper');
 const JobStatus = require('../../../dist/src/models/JobStatus').JobStatus;
 const client = clientHelper.getAsyncClient();
 
 beforeAll(async (done) => {
     const jobList = await client.getListOfJobs();
-    var jobId;
+    let jobId;
     if(jobList !== undefined) {
         jobId = clientHelper.getTranscribedJobId(jobList);
     }
@@ -13,16 +12,16 @@ beforeAll(async (done) => {
         const job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3');
         jobId = job.id;
     }
-    var intervalObject = setInterval(function(){
+    let intervalObject = setInterval(function(){
         (async () => {
             const jobDetails = await client.getJobDetails(jobId);
-            if (jobDetails.status == JobStatus.Transcribed) {
+            if (jobDetails.status === JobStatus.Transcribed) {
                 clearInterval(intervalObject);
                 done();
             }
-        })()
+        })();
     }, 15000);
-}, 600000)
+}, 600000);
 
 test('Can get JSON transcript', async (done) => {
     const jobList = await client.getListOfJobs();
@@ -42,8 +41,8 @@ test('Can get JSON transcript', async (done) => {
                 expect(element.type).toBeDefined();
                 expect(element.value).toBeDefined();
             }
-        })
-    })
+        });
+    });
     done();
 }, 30000);
 
@@ -53,7 +52,7 @@ test('JSON stream is equivalent to JSON object', async (done) => {
     expect(jobId).toBeDefined();
     const jsonObject = await client.getTranscriptObject(jobId);
     const jsonStream = await client.getTranscriptObjectStream(jobId);
-    var streamString = '';
+    let streamString = '';
     jsonStream.on('data', data => {
         streamString += data.toString();
     });
@@ -80,12 +79,12 @@ test('Text stream is equivalent to text string', async (done) => {
     expect(jobId).toBeDefined();
     const textString = await client.getTranscriptText(jobId);
     const textStream = await client.getTranscriptTextStream(jobId);
-    var streamString = '';
+    let streamString = '';
     textStream.on('data', data => {
         streamString += data.toString();
-    })
+    });
     textStream.on('end', () => {
         expect(textString).toBe(streamString);
         done();
-    })
+    });
 }, 30000);

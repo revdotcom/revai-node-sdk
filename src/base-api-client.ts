@@ -55,7 +55,7 @@ export abstract class BaseApiClient<TJob, TResult> {
     protected async _submitJob(options?: {}): Promise<TJob> {
         options = this.filterNullOptions(options || {});
 
-        return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<TJob>('post', '/jobs',
             { 'Content-Type': 'application/json' }, 'json', options);
     }
 

@@ -1,4 +1,9 @@
-import { TopicExtractionClient, TopicExtractionJob, TopicExtractionJobOptions, TopicExtractionResult, TopicExtractionResultOptions } from '../../src';
+import {
+    TopicExtractionClient,
+    TopicExtractionJob,
+    TopicExtractionJobOptions,
+    TopicExtractionResult,
+    TopicExtractionResultOptions } from '../../src';
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { GetListOfJobsOptions } from '../../src/models/GetListOfJobsOptions';
 
@@ -51,7 +56,7 @@ describe('topic-extraction-client', () => {
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
+            expect(mockMakeApiRequest).toBeCalledWith('get', '/jobs', {}, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
 
@@ -88,7 +93,7 @@ describe('topic-extraction-client', () => {
         it('submit text job with options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
-                metadata: 'metadata field',
+                metadata: 'metadata field'
             } as TopicExtractionJobOptions;
 
             const job = await sut.submitJobFromText(text, options);
@@ -142,7 +147,7 @@ describe('topic-extraction-client', () => {
         it('submit transcript job with options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
-                metadata: 'metadata field',
+                metadata: 'metadata field'
             } as TopicExtractionJobOptions;
             const expectedOptions = { ...options, 'json': transcript };
 
@@ -159,11 +164,11 @@ describe('topic-extraction-client', () => {
         const jobResult = {
             topics: [
                 {
-                    topic_name: "apples",
+                    topic_name: 'apples',
                     score: 0.9,
                     informants: [
-                        { content: "Apples are tasty." }, 
-                        { content: "Apples are very sweet." } 
+                        { content: 'Apples are tasty.' },
+                        { content: 'Apples are very sweet.' }
                     ]
                 }
             ]
@@ -188,8 +193,8 @@ describe('topic-extraction-client', () => {
 
             const res = await sut.getResult(jobId, options);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', 
-                `/jobs/${jobId}/result?threshold=0.5`, 
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/result?threshold=0.5`,
                 { 'Accept': 'application/vnd.rev.topic.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(res).toEqual(jobResult);

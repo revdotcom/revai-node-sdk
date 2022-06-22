@@ -136,7 +136,7 @@ describe('streaming-client', () => {
             // Arrange
             const res = sut.start();
             let connectionError = null;
-            let expectedError = new Error('fake error');
+            const expectedError = new Error('fake error');
             sut.on('connectFailed', error => connectionError = error);
 
             // Act
@@ -198,7 +198,7 @@ describe('streaming-client', () => {
             const res = sut.start();
             let jobId = null;
             const expectedJobId = '1';
-            let mockConnection = new WebSocketConnectionMock();
+            const mockConnection = new WebSocketConnectionMock();
             sut.on('connect', response => jobId = response.id);
 
             // Act
@@ -206,7 +206,7 @@ describe('streaming-client', () => {
             mockConnection.emit('message',
                 {
                     type: 'utf8',
-                    utf8Data: `{ \"type\": \"connected\", \"id\": \"${expectedJobId}\"}`
+                    utf8Data: `{ "type": "connected", "id": "${expectedJobId}"}`
                 }
             );
 
@@ -217,7 +217,7 @@ describe('streaming-client', () => {
 
         it('does not write messages from server after streams are closed', () => {
             const res = sut.start();
-            let mockConnection = new WebSocketConnectionMock();
+            const mockConnection = new WebSocketConnectionMock();
             sut.unsafeEnd();
 
             // Act
@@ -225,7 +225,7 @@ describe('streaming-client', () => {
             mockConnection.emit('message',
                 {
                     type: 'utf8',
-                    utf8Data: `{ \"type\": \"partial\", \"ts\": 0, \"end_ts\": 1, \"elements\": [] }`
+                    utf8Data: '{ "type": "partial", "ts": 0, "end_ts": 1, "elements": [] }'
                 }
             );
 

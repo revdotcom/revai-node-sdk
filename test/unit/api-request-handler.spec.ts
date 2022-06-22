@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { Readable, Transform, Writable } from 'stream';
+import axios from 'axios';
 
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {
