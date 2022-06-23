@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { IncomingMessage } from 'http';
 import { Duplex, PassThrough } from 'stream';
-import { client, connection, Message } from 'websocket';
+import { client, connection, IClientConfig, Message } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
@@ -54,9 +54,14 @@ export class RevAiStreamingClient extends EventEmitter {
             readableObjectMode: true,
             writableObjectMode: true
         });
-        this.client = new client({
+        const clientConfig: IClientConfig = {};
+        const clientConfigExtensionProperties = {
             keepalive: true,
             keepaliveInterval: 30000
+        };
+        this.client = new client({
+            ...clientConfig,
+            ...clientConfigExtensionProperties
         });
         this.setUpHttpResponseHandler();
         this.setUpConnectionFailureHandler();
