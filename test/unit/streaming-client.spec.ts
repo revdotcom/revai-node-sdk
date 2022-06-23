@@ -16,7 +16,6 @@ const audioConfig = new AudioConfig('audio/x-wav');
 const token = 'testToken';
 const baseUrl = 'wss://api.rev.ai/speechtotext/v1/stream';
 
-// tslint:disable-next-line
 const sdkVersion = require('../../package.json').version;
 
 describe('streaming-client', () => {

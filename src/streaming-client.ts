@@ -12,7 +12,6 @@ import {
     StreamingResponse
 } from './models/streaming/StreamingResponses';
 
-// tslint:disable-next-line
 const sdkVersion = require('../package.json').version;
 
 /**
@@ -56,7 +55,6 @@ export class RevAiStreamingClient extends EventEmitter {
             writableObjectMode: true
         });
         this.client = new client({
-            // @ts-ignore
             keepalive: true,
             keepaliveInterval: 30000
         });
@@ -158,7 +156,7 @@ export class RevAiStreamingClient extends EventEmitter {
                     return;
                 }
                 if (message.type === 'utf8') {
-                    let response = JSON.parse(message.utf8Data);
+                    const response = JSON.parse(message.utf8Data);
                     if ((response as StreamingResponse).type === 'connected') {
                         this.emit('connect', response as StreamingConnected);
                     } else if (this.responses.writable) {

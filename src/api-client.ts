@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import * as fs from 'fs';
 import { Readable } from 'stream';
 import * as FormData from 'form-data';

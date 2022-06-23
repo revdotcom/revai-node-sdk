@@ -1,5 +1,6 @@
 /* eslint-disable */
 module.exports = {
+    "ignorePatterns": ["dist"],
     "env": {
         "browser": true,
         "es6": true,

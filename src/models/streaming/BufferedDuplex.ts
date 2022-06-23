@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Duplex, DuplexOptions, PassThrough } from 'stream';
 
 /**
