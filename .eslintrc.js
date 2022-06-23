@@ -13,7 +13,6 @@ module.exports = {
     "plugins": [
         "eslint-plugin-import",
         "@typescript-eslint",
-        "@typescript-eslint/tslint"
     ],
     "root": true,
     "extends": [

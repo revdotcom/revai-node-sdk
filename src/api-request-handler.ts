@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable indent */
 import axios, { AxiosInstance } from 'axios';
 
 import {
