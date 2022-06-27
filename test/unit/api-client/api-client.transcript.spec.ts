@@ -51,7 +51,7 @@ describe('api-client', () => {
             const transcript = await sut.getTranscriptObject(jobId);
 
             expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
-                { 'Accept': `application/vnd.rev.transcript.v1.0+json` }, 'json');
+                { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
         });
@@ -90,7 +90,7 @@ describe('api-client', () => {
             const transcript = await sut.getTranscriptObjectStream(jobId);
 
             expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript`,
-                { 'Accept': `application/vnd.rev.transcript.v1.0+json` }, 'stream');
+                { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }, 'stream');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
         });

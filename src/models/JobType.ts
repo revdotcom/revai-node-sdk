@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /** Job types */
 export enum JobType {
     Async = 'async',

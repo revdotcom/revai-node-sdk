@@ -1,5 +1,6 @@
-import axios from 'axios';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Readable, Transform, Writable } from 'stream';
+import axios from 'axios';
 
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {
@@ -36,7 +37,7 @@ describe('api-request-handler', () => {
             const response = 'testResponse';
             axios.request.mockResolvedValue({ data : response });
 
-            let res = await sut.makeApiRequest(method, endpoint, headers, responseType);
+            const res = await sut.makeApiRequest(method, endpoint, headers, responseType);
 
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
@@ -57,7 +58,7 @@ describe('api-request-handler', () => {
             const params = { data : 'stuff' };
             axios.request.mockResolvedValue({ data : response });
 
-            let res = await sut.makeApiRequest('post', endpoint, headers, responseType, params);
+            const res = await sut.makeApiRequest('post', endpoint, headers, responseType, params);
 
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
@@ -78,7 +79,7 @@ describe('api-request-handler', () => {
             const params = { data : 'stuff' };
             axios.request.mockResolvedValue({ data : response });
 
-            let res = await sut.makeApiRequest(method, endpoint, headers, responseType, params);
+            const res = await sut.makeApiRequest(method, endpoint, headers, responseType, params);
 
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
@@ -199,7 +200,7 @@ describe('api-request-handler', () => {
                     ]
                 }
             };
-            let responseStream = new Transform({ objectMode: true });
+            const responseStream = new Transform({ objectMode: true });
             responseStream.push(JSON.stringify(fakeData));
             fakeError.response.data = responseStream;
             axios.request.mockImplementationOnce(() => Promise.reject(fakeError));

@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { IncomingMessage } from 'http';
 import { Duplex, PassThrough } from 'stream';
-import { client, connection, Message } from 'websocket';
+import { client, connection, IClientConfig, Message } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
@@ -12,7 +12,6 @@ import {
     StreamingResponse
 } from './models/streaming/StreamingResponses';
 
-// tslint:disable-next-line
 const sdkVersion = require('../package.json').version;
 
 /**
@@ -55,10 +54,14 @@ export class RevAiStreamingClient extends EventEmitter {
             readableObjectMode: true,
             writableObjectMode: true
         });
-        this.client = new client({
-            // @ts-ignore
+        const clientConfig: IClientConfig = {};
+        const clientConfigExtensionProperties = {
             keepalive: true,
             keepaliveInterval: 30000
+        };
+        this.client = new client({
+            ...clientConfig,
+            ...clientConfigExtensionProperties
         });
         this.setUpHttpResponseHandler();
         this.setUpConnectionFailureHandler();
@@ -158,7 +161,7 @@ export class RevAiStreamingClient extends EventEmitter {
                     return;
                 }
                 if (message.type === 'utf8') {
-                    let response = JSON.parse(message.utf8Data);
+                    const response = JSON.parse(message.utf8Data);
                     if ((response as StreamingResponse).type === 'connected') {
                         this.emit('connect', response as StreamingConnected);
                     } else if (this.responses.writable) {

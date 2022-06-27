@@ -1,4 +1,10 @@
-import { SentimentAnalysisClient, SentimentAnalysisJob, SentimentAnalysisJobOptions, SentimentAnalysisResult, SentimentAnalysisResultOptions } from '../../src';
+import {
+    SentimentAnalysisClient,
+    SentimentAnalysisJob,
+    SentimentAnalysisJobOptions,
+    SentimentAnalysisResult,
+    SentimentAnalysisResultOptions
+} from '../../src';
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { GetListOfJobsOptions } from '../../src/models/GetListOfJobsOptions';
 
@@ -51,7 +57,7 @@ describe('sentiment-analysis-client', () => {
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails, jobDetails2]);
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
+            expect(mockMakeApiRequest).toBeCalledWith('get', '/jobs', {}, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
 
@@ -88,7 +94,7 @@ describe('sentiment-analysis-client', () => {
         it('submit text job with options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
-                metadata: 'metadata field',
+                metadata: 'metadata field'
             } as SentimentAnalysisJobOptions;
 
             const job = await sut.submitJobFromText(text, options);
@@ -142,7 +148,7 @@ describe('sentiment-analysis-client', () => {
         it('submit transcript job with options', async () => {
             mockMakeApiRequest.mockResolvedValue(jobDetails);
             const options = {
-                metadata: 'metadata field',
+                metadata: 'metadata field'
             } as SentimentAnalysisJobOptions;
             const expectedOptions = { ...options, 'json': transcript };
 
@@ -185,8 +191,8 @@ describe('sentiment-analysis-client', () => {
 
             const res = await sut.getResult(jobId, options);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', 
-                `/jobs/${jobId}/result?filter_for=neutral`, 
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/result?filter_for=neutral`,
                 { 'Accept': 'application/vnd.rev.sentiment.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(res).toEqual(jobResult);

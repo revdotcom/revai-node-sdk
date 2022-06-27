@@ -27,7 +27,7 @@ describe('api-client', () => {
         it('get account email and balance', async () => {
             const accountEmail = 'test@rev.com';
             const balanceSeconds = 300;
-            const data = { email: accountEmail, balance_seconds: balanceSeconds};
+            const data = { email: accountEmail, balance_seconds: balanceSeconds };
             mockMakeApiRequest.mockResolvedValueOnce(data);
 
             const account = await sut.getAccount();
@@ -57,7 +57,7 @@ describe('api-client', () => {
             const jobs = await sut.getListOfJobs();
 
             expect(jobs).toEqual([jobDetails]);
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs`, {}, 'json');
+            expect(mockMakeApiRequest).toBeCalledWith('get', '/jobs', {}, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
 
