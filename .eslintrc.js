@@ -61,7 +61,6 @@ module.exports = {
                 }
             }
         ],
-        // "@typescript-eslint/naming-convention": "error",
         "@typescript-eslint/no-empty-function": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-inferrable-types": "off",
@@ -185,21 +184,6 @@ module.exports = {
                     "/"
                 ]
             }
-        ],
-        // "@typescript-eslint/tslint/config": [
-        //     "error",
-        //     {
-        //         "rules": {
-        //             "whitespace": [
-        //                 true,
-        //                 "check-branch",
-        //                 "check-decl",
-        //                 "check-operator",
-        //                 "check-separator",
-        //                 "check-type"
-        //             ]
-        //         }
-        //     }
-        // ]
+        ]
     }
 };
