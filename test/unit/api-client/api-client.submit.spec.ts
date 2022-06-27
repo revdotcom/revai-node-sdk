@@ -84,7 +84,7 @@ describe('api-client job submission', () => {
             const options: RevAiJobOptions = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                custom_vocabularies: [{ phrases: ['word1', 'word2'] }, { phrases: ['word3', 'word4'] }],
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
@@ -282,7 +282,7 @@ describe('api-client job submission', () => {
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                custom_vocabularies: [{ phrases: ['word1', 'word2'] }, { phrases: ['word3', 'word4'] }],
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
@@ -373,7 +373,7 @@ describe('api-client job submission', () => {
             const options = {
                 metadata: 'This is a sample submit jobs option',
                 callback_url: 'https://www.example.com/callback',
-                custom_vocabularies: [{phrases: ['word1', 'word2']}, {phrases: ['word3', 'word4']}],
+                custom_vocabularies: [{ phrases: ['word1', 'word2'] }, { phrases: ['word3', 'word4'] }],
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,

@@ -205,7 +205,7 @@ describe('streaming-client', () => {
             mockConnection.emit('message',
                 {
                     type: 'utf8',
-                    utf8Data: `{ "type": "connected", "id": "${expectedJobId}"}`
+                    utf8Data: `{ "type": "connected", "id": "${expectedJobId}" }`
                 }
             );
 

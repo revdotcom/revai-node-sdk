@@ -44,7 +44,7 @@ export class RevAiCustomVocabulariesClient {
             throw Error('customVocabularies is a required parameter');
         }
 
-        const options: CustomVocabularyOptions = {custom_vocabularies: customVocabularies};
+        const options: CustomVocabularyOptions = { custom_vocabularies: customVocabularies };
         if (callbackUrl) {
             options.callback_url = callbackUrl;
         }

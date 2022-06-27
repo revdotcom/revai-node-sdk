@@ -1,4 +1,4 @@
-import {CustomVocabularyStatus} from './CustomVocabularyStatus';
+import { CustomVocabularyStatus } from './CustomVocabularyStatus';
 
 export interface CustomVocabularyInformation {
     id: string;

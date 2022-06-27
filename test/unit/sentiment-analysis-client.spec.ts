@@ -3,7 +3,8 @@ import {
     SentimentAnalysisJob,
     SentimentAnalysisJobOptions,
     SentimentAnalysisResult,
-    SentimentAnalysisResultOptions } from '../../src';
+    SentimentAnalysisResultOptions
+} from '../../src';
 import { ApiRequestHandler } from '../../src/api-request-handler';
 import { GetListOfJobsOptions } from '../../src/models/GetListOfJobsOptions';
 
