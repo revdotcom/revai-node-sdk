@@ -1,5 +1,6 @@
 /**
  * Configuration for streaming job
+ * See https://docs.rev.ai/api/streaming/requests/#request-parameters for details
  */
 export class SessionConfig {
     metadata?: string;
@@ -11,6 +12,7 @@ export class SessionConfig {
     transcriber?: string;
     detailedPartials?: boolean;
     language: string;
+    skipPostprocessing?: boolean; 
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -27,6 +29,7 @@ export class SessionConfig {
      *      media file
      * @param detailedPartials (Optional) whether to return detailed partials
      * @param language (Optional) language to use for the streaming job
+     * @param skipPostprocessing (Optional) skip all text postprocessing
      */
     constructor(
         metadata?: string,
@@ -37,7 +40,8 @@ export class SessionConfig {
         startTs?: number,
         transcriber?: string,
         detailedPartials?: boolean,
-        language?: string
+        language?: string,
+        skipPostprocessing?: boolean
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
@@ -48,5 +52,6 @@ export class SessionConfig {
         this.transcriber = transcriber;
         this.detailedPartials = detailedPartials;
         this.language = language;
+        this.skipPostprocessing = skipPostprocessing;
     }
 }
