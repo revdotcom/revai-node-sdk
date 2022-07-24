@@ -12,7 +12,7 @@ export class SessionConfig {
     transcriber?: string;
     detailedPartials?: boolean;
     language: string;
-    skipPostprocessing?: boolean; 
+    skipPostprocessing?: boolean;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
