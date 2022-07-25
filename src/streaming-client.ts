@@ -111,7 +111,7 @@ export class RevAiStreamingClient extends EventEmitter {
                 url += `&language=${encodeURIComponent(config.language)}`;
             }
             if (config.skipPostprocessing) {
-                url += `&skip_postprocessing=true`;
+                url += '&skip_postprocessing=true';
             }
         }
 
