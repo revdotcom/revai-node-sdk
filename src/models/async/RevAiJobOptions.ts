@@ -22,6 +22,7 @@ export interface RevAiJobOptions {
     notification_config?: CustomerUrlData;
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
+    skip_postprocessing?: boolean;
     speaker_channels_count?: number;
     custom_vocabulary_id?: string;
     custom_vocabularies?: CustomVocabulary[];

@@ -29,7 +29,8 @@ const token = require('./config/config.json').access_token;
         metadata: 'InternalOrderNumber=123456789',
         notification_config: notificationConfig,
         skip_diarization: false,
-        skip_punctuation: false,
+        skip_punctuation: false, // Optional value available with some languages
+        skip_postprocessing: false, // Optional value available with some languages
         speaker_channels_count: null, // Optional value available with some languages
         custom_vocabulary_id: null, // Optional value available with some languages
         custom_vocabularies: [{
