@@ -1,6 +1,7 @@
-import * as FormData from 'form-data';
+/* eslint-disable no-shadow */
 import * as fs from 'fs';
 import { Readable } from 'stream';
+import * as FormData from 'form-data';
 
 import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
@@ -123,7 +124,7 @@ export class RevAiApiClient {
             ...(options || {})
         });
 
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', '/jobs',
             { 'Content-Type': 'application/json' }, 'json', options);
     }
 
@@ -138,7 +139,7 @@ export class RevAiApiClient {
             ...(options || {})
         });
 
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', '/jobs',
             { 'Content-Type': 'application/json' }, 'json', options);
     }
 
@@ -163,7 +164,7 @@ export class RevAiApiClient {
             payload.append('options', JSON.stringify(options));
         }
 
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', '/jobs',
             payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 
@@ -183,7 +184,7 @@ export class RevAiApiClient {
             payload.append('options', JSON.stringify(options));
         }
 
-        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<RevAiApiJob>('post', '/jobs',
             payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 

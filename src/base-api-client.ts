@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { ApiRequestHandler } from './api-request-handler';
 import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
 import { RevAiBaseUrl } from './models/RevAiBaseUrl';
@@ -87,7 +88,7 @@ export abstract class BaseApiClient<TJob, TResult> {
     protected async _submitJob(options?: {}): Promise<TJob> {
         options = this.filterNullOptions(options || {});
 
-        return await this.apiHandler.makeApiRequest<TJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<TJob>('post', '/jobs',
             { 'Content-Type': 'application/json' }, 'json', options);
     }
 

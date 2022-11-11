@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { BaseApiClient } from './base-api-client';
 import { GetListOfJobsOptions } from './models/GetListOfJobsOptions';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';

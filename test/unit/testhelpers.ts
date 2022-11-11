@@ -1,5 +1,5 @@
-import { AxiosError } from 'axios';
 import { Readable } from 'stream';
+import { AxiosError } from 'axios';
 
 export function objectToStream(input: any): Readable {
     const stream = new Readable({ objectMode: true });
@@ -41,7 +41,7 @@ export const setupFakeApiError = (
 }) as AxiosError;
 
 export const setupFakeInvalidStateError = (): AxiosError => {
-    let err = setupFakeApiError(409,
+    const err = setupFakeApiError(409,
         'Job is in invalid state',
         'https://www.rev.ai/api/v1/errors/invalid-job-state',
         'Job is in invalid state to obtain the transcript'
@@ -79,8 +79,8 @@ export const setupFakeResourceNotFoundError = (): AxiosError => {
 };
 
 export const setupFakeInvalidParametersError = (): AxiosError => {
-    let err = setupFakeApiError(400,
-        "Your request parameters didn't validate",
+    const err = setupFakeApiError(400,
+        'Your request parameters didn\'t validate',
         'https://www.rev.ai/api/v1/errors/invalid-parameters'
     );
     err.response.data.parameters = {

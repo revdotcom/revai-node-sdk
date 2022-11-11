@@ -16,6 +16,7 @@ const token = require('./config/config.json').access_token;
         notification_config: { url: 'https://jsonplaceholder.typicode.com/posts' },
         skip_diarization: false,
         skip_punctuation: false, // Optional value available with some languages
+        skip_postprocessing: false, // Optional value available with some languages
         speaker_channels_count: null, // Optional value available with some languages
         custom_vocabulary_id: null, // Optional value available with some languages
         custom_vocabularies: [{ // Optional value available with some languages

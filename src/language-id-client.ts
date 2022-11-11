@@ -1,6 +1,7 @@
-import * as FormData from 'form-data';
+/* eslint-disable no-underscore-dangle */
 import * as fs from 'fs';
 import { Readable } from 'stream';
+import * as FormData from 'form-data';
 
 import { BaseApiClient } from './base-api-client';
 import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
@@ -61,7 +62,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
      * @param options Options submitted with the job: see LanguageIdJobOptions object
      * @returns Details of the submitted job
      */
-     async submitJob(options: LanguageIdJobOptions = {}): Promise<LanguageIdJob> {
+    async submitJob(options: LanguageIdJobOptions = {}): Promise<LanguageIdJob> {
         return super._submitJob(options);
     }
 
@@ -74,7 +75,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
      *     or https://docs.rev.ai/api/language-identification/reference/#operation/SubmitLanguageIdentificationJob
      * @returns Details of submitted job
      */
-     async submitJobAudioData(
+    async submitJobAudioData(
         audioData: Buffer | Readable,
         filename?: string,
         options?: LanguageIdJobOptions
@@ -107,7 +108,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
             payload.append('options', JSON.stringify(options));
         }
 
-        return await this.apiHandler.makeApiRequest<LanguageIdJob>('post', `/jobs`,
+        return await this.apiHandler.makeApiRequest<LanguageIdJob>('post', '/jobs',
             payload.getHeaders(), 'json', payload, TWO_GIGABYTES);
     }
 

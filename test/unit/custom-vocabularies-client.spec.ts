@@ -10,12 +10,12 @@ describe('custom-vocabularies-client', () => {
         { phrases: ['my', 'test', 'custom', 'vocabularies'] }
     ];
     const callbackUrl = 'example.com';
-    const callbackAuth = { "Authorization": "Bearer token" }
+    const callbackAuth = { 'Authorization': 'Bearer token' };
     const metadata = 'my metadata';
     const notificationConfig = {
         url: callbackUrl,
         auth_headers: callbackAuth
-    }
+    };
     const customVocabularyLegacyOptions = {
         custom_vocabularies: customVocabularies,
         callback_url: callbackUrl,
@@ -59,7 +59,7 @@ describe('custom-vocabularies-client', () => {
             expect(mockHandler.makeApiRequest).toBeCalledTimes(1);
             expect(customVocabularyInformation).toEqual(customVocabularyDetails);
         });
-        
+
         it('submit custom vocabularies with the notification config', async () => {
             const mockHandler = ApiRequestHandler.mock.instances[0];
             mockHandler.makeApiRequest.mockResolvedValue(customVocabularyDetails);

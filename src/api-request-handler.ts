@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable indent */
 import axios, { AxiosInstance } from 'axios';
 
 import {
@@ -11,7 +13,6 @@ import {
 export type HttpMethodTypes = 'post' | 'get' | 'delete';
 export type AxiosResponseTypes = 'stream' | 'json' | 'text';
 
-// tslint:disable-next-line
 const sdkVersion = require('../package.json').version;
 
 /**
@@ -55,8 +56,7 @@ export class ApiRequestHandler {
 
             return response.data;
         } catch (error) {
-            // tslint:disable-next-line
-            if (error.response == null) {
+            if (error.response === null) {
                 throw error;
             }
             if (responseType === 'stream') {
