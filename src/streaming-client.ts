@@ -6,7 +6,7 @@ import { client, connection, IClientConfig, Message } from 'websocket';
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
 import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
-import { RevAiBaseWebsocketUrl } from './models/RevAiBaseWebsocketUrl';
+import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 import { SessionConfig } from './models/streaming/SessionConfig';
 import {
     StreamingConnected,
@@ -54,8 +54,8 @@ export class RevAiStreamingClient extends EventEmitter {
             if (this.apiClientConfig.version === null || this.apiClientConfig.version === undefined) {
                 this.apiClientConfig.version = version;
             }
-            if (this.apiClientConfig.baseUrl === null || this.apiClientConfig.baseUrl === undefined) {
-                this.apiClientConfig.baseUrl = RevAiBaseWebsocketUrl.US;
+            if (this.apiClientConfig.deploymentConfig === null || this.apiClientConfig.deploymentConfig === undefined) {
+                this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
             }
             if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
                 throw new Error('token must be defined');
@@ -63,14 +63,14 @@ export class RevAiStreamingClient extends EventEmitter {
         } else {
             this.apiClientConfig.token = params;
             this.apiClientConfig.version = version;
-            this.apiClientConfig.baseUrl = RevAiBaseWebsocketUrl.US;
+            this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
         }
         this.apiClientConfig.serviceApi = 'speechtotext';
 
         this.streamsClosed = false;
         this.accessToken = this.apiClientConfig.token;
         this.config = config;
-        this.baseUrl = `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}` +
+        this.baseUrl = `${this.apiClientConfig.deploymentConfig.baseWebsocketUrl}/${this.apiClientConfig.serviceApi}` +
             `/${this.apiClientConfig.version}/stream`;
         this.requests = new PassThrough({ objectMode: true });
         this.responses = new PassThrough({ objectMode: true });

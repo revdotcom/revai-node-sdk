@@ -9,7 +9,7 @@ import { TranscriptType } from './models/async/TranscriptType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
 import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
-import { RevAiBaseUrl } from './models/RevAiBaseUrl';
+import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 
@@ -34,8 +34,8 @@ export class RevAiApiClient {
             if (this.apiClientConfig.version === null || this.apiClientConfig.version === undefined) {
                 this.apiClientConfig.version = version;
             }
-            if (this.apiClientConfig.baseUrl === null || this.apiClientConfig.baseUrl === undefined) {
-                this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
+            if (this.apiClientConfig.deploymentConfig === null || this.apiClientConfig.deploymentConfig === undefined) {
+                this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
             }
             if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
                 throw new Error('token must be defined');
@@ -43,13 +43,13 @@ export class RevAiApiClient {
         } else {
             this.apiClientConfig.token = params;
             this.apiClientConfig.version = version;
-            this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
+            this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
         }
 
         this.apiClientConfig.serviceApi = 'speechtotext';
 
         this.apiHandler = new ApiRequestHandler(
-            `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/`,
+            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/`,
             this.apiClientConfig.token
         );
     }

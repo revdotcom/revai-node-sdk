@@ -3,7 +3,7 @@ const token = require('./config/config.json').access_token;
 
 (async () => {
     // Initialize your client with your Rev AI access token
-    var client = new revai.RevAiApiClient({ token: token });
+    var client = new revai.LanguageIdClient({ token: token } });
 
     const jobOptions = {
         metadata: 'node example language id local file submission',
