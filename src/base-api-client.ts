@@ -19,20 +19,16 @@ export abstract class BaseApiClient<TJob, TResult> {
         if (typeof params === 'object') {
             this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
 
-            // tslint:disable-next-line
-            if (this.apiClientConfig.version == null) {
+            if (this.apiClientConfig.version === null || his.apiClientConfig.version === undefined) {
                 this.apiClientConfig.version = version;
             }
-            // tslint:disable-next-line
-            if (this.apiClientConfig.baseUrl == null) {
+            if (this.apiClientConfig.baseUrl === null || this.apiClientConfig.baseUrl === undefined) {
                 this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
             }
-            // tslint:disable-next-line
-            if (this.apiClientConfig.serviceApi == null) {
+            if (this.apiClientConfig.serviceApi === null || this.apiClientConfig.serviceApi === undefined) {
                 this.apiClientConfig.serviceApi = serviceApi;
             }
-            // tslint:disable-next-line
-            if (this.apiClientConfig.token == null) {
+            if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
                 throw new Error('token must be defined');
             }
         } else {

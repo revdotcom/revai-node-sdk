@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /**
  * Configuration object to initialize RevAiApiClient with
  * @param token Access token used to validate API requests, note access token should match the deployment
@@ -11,5 +12,5 @@ export interface RevAiApiClientConfig {
     token?: string;
     version?: string;
     baseUrl?: string;
-    serviceApi? : string
+    serviceApi?: string;
 }

@@ -21,7 +21,7 @@ export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdRes
     /**
      * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      */
-     constructor(params: RevAiApiClientConfig | string) {
+    constructor(params: RevAiApiClientConfig | string) {
         super(params, 'languageid', 'v1');
     }
 

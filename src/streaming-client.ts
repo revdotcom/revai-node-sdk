@@ -51,16 +51,13 @@ export class RevAiStreamingClient extends EventEmitter {
         if (typeof params === 'object') {
             this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
 
-            // tslint:disable-next-line
-            if (this.apiClientConfig.version == null) {
+            if (this.apiClientConfig.version === null || his.apiClientConfig.version === undefined) {
                 this.apiClientConfig.version = version;
             }
-            // tslint:disable-next-line
-            if (this.apiClientConfig.baseUrl == null) {
-                this.apiClientConfig.baseUrl = RevAiBaseWebsocketUrl.US;
+            if (this.apiClientConfig.baseUrl === null || this.apiClientConfig.baseUrl === undefined) {
+                this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
             }
-            // tslint:disable-next-line
-            if (this.apiClientConfig.token == null) {
+            if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
                 throw new Error('token must be defined');
             }
         } else {
@@ -73,7 +70,8 @@ export class RevAiStreamingClient extends EventEmitter {
         this.streamsClosed = false;
         this.accessToken = this.apiClientConfig.token;
         this.config = config;
-        this.baseUrl = `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/stream`;
+        this.baseUrl = `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}` +
+            `/${this.apiClientConfig.version}/stream`;
         this.requests = new PassThrough({ objectMode: true });
         this.responses = new PassThrough({ objectMode: true });
         this.protocol = new BufferedDuplex(this.requests, this.responses, {

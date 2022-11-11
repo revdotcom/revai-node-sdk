@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /** Base Urls */
 export enum RevAiBaseUrl {
     US = 'https://api.rev.ai',
