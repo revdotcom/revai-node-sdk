@@ -3,9 +3,7 @@ const token = require('./config/config.json').access_token;
 
 (async () => {
     // Initialize your client with your Rev AI access token
-    var client = new revai.LanguageIdClient({
-        token: token
-    });
+    var client = new revai.RevAiApiClient({ token: token });
 
     // Configure your source media url
     // If authorization headers are needed to access the url they can be provided as an argument, e.g.
