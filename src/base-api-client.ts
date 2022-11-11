@@ -39,7 +39,8 @@ export abstract class BaseApiClient<TJob, TResult> {
         }
 
         this.apiHandler = new ApiRequestHandler(
-            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/`,
+            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}`
+                + `/${this.apiClientConfig.version}/`,
             this.apiClientConfig.token
         );
     }

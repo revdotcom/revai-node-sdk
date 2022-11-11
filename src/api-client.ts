@@ -49,7 +49,8 @@ export class RevAiApiClient {
         this.apiClientConfig.serviceApi = 'speechtotext';
 
         this.apiHandler = new ApiRequestHandler(
-            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/`,
+            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}/`
+                + `${this.apiClientConfig.version}/`,
             this.apiClientConfig.token
         );
     }
