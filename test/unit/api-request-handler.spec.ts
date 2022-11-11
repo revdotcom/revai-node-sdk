@@ -188,7 +188,7 @@ describe('api-request-handler', () => {
             });
         });
 
-        t('handles when api returns resource not found', async () => {
+        it('handles when api returns resource not found', async () => {
             const method = 'get';
             const endpoint = '/test';
             const headers = { 'Header1' : 'test' };

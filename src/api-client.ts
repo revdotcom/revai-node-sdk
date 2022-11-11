@@ -36,8 +36,8 @@ export class RevAiApiClient {
     apiHandler: ApiRequestHandler;
 
     /**
-     * @param params either string Access token used to validate API requests or RevAiApiClientConfig object
-     * @param version (optional) version of the API to be used
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
+     * @param version (optional) version of the API to be used with string Acces token
      */
     constructor(params: RevAiApiClientConfig | string, version: string = 'v1')
     {

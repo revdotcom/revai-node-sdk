@@ -38,7 +38,7 @@ describe('api-client job submission', () => {
         (ApiRequestHandler as jest.Mock<ApiRequestHandler>).mockImplementationOnce(() => ({
             makeApiRequest: mockMakeApiRequest
         }));
-        sut = new RevAiApiClient('testtoken');
+        sut = new RevAiApiClient({ token: 'testtoken' });
     });
 
     describe('submitJobUrl', () => {
