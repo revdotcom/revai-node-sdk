@@ -29,7 +29,13 @@ import { RevAiApiClient } from 'revai-node-sdk';
 
 // Initialize your client with your Rev AI access token
 const accessToken = "Your Access Token";
-const client = new RevAiApiClient(accessToken);
+/**
+ * Optionally set the base url of the Rev AI deployment of your account, defaults to US.
+ * Note the base url for the streaming API is different from the asynchronouse API,
+ * use RevAiBaseWebsocketUrl and RevAiBaseUrl, respectively.
+ * Learn more about Rev AI's global deployments [here](https://docs.rev.ai/api/global-deployments/).
+ */
+const client = new RevAiApiClient({ token: accessToken, baseUrl: RevAiBaseUrl.US } );
 ```
 
 ### Checking credits remaining
