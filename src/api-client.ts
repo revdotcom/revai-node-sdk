@@ -14,9 +14,9 @@ import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
- * Configuration objec to initialize RevAiApiClient with
+ * Configuration object to initialize RevAiApiClient with
  * @param token Access token used to validate API requests, note access token should match the deployment
- *    specified in @param baseUrl
+ *    associated with the url in @param baseUrl
  * @param version version of the API to be used
  * @param baseUrl base url of the API to be used, note base urls are different for Rev AI deployments in
  *     different locations
@@ -43,8 +43,8 @@ export class RevAiApiClient {
     {
         if (typeof params === 'object') {
             this._config = Object.assign(this._config, params as RevAiApiClientConfig);
-            this._config.version ??= version;
-            this._config.baseUrl ??= RevAiBaseUrl.US;
+            this._config.version = this._config.version || version;
+            this._config.baseUrl = this._config.baseUrl || RevAiBaseUrl.US;
             assertNotNull(this._config.token);
         } else {
             this._config.token = params;

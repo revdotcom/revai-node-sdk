@@ -69,6 +69,15 @@ export const setupFakeUnsupportedApiError = (): AxiosError => {
     return err;
 };
 
+export const setupFakeResourceNotFoundError = (): AxiosError => {
+    let err = setupFakeApiError(404,
+        'could not find job',
+        'https://www.rev.ai/api/v1/errors/job-not-found',
+        null
+    );
+    return err;
+};
+
 export const setupFakeInvalidParametersError = (): AxiosError => {
     let err = setupFakeApiError(400,
         "Your request parameters didn't validate",

@@ -5,7 +5,7 @@ import {
     InvalidParameterError,
     InvalidStateError,
     RevAiApiError,
-    UnsupportedApiError
+    ResourceNotFoundOrUnsupportedApiError
 } from './models/RevAiApiError';
 
 export type HttpMethodTypes = 'post' | 'get' | 'delete';
@@ -68,7 +68,7 @@ export class ApiRequestHandler {
                 case 403:
                     throw new ForbiddenAccessError(error);
                 case 404:
-                    throw new UnsupportedApiError(error);
+                    throw new ResourceNotFoundOrUnsupportedApiError(error);
                 case 409:
                     throw new InvalidStateError(error);
                 default:

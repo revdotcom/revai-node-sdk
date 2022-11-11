@@ -5,7 +5,7 @@ import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../sr
 import {
     InvalidParameterError,
     ForbiddenAccessError,
-    UnsupportedApiError,
+    ResourceNotFoundOrUnsupportedApiError,
     InvalidStateError,
     RevAiApiError
 } from '../../src/models/RevAiApiError';
@@ -15,6 +15,7 @@ import {
     setupFakeApiError,
     setupFakeInvalidParametersError,
     setupFakeForbiddenAccessError,
+    setupFakeResourceNotFoundError,
     setupFakeUnsupportedApiError,
     setupFakeInvalidStateError
 } from './testhelpers';
@@ -164,7 +165,7 @@ describe('api-request-handler', () => {
             });
         });
 
-        it('handles when api returns not found', async () => {
+        it('handles when api returns api not found', async () => {
             const method = 'get';
             const endpoint = '/test';
             const headers = { 'Header1' : 'test' };
@@ -175,7 +176,30 @@ describe('api-request-handler', () => {
             try {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
             } catch (e) {
-                expect(e).toEqual(new UnsupportedApiError(fakeError));
+                expect(e).toEqual(new ResourceNotFoundOrUnsupportedApiError(fakeError));
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        t('handles when api returns resource not found', async () => {
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const responseType = 'text';
+            const fakeError = setupFakeResourceNotFoundError();
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(new ResourceNotFoundOrUnsupportedApiError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({

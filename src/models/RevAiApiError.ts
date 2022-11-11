@@ -30,7 +30,7 @@ export class ForbiddenAccessError extends RevAiApiError {
     }
 }
 
-export class UnsupportedApiError extends RevAiApiError {
+export class ResourceNotFoundOrUnsupportedApiError extends RevAiApiError {
     parameters: {};
 
     constructor(e: AxiosError) {
