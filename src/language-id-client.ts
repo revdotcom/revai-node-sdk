@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { Readable } from 'stream';
 
 import { BaseApiClient } from './base-api-client';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
 import { GetListOfJobsOptions } from './models/GetListOfJobsOptions';
 import { LanguageIdJob } from './models/language-id/LanguageIdJob';
 import { LanguageIdJobOptions } from './models/language-id/LanguageIdJobOptions';
@@ -17,11 +18,10 @@ const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
  */
 export class LanguageIdClient extends BaseApiClient<LanguageIdJob, LanguageIdResult> {
     /**
-     * @param accessToken Access token used to validate API requests
-     * @param version (optional) version of the API to be used
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      */
-     constructor(accessToken: string) {
-        super(accessToken, 'languageid', 'v1');
+     constructor(params: RevAiApiClientConfig | string) {
+        super(params, 'languageid', 'v1');
     }
 
     /**

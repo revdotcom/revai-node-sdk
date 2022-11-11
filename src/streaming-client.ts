@@ -5,6 +5,8 @@ import { client, connection, Message } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
+import { RevAiBaseWebsocketUrl } from './models/RevAiBaseWebsocketUrl';
 import { SessionConfig } from './models/streaming/SessionConfig';
 import {
     StreamingConnected,
@@ -31,6 +33,7 @@ const sdkVersion = require('../package.json').version;
 export class RevAiStreamingClient extends EventEmitter {
     baseUrl: string;
     client: client;
+    private apiClientConfig: RevAiApiClientConfig = {};
     private streamsClosed: boolean;
     private accessToken: string;
     private config: AudioConfig;
@@ -39,16 +42,39 @@ export class RevAiStreamingClient extends EventEmitter {
     private protocol: Duplex;
 
     /**
-     * @param accessToken Access token associated with the user's account
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      * @param config Configuration of the audio the user will send from this client
      * @param version (optional) Version of the Rev AI API the user wants to use
      */
-    constructor(accessToken: string, config: AudioConfig, version = 'v1') {
+    constructor(params: RevAiApiClientConfig | string, config: AudioConfig, version = 'v1') {
         super();
+
+        if (typeof params === 'object') {
+            this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
+
+            // tslint:disable-next-line
+            if (this.apiClientConfig.version == null) {
+                this.apiClientConfig.version = version;
+            }
+            // tslint:disable-next-line
+            if (this.apiClientConfig.baseUrl == null) {
+                this.apiClientConfig.baseUrl = RevAiBaseWebsocketUrl.US;
+            }
+            // tslint:disable-next-line
+            if (this.apiClientConfig.token == null) {
+                throw new Error('token must be defined');
+            }
+        } else {
+            this.apiClientConfig.token = params;
+            this.apiClientConfig.version = version;
+            this.apiClientConfig.baseUrl = RevAiBaseWebsocketUrl.US;
+        }
+        this.apiClientConfig.serviceApi = 'speechtotext';
+
         this.streamsClosed = false;
-        this.accessToken = accessToken;
+        this.accessToken = this.apiClientConfig.token;
         this.config = config;
-        this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
+        this.baseUrl = `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/stream`;
         this.requests = new PassThrough({ objectMode: true });
         this.responses = new PassThrough({ objectMode: true });
         this.protocol = new BufferedDuplex(this.requests, this.responses, {

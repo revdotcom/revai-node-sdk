@@ -7,6 +7,7 @@ import { CaptionType } from './models/async/CaptionType';
 import { TranscriptType } from './models/async/TranscriptType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
 import { RevAiBaseUrl } from './models/RevAiBaseUrl';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
@@ -14,24 +15,10 @@ import { RevAiApiTranscript } from './models/RevAiApiTranscript';
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
 /**
- * Configuration object to initialize RevAiApiClient with
- * @param token Access token used to validate API requests, note access token should match the deployment
- *    associated with the url in @param baseUrl
- * @param version version of the API to be used
- * @param baseUrl base url of the API to be used, note base urls are different for Rev AI deployments in
- *     different locations
- */
-interface RevAiApiClientConfig {
-    token?: string;
-    version?: string;
-    baseUrl?: string;
-}
-
-/**
  * Client which handles connection to the Rev AI speech to text API.
  */
 export class RevAiApiClient {
-    private _config: RevAiApiClientConfig = {};
+    private apiClientConfig: RevAiApiClientConfig = {};
 
     apiHandler: ApiRequestHandler;
 
@@ -41,25 +28,31 @@ export class RevAiApiClient {
      */
     constructor(params: RevAiApiClientConfig | string, version: string = 'v1') {
         if (typeof params === 'object') {
-            this._config = Object.assign(this._config, params as RevAiApiClientConfig);
-            if (this._config.version === null || this._config.version === undefined) {
-                this._config.version = version;
+            this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
+
+            // tslint:disable-next-line
+            if (this.apiClientConfig.version == null) {
+                this.apiClientConfig.version = version;
             }
-            if (this._config.baseUrl === null || this._config.baseUrl === undefined) {
-                this._config.baseUrl = RevAiBaseUrl.US;
+            // tslint:disable-next-line
+            if (this.apiClientConfig.baseUrl == null) {
+                this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
             }
-            if (this._config.token === null || this._config.token === undefined) {
+            // tslint:disable-next-line
+            if (this.apiClientConfig.token == null) {
                 throw new Error('token must be defined');
             }
         } else {
-            this._config.token = params;
-            this._config.version = version;
-            this._config.baseUrl = RevAiBaseUrl.US;
+            this.apiClientConfig.token = params;
+            this.apiClientConfig.version = version;
+            this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
         }
 
+        this.apiClientConfig.serviceApi = 'speechtotext';
+
         this.apiHandler = new ApiRequestHandler(
-            `${this._config.baseUrl}/speechtotext/${this._config.version}/`,
-            this._config.token
+            `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/`,
+            this.apiClientConfig.token
         );
     }
 

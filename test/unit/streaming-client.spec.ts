@@ -21,7 +21,7 @@ const sdkVersion = require('../../package.json').version;
 
 describe('streaming-client', () => {
     beforeEach(() => {
-        sut = new RevAiStreamingClient(token, audioConfig);
+        sut = new RevAiStreamingClient({ token: token }, audioConfig);
         mockClient = sut.client;
     });
 

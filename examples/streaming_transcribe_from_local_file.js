@@ -11,7 +11,10 @@ const audioConfig = new revai.AudioConfig(
     /* channels */    1
 );
 
-var client = new revai.RevAiStreamingClient(token, audioConfig);
+var client = new revai.RevAiStreamingClient(
+    { token: token },
+    audioConfig
+);
 
 // Create your event responses
 client.on('close', (code, reason) => {

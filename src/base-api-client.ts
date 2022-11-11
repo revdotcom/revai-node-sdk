@@ -1,18 +1,50 @@
 import { ApiRequestHandler } from './api-request-handler';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
+import { RevAiBaseUrl } from './models/RevAiBaseUrl';
 
 /**
  * Base client implementation. Intended to be extended by a specific client per API
  */
 export abstract class BaseApiClient<TJob, TResult> {
+    private apiClientConfig: RevAiApiClientConfig = {};
     apiHandler: ApiRequestHandler;
 
     /**
-     * @param accessToken Access token used to validate API requests
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      * @param serviceApi Type of api service
      * @param version (optional) version of the API to be used
      */
-    constructor (accessToken: string, serviceApi: string, version: string) {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/${serviceApi}/${version}/`, accessToken);
+    constructor (params: RevAiApiClientConfig | string, serviceApi: string, version: string) {
+        if (typeof params === 'object') {
+            this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
+
+            // tslint:disable-next-line
+            if (this.apiClientConfig.version == null) {
+                this.apiClientConfig.version = version;
+            }
+            // tslint:disable-next-line
+            if (this.apiClientConfig.baseUrl == null) {
+                this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
+            }
+            // tslint:disable-next-line
+            if (this.apiClientConfig.serviceApi == null) {
+                this.apiClientConfig.serviceApi = serviceApi;
+            }
+            // tslint:disable-next-line
+            if (this.apiClientConfig.token == null) {
+                throw new Error('token must be defined');
+            }
+        } else {
+            this.apiClientConfig.token = params;
+            this.apiClientConfig.version = version;
+            this.apiClientConfig.baseUrl = RevAiBaseUrl.US;
+            this.apiClientConfig.serviceApi = serviceApi;
+        }
+
+        this.apiHandler = new ApiRequestHandler(
+            `${this.apiClientConfig.baseUrl}/${this.apiClientConfig.serviceApi}/${this.apiClientConfig.version}/`,
+            this.apiClientConfig.token
+        );
     }
 
     /**

@@ -36,7 +36,7 @@ describe('language-id-client', () => {
         (ApiRequestHandler as jest.Mock<ApiRequestHandler>).mockImplementationOnce(() => ({
             makeApiRequest: mockMakeApiRequest
         }));
-        sut = new LanguageIdClient('testtoken');
+        sut = new LanguageIdClient({ token: 'testtoken' });
     });
 
     describe('getJobDetails', () => {

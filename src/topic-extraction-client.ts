@@ -14,7 +14,6 @@ const TopicsContentType = 'application/vnd.rev.topic.v1.0+json';
 export class TopicExtractionClient extends BaseApiClient<TopicExtractionJob, TopicExtractionResult> {
     /**
      * @param accessToken Access token used to validate API requests
-     * @param version (optional) version of the API to be used
      */
     constructor (accessToken: string) {
         super(accessToken, 'topic_extraction', 'v1');
