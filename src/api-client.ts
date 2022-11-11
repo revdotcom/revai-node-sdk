@@ -31,7 +31,7 @@ export class RevAiApiClient {
         if (typeof params === 'object') {
             this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
 
-            if (this.apiClientConfig.version === null || his.apiClientConfig.version === undefined) {
+            if (this.apiClientConfig.version === null || this.apiClientConfig.version === undefined) {
                 this.apiClientConfig.version = version;
             }
             if (this.apiClientConfig.baseUrl === null || this.apiClientConfig.baseUrl === undefined) {
