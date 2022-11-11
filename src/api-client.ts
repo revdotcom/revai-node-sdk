@@ -50,17 +50,18 @@ export class RevAiApiClient {
                 this._config.baseUrl = RevAiBaseUrl.US;
             }
             if (this._config.token == null) {
-                throw new Error("token must be defined")
+                throw new Error('token must be defined');
             }
-        }
-        else
-        {
+        } else {
             this._config.token = params;
             this._config.version = version;
-            this._config.baseUrl = RevAiBaseUrl.US
+            this._config.baseUrl = RevAiBaseUrl.US;
         }
 
-        this.apiHandler = new ApiRequestHandler(`${this._config.baseUrl}/speechtotext/${this._config.version}/`, this._config.token);
+        this.apiHandler = new ApiRequestHandler(
+            `${this._config.baseUrl}/speechtotext/${this._config.version}/`,
+            this._config.token
+        );
     }
 
     /**

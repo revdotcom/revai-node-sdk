@@ -52,7 +52,7 @@ export const setupFakeInvalidStateError = (): AxiosError => {
 };
 
 export const setupFakeForbiddenAccessError = (): AxiosError => {
-    let err = setupFakeApiError(403,
+    const err = setupFakeApiError(403,
         'Permisson has been denied for this request - access to this deployment is not allowed',
         'https://www.rev.ai/api/v1/errors/access-denied',
         null
@@ -61,7 +61,7 @@ export const setupFakeForbiddenAccessError = (): AxiosError => {
 };
 
 export const setupFakeUnsupportedApiError = (): AxiosError => {
-    let err = setupFakeApiError(404,
+    const err = setupFakeApiError(404,
         'This api is not supported in this deployment',
         'https://www.rev.ai/api/v1/errors/unsupported-api',
         null
@@ -70,7 +70,7 @@ export const setupFakeUnsupportedApiError = (): AxiosError => {
 };
 
 export const setupFakeResourceNotFoundError = (): AxiosError => {
-    let err = setupFakeApiError(404,
+    const err = setupFakeApiError(404,
         'could not find job',
         'https://www.rev.ai/api/v1/errors/job-not-found',
         null
