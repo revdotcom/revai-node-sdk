@@ -31,7 +31,7 @@ interface RevAiApiClientConfig {
  * Client which handles connection to the Rev AI speech to text API.
  */
 export class RevAiApiClient {
-    private _config: Config = {};
+    private _config: RevAiApiClientConfig = {};
 
     apiHandler: ApiRequestHandler;
 
@@ -43,10 +43,18 @@ export class RevAiApiClient {
     {
         if (typeof params === 'object') {
             this._config = Object.assign(this._config, params as RevAiApiClientConfig);
-            this._config.version = this._config.version || version;
-            this._config.baseUrl = this._config.baseUrl || RevAiBaseUrl.US;
-            assertNotNull(this._config.token);
-        } else {
+            if (this._config.version == null) {
+                this._config.version = version;
+            }
+            if (this._config.baseUrl == null) {
+                this._config.baseUrl = RevAiBaseUrl.US;
+            }
+            if (this._config.token == null) {
+                throw new Error("token must be defined")
+            }
+        }
+        else
+        {
             this._config.token = params;
             this._config.version = version;
             this._config.baseUrl = RevAiBaseUrl.US

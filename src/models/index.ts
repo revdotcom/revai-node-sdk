@@ -1,8 +1,8 @@
 export * from './async/CaptionType';
+export * from './async/TranscriptType';
 export * from './async/RevAiAccount';
 export * from './async/RevAiJobOptions';
 export * from './CustomVocabulary';
-export * from './BaseUrl';
 export * from './CustomVocabularyOptions';
 export * from './CustomVocabularyStatus';
 export * from './GetListOfJobsOptions';
@@ -11,6 +11,7 @@ export * from './JobType';
 export * from './RevAiApiError';
 export * from './RevAiApiJob';
 export * from './RevAiApiTranscript';
+export * from './RevAiBaseUrl';
 export * from './sentiment-analysis/Sentiment';
 export * from './sentiment-analysis/SentimentAnalysisJob';
 export * from './sentiment-analysis/SentimentAnalysisJobOptions';
