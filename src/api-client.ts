@@ -39,17 +39,16 @@ export class RevAiApiClient {
      * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      * @param version (optional) version of the API to be used with string Acces token
      */
-    constructor(params: RevAiApiClientConfig | string, version: string = 'v1')
-    {
+    constructor(params: RevAiApiClientConfig | string, version: string = 'v1') {
         if (typeof params === 'object') {
             this._config = Object.assign(this._config, params as RevAiApiClientConfig);
-            if (this._config.version == null) {
+            if (this._config.version === null || this._config.version === undefined) {
                 this._config.version = version;
             }
-            if (this._config.baseUrl == null) {
+            if (this._config.baseUrl === null || this._config.baseUrl === undefined) {
                 this._config.baseUrl = RevAiBaseUrl.US;
             }
-            if (this._config.token == null) {
+            if (this._config.token === null || this._config.token === undefined) {
                 throw new Error('token must be defined');
             }
         } else {
