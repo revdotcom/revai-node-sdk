@@ -1,19 +1,48 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ApiRequestHandler } from './api-request-handler';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
+import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 
 /**
  * Base client implementation. Intended to be extended by a specific client per API
  */
 export abstract class BaseApiClient<TJob, TResult> {
+    private apiClientConfig: RevAiApiClientConfig = {};
     apiHandler: ApiRequestHandler;
 
     /**
-     * @param accessToken Access token used to validate API requests
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      * @param serviceApi Type of api service
      * @param version (optional) version of the API to be used
      */
-    constructor (accessToken: string, serviceApi: string, version: string) {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/${serviceApi}/${version}/`, accessToken);
+    constructor (params: RevAiApiClientConfig | string, serviceApi: string, version: string) {
+        if (typeof params === 'object') {
+            this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
+
+            if (this.apiClientConfig.version === null || this.apiClientConfig.version === undefined) {
+                this.apiClientConfig.version = version;
+            }
+            if (this.apiClientConfig.deploymentConfig === null || this.apiClientConfig.deploymentConfig === undefined) {
+                this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
+            }
+            if (this.apiClientConfig.serviceApi === null || this.apiClientConfig.serviceApi === undefined) {
+                this.apiClientConfig.serviceApi = serviceApi;
+            }
+            if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
+                throw new Error('token must be defined');
+            }
+        } else {
+            this.apiClientConfig.token = params;
+            this.apiClientConfig.version = version;
+            this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
+            this.apiClientConfig.serviceApi = serviceApi;
+        }
+
+        this.apiHandler = new ApiRequestHandler(
+            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}`
+                + `/${this.apiClientConfig.version}/`,
+            this.apiClientConfig.token
+        );
     }
 
     /**

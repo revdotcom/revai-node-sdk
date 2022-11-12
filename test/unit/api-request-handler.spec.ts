@@ -5,6 +5,8 @@ import axios from 'axios';
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {
     InvalidParameterError,
+    ForbiddenAccessError,
+    ResourceNotFoundOrUnsupportedApiError,
     InvalidStateError,
     RevAiApiError
 } from '../../src/models/RevAiApiError';
@@ -13,6 +15,9 @@ import {
     objectToStream,
     setupFakeApiError,
     setupFakeInvalidParametersError,
+    setupFakeForbiddenAccessError,
+    setupFakeResourceNotFoundError,
+    setupFakeUnsupportedApiError,
     setupFakeInvalidStateError
 } from './testhelpers';
 
@@ -115,29 +120,6 @@ describe('api-request-handler', () => {
             });
         });
 
-        it('handles when api returns not found', async () => {
-            const method = 'get';
-            const endpoint = '/test';
-            const headers = { 'Header1' : 'test' };
-            const responseType = 'text';
-            const fakeError = setupFakeApiError(404, 'not found');
-            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
-
-            try {
-                await sut.makeApiRequest(method, endpoint, headers, responseType);
-            } catch (e) {
-                expect(e).toEqual(new RevAiApiError(fakeError));
-            }
-            expect(axios.request).toBeCalledTimes(1);
-            expect(axios.request).toBeCalledWith({
-                method: method,
-                url: endpoint,
-                data: undefined,
-                headers: headers,
-                responseType: responseType
-            });
-        });
-
         it('handles when api returns bad request', async () => {
             const method = 'get';
             const endpoint = '/test';
@@ -150,6 +132,75 @@ describe('api-request-handler', () => {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
             } catch (e) {
                 expect(e).toEqual(new InvalidParameterError(fakeError));
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        it('handles when api returns forbidden', async () => {
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const responseType = 'text';
+            const fakeError = setupFakeForbiddenAccessError();
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(new ForbiddenAccessError(fakeError));
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        it('handles when api returns api not found', async () => {
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const responseType = 'text';
+            const fakeError = setupFakeUnsupportedApiError();
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(new ResourceNotFoundOrUnsupportedApiError(fakeError));
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        it('handles when api returns resource not found', async () => {
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const responseType = 'text';
+            const fakeError = setupFakeResourceNotFoundError();
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(new ResourceNotFoundOrUnsupportedApiError(fakeError));
             }
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({

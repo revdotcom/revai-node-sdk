@@ -5,6 +5,8 @@ import { client, connection, IClientConfig, Message } from 'websocket';
 
 import { AudioConfig } from './models/streaming/AudioConfig';
 import { BufferedDuplex } from './models/streaming/BufferedDuplex';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
+import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 import { SessionConfig } from './models/streaming/SessionConfig';
 import {
     StreamingConnected,
@@ -30,6 +32,7 @@ const sdkVersion = require('../package.json').version;
 export class RevAiStreamingClient extends EventEmitter {
     baseUrl: string;
     client: client;
+    private apiClientConfig: RevAiApiClientConfig = {};
     private streamsClosed: boolean;
     private accessToken: string;
     private config: AudioConfig;
@@ -38,16 +41,37 @@ export class RevAiStreamingClient extends EventEmitter {
     private protocol: Duplex;
 
     /**
-     * @param accessToken Access token associated with the user's account
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
      * @param config Configuration of the audio the user will send from this client
      * @param version (optional) Version of the Rev AI API the user wants to use
      */
-    constructor(accessToken: string, config: AudioConfig, version = 'v1') {
+    constructor(params: RevAiApiClientConfig | string, config: AudioConfig, version = 'v1') {
         super();
+
+        if (typeof params === 'object') {
+            this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
+
+            if (this.apiClientConfig.version === null || this.apiClientConfig.version === undefined) {
+                this.apiClientConfig.version = version;
+            }
+            if (this.apiClientConfig.deploymentConfig === null || this.apiClientConfig.deploymentConfig === undefined) {
+                this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
+            }
+            if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
+                throw new Error('token must be defined');
+            }
+        } else {
+            this.apiClientConfig.token = params;
+            this.apiClientConfig.version = version;
+            this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
+        }
+        this.apiClientConfig.serviceApi = 'speechtotext';
+
         this.streamsClosed = false;
-        this.accessToken = accessToken;
+        this.accessToken = this.apiClientConfig.token;
         this.config = config;
-        this.baseUrl = `wss://api.rev.ai/speechtotext/${version}/stream`;
+        this.baseUrl = `${this.apiClientConfig.deploymentConfig.baseWebsocketUrl}/${this.apiClientConfig.serviceApi}` +
+            `/${this.apiClientConfig.version}/stream`;
         this.requests = new PassThrough({ objectMode: true });
         this.responses = new PassThrough({ objectMode: true });
         this.protocol = new BufferedDuplex(this.requests, this.responses, {

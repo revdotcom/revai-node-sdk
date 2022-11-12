@@ -22,6 +22,24 @@ export class InvalidParameterError extends RevAiApiError {
     }
 }
 
+export class ForbiddenAccessError extends RevAiApiError {
+    parameters: {};
+
+    constructor(e: AxiosError) {
+        super(e);
+        this.parameters = e.response.data.parameters;
+    }
+}
+
+export class ResourceNotFoundOrUnsupportedApiError extends RevAiApiError {
+    parameters: {};
+
+    constructor(e: AxiosError) {
+        super(e);
+        this.parameters = e.response.data.parameters;
+    }
+}
+
 export class InvalidStateError extends RevAiApiError {
     currentValue: string;
     allowedValues: string[];

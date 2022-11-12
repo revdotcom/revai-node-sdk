@@ -5,15 +5,13 @@ import * as FormData from 'form-data';
 
 import { ApiRequestHandler } from './api-request-handler';
 import { CaptionType } from './models/async/CaptionType';
+import { TranscriptType } from './models/async/TranscriptType';
 import { RevAiAccount } from './models/async/RevAiAccount';
 import { RevAiJobOptions } from './models/async/RevAiJobOptions';
+import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
+import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
-
-const enum TranscriptContentTypes {
-    JSON = 'application/vnd.rev.transcript.v1.0+json',
-    TEXT = 'text/plain'
-}
 
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
@@ -21,14 +19,40 @@ const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
  * Client which handles connection to the Rev AI speech to text API.
  */
 export class RevAiApiClient {
+    private apiClientConfig: RevAiApiClientConfig = {};
+
     apiHandler: ApiRequestHandler;
 
     /**
-     * @param accessToken Access token used to validate API requests
-     * @param version (optional) version of the API to be used
+     * @param either string Access token used to validate API requests or RevAiApiClientConfig object
+     * @param version (optional) version of the API to be used with string Acces token
      */
-    constructor (accessToken: string, version = 'v1') {
-        this.apiHandler = new ApiRequestHandler(`https://api.rev.ai/speechtotext/${version}/`, accessToken);
+    constructor(params: RevAiApiClientConfig | string, version: string = 'v1') {
+        if (typeof params === 'object') {
+            this.apiClientConfig = Object.assign(this.apiClientConfig, params as RevAiApiClientConfig);
+
+            if (this.apiClientConfig.version === null || this.apiClientConfig.version === undefined) {
+                this.apiClientConfig.version = version;
+            }
+            if (this.apiClientConfig.deploymentConfig === null || this.apiClientConfig.deploymentConfig === undefined) {
+                this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
+            }
+            if (this.apiClientConfig.token === null || this.apiClientConfig.token === undefined) {
+                throw new Error('token must be defined');
+            }
+        } else {
+            this.apiClientConfig.token = params;
+            this.apiClientConfig.version = version;
+            this.apiClientConfig.deploymentConfig = RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US);
+        }
+
+        this.apiClientConfig.serviceApi = 'speechtotext';
+
+        this.apiHandler = new ApiRequestHandler(
+            `${this.apiClientConfig.deploymentConfig.baseUrl}/${this.apiClientConfig.serviceApi}/`
+                + `${this.apiClientConfig.version}/`,
+            this.apiClientConfig.token
+        );
     }
 
     /**
@@ -170,7 +194,7 @@ export class RevAiApiClient {
      */
     async getTranscriptObject(id: string): Promise<RevAiApiTranscript> {
         return await this.apiHandler.makeApiRequest<RevAiApiTranscript>('get', `/jobs/${id}/transcript`,
-            { 'Accept': TranscriptContentTypes.JSON }, 'json');
+            { 'Accept': TranscriptType.JSON }, 'json');
     }
 
     /**
@@ -182,7 +206,7 @@ export class RevAiApiClient {
      */
     async getTranscriptObjectStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.JSON }, 'stream');
+            `/jobs/${id}/transcript`, { 'Accept': TranscriptType.JSON }, 'stream');
     }
 
     /**
@@ -193,7 +217,7 @@ export class RevAiApiClient {
      */
     async getTranscriptText(id: string): Promise<string> {
         return await this.apiHandler.makeApiRequest<string>('get', `/jobs/${id}/transcript`,
-            { 'Accept': TranscriptContentTypes.TEXT }, 'text');
+            { 'Accept': TranscriptType.TEXT }, 'text');
     }
 
     /**
@@ -205,7 +229,7 @@ export class RevAiApiClient {
      */
     async getTranscriptTextStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
-            `/jobs/${id}/transcript`, { 'Accept': TranscriptContentTypes.TEXT }, 'stream');
+            `/jobs/${id}/transcript`, { 'Accept': TranscriptType.TEXT }, 'stream');
     }
 
     /**
