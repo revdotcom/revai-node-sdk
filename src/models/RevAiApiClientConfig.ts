@@ -10,7 +10,7 @@
 export interface RevAiApiClientConfig {
     token?: string;
     version?: string;
-    deploymentConfig?: RevAiAPiDeploymentConfig;
+    deploymentConfig?: RevAiApiDeploymentConfig;
     serviceApi?: string;
 }
 
@@ -21,7 +21,7 @@ export interface RevAiApiClientConfig {
  * @param baseUrl base url of the API to be used
  * @param baseWebsocketUrl base urls of the streaming API to be used
  */
-interface RevAiAPiDeploymentConfig {
+interface RevAiApiDeploymentConfig {
     baseUrl: string;
     baseWebsocketUrl: string;
 }
