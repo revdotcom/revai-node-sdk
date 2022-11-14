@@ -25,15 +25,14 @@ your [Settings Page](https://www.rev.ai/access_token). Create a client with the
 given Access Token:
 
 ```javascript
-import { RevAiApiClient } from 'revai-node-sdk';
+import { RevAiApiClient, RevAiApiDeployment, RevAiApiDeploymentConfigMap } from 'revai-node-sdk';
 
 // Initialize your client with your Rev AI access token
-const accessToken = "Your Access Token";
-/**
- * Optionally set the base url of the Rev AI deployment of your account, defaults to US.
- * Learn more about Rev AI's global deployments [here](https://docs.rev.ai/api/global-deployments/).
- */
-const client = new RevAiApiClient({ token: accessToken, deploymentConfig: RevAiAPiDeploymentConfigMap.get(RevAiAPiDeployment.US) });
+const accessToken = "<ACCESS_TOKEN>";
+
+// Optionally set the specific Rev AI deployment of your account, defaults to the US deployment.
+// Learn more about Rev AI's global deployments at https://docs.rev.ai/api/global-deployments.
+const client = new RevAiApiClient({ token: accessToken, deploymentConfig: RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US) });
 ```
 
 ### Checking credits remaining
@@ -173,10 +172,14 @@ const captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channel
 In order to stream audio, you will need to setup a streaming client and a media configuration for the audio you will be sending.
 
 ```javascript
-import { RevAiStreamingClient } from 'revai-node-sdk';
+import { RevAiApiClient, RevAiApiDeployment, RevAiApiDeploymentConfigMap } from 'revai-node-sdk';
 
-const audioConfig = new AudioConfig() // Initialize audio configuration for the streaming client
-const streamingClient = new RevAiStreamingClient("ACCESS TOKEN", audioConfig);
+ // Initialize audio configuration for the streaming client
+const audioConfig = new AudioConfig()
+
+// Optionally set the specific Rev AI deployment of your account, defaults to the US deployment.
+// Learn more about Rev AI's global deployments at https://docs.rev.ai/api/global-deployments.
+const streamingClient = new RevAiStreamingClient({ token: "<ACCESS_TOKEN>", deploymentConfig: RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US) }, audioConfig);
 ```
 
 You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting!
@@ -214,7 +217,7 @@ For more information, check out our [examples](https://github.com/revdotcom/reva
 import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
 
 // Initialize your client with your Rev AI access token
-const accessToken = "Your Access Token";
+const accessToken = "<ACCESS_TOKEN>";
 const client = new RevAiCustomVocabulariesClient(accessToken);
 
 // Construct custom vocabularies object and submit it through the client
