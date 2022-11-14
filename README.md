@@ -28,7 +28,7 @@ given Access Token:
 import { RevAiApiClient, RevAiApiDeployment, RevAiApiDeploymentConfigMap } from 'revai-node-sdk';
 
 // Initialize your client with your Rev AI access token
-const accessToken = "Your Access Token";
+const accessToken = "<ACCESS_TOKEN>";
 
 // Optionally set the specific Rev AI deployment of your account, defaults to the US deployment.
 // Learn more about Rev AI's global deployments at https://docs.rev.ai/api/global-deployments.
@@ -179,7 +179,7 @@ const audioConfig = new AudioConfig()
 
 // Optionally set the specific Rev AI deployment of your account, defaults to the US deployment.
 // Learn more about Rev AI's global deployments at https://docs.rev.ai/api/global-deployments.
-const streamingClient = new RevAiStreamingClient({ token: "ACCESS TOKEN", deploymentConfig: RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US) }, audioConfig);
+const streamingClient = new RevAiStreamingClient({ token: "<ACCESS_TOKEN>", deploymentConfig: RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US) }, audioConfig);
 ```
 
 You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting!
@@ -217,7 +217,7 @@ For more information, check out our [examples](https://github.com/revdotcom/reva
 import { RevAiCustomVocabulariesClient } from 'revai-node-sdk';
 
 // Initialize your client with your Rev AI access token
-const accessToken = "Your Access Token";
+const accessToken = "<ACCESS_TOKEN>";
 const client = new RevAiCustomVocabulariesClient(accessToken);
 
 // Construct custom vocabularies object and submit it through the client
