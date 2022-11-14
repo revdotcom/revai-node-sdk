@@ -25,14 +25,14 @@ your [Settings Page](https://www.rev.ai/access_token). Create a client with the
 given Access Token:
 
 ```javascript
-import { RevAiApiClient } from 'revai-node-sdk';
+import { RevAiApiClient, RevAiApiDeployment, RevAiApiDeploymentConfigMap } from 'revai-node-sdk';
 
 // Initialize your client with your Rev AI access token
 const accessToken = "Your Access Token";
 
 // Optionally set the specific Rev AI deployment of your account, defaults to the US deployment.
 // Learn more about Rev AI's global deployments at https://docs.rev.ai/api/global-deployments.
-const client = new RevAiApiClient({ token: accessToken, deploymentConfig: RevAiAPiDeploymentConfigMap.get(RevAiAPiDeployment.US) });
+const client = new RevAiApiClient({ token: accessToken, deploymentConfig: RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US) });
 ```
 
 ### Checking credits remaining
@@ -172,14 +172,14 @@ const captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channel
 In order to stream audio, you will need to setup a streaming client and a media configuration for the audio you will be sending.
 
 ```javascript
-import { RevAiStreamingClient } from 'revai-node-sdk';
+import { RevAiApiClient, RevAiApiDeployment, RevAiApiDeploymentConfigMap } from 'revai-node-sdk';
 
  // Initialize audio configuration for the streaming client
 const audioConfig = new AudioConfig()
 
 // Optionally set the specific Rev AI deployment of your account, defaults to the US deployment.
 // Learn more about Rev AI's global deployments at https://docs.rev.ai/api/global-deployments.
-const streamingClient = new RevAiStreamingClient({ token: "ACCESS TOKEN", deploymentConfig: RevAiAPiDeploymentConfigMap.get(RevAiAPiDeployment.US) }, audioConfig);
+const streamingClient = new RevAiStreamingClient({ token: "ACCESS TOKEN", deploymentConfig: RevAiApiDeploymentConfigMap.get(RevAiApiDeployment.US) }, audioConfig);
 ```
 
 You can set up event responses for your client's streaming sessions. This allows you to handle events such as the connection closing, failing, or successfully connecting!
