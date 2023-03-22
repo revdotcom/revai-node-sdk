@@ -13,6 +13,7 @@ export interface StreamingResponse {
 export interface StreamingHypothesis extends StreamingResponse {
     ts?: number;
     end_ts?: number;
+    speaker_id?: number;
     elements: Element[];
 }
 

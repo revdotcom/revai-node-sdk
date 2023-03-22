@@ -137,6 +137,9 @@ export class RevAiStreamingClient extends EventEmitter {
             if (config.skipPostprocessing) {
                 url += '&skip_postprocessing=true';
             }
+            if (config.enableSpeakerSwitch) {
+                url += '&enable_speaker_switch=true';
+            }
         }
 
         this.client.connect(url);
