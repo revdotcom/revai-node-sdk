@@ -13,6 +13,7 @@ export class SessionConfig {
     detailedPartials?: boolean;
     language: string;
     skipPostprocessing?: boolean;
+    enableSpeakerSwitch?: boolean;
 
     /**
      * @param metadata (Optional) metadata to be associated with the streaming job
@@ -30,7 +31,8 @@ export class SessionConfig {
      * @param detailedPartials (Optional) whether to return detailed partials
      * @param language (Optional) language to use for the streaming job
      * @param skipPostprocessing (Optional) skip all text postprocessing
-     */
+     * @param enableSpeakerSwitch (Optional) whether to enable speaker switch detection
+    */
     constructor(
         metadata?: string,
         customVocabularyID?: string,
@@ -41,7 +43,8 @@ export class SessionConfig {
         transcriber?: string,
         detailedPartials?: boolean,
         language?: string,
-        skipPostprocessing?: boolean
+        skipPostprocessing?: boolean,
+        enableSpeakerSwitch?: boolean
     ) {
         this.metadata = metadata;
         this.customVocabularyID = customVocabularyID;
@@ -53,5 +56,6 @@ export class SessionConfig {
         this.detailedPartials = detailedPartials;
         this.language = language;
         this.skipPostprocessing = skipPostprocessing;
+        this.enableSpeakerSwitch = enableSpeakerSwitch;
     }
 }
