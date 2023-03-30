@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Readable, Transform, Writable } from 'stream';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {

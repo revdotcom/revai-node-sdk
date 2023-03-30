@@ -56,7 +56,7 @@ export class ApiRequestHandler {
 
             return response.data;
         } catch (error) {
-            if (error.response == null) {
+            if (error.response === null || error.response === undefined) {
                 throw error;
             }
             if (responseType === 'stream') {
