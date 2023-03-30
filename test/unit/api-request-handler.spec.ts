@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Readable, Transform, Writable } from 'stream';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 
 import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
 import {
@@ -18,7 +18,7 @@ import {
     setupFakeForbiddenAccessError,
     setupFakeResourceNotFoundError,
     setupFakeUnsupportedApiError,
-    setupFakeInvalidStateError
+    setupFakeInvalidStateError, fakeAxiosError
 } from './testhelpers';
 
 describe('api-request-handler', () => {
@@ -260,6 +260,53 @@ describe('api-request-handler', () => {
                 await sut.makeApiRequest(method, endpoint, headers, responseType);
             } catch (e) {
                 expect(e).toEqual(new InvalidParameterError(fakeError));
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        it('rethrows error when not axios error', async () => {
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const responseType = 'text';
+            const fakeError = new SyntaxError();
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(fakeError);
+            }
+            expect(axios.request).toBeCalledTimes(1);
+            expect(axios.request).toBeCalledWith({
+                method: method,
+                url: endpoint,
+                data: undefined,
+                headers: headers,
+                responseType: responseType
+            });
+        });
+
+        it('rethrows error when response is null', async () => {
+            const method = 'get';
+            const endpoint = '/test';
+            const headers = { 'Header1' : 'test' };
+            const responseType = 'text';
+            const fakeError = setupFakeForbiddenAccessError();
+            fakeError.response = null;
+            axios.request.mockImplementationOnce(() => Promise.reject(fakeError));
+
+            try {
+                await sut.makeApiRequest(method, endpoint, headers, responseType);
+            } catch (e) {
+                expect(e).toEqual(fakeError);
             }
             expect(axios.request).toBeCalledTimes(1);
             expect(axios.request).toBeCalledWith({
