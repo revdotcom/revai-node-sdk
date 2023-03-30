@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: FantasticFiasco/action-update-license-year@f3d1911d2a05b8a69fee1de4033b2847c347d911
+      - uses: FantasticFiasco/action-update-license-year@00b7495233bb4a9229204b2bd3e2a6df7551e155
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           transform: (?<from>\d{4})+-?(\d{4})?
