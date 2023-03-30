@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Readable, Transform, Writable } from 'stream';
+import { Transform } from 'stream';
 import axios from 'axios';
 
-import { ApiRequestHandler, AxiosResponseTypes, HttpMethodTypes } from '../../src/api-request-handler';
+import { ApiRequestHandler } from '../../src/api-request-handler';
 import {
     InvalidParameterError,
     ForbiddenAccessError,
@@ -18,7 +18,7 @@ import {
     setupFakeForbiddenAccessError,
     setupFakeResourceNotFoundError,
     setupFakeUnsupportedApiError,
-    setupFakeInvalidStateError, fakeAxiosError
+    setupFakeInvalidStateError
 } from './testhelpers';
 
 describe('api-request-handler', () => {
