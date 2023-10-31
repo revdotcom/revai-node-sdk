@@ -24,7 +24,7 @@ export interface RevAiJobOptions {
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
     skip_postprocessing?: boolean;
-    diarization_type?: DiarizationType;
+    diarization_type?: string;
     speaker_channels_count?: number;
     custom_vocabulary_id?: string;
     custom_vocabularies?: CustomVocabulary[];
