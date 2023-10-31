@@ -1,5 +1,6 @@
 import { CustomerUrlData } from '../CustomerUrlData';
 import { CustomVocabulary } from '../CustomVocabulary';
+import { DiarizationType } from './DiarizationType';
 
 export interface SegmentToTranscribe {
     start: number;
@@ -23,6 +24,7 @@ export interface RevAiJobOptions {
     skip_diarization?: boolean;
     skip_punctuation?: boolean;
     skip_postprocessing?: boolean;
+    diarization_type?: DiarizationType;
     speaker_channels_count?: number;
     custom_vocabulary_id?: string;
     custom_vocabularies?: CustomVocabulary[];
