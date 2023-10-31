@@ -1,4 +1,5 @@
 export * from './async/CaptionType';
+export * from './async/DiarizationType';
 export * from './async/TranscriptType';
 export * from './async/RevAiAccount';
 export * from './async/RevAiJobOptions';
