@@ -1,6 +1,5 @@
 import { CustomerUrlData } from '../CustomerUrlData';
 import { CustomVocabulary } from '../CustomVocabulary';
-import { DiarizationType } from './DiarizationType';
 
 export interface SegmentToTranscribe {
     start: number;
