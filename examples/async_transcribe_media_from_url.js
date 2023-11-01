@@ -41,6 +41,7 @@ const token = require('./config/config.json').access_token;
                 'here'
             ]
         }],
+        diarization_type: 'premium', // Optional property which allows to define diarization type
         filter_profanity: false, // Optional value available with some languages
         remove_disfluencies: false, // Optional value available with some languages
         delete_after_seconds: 2592000, // 30 days in seconds

@@ -4,6 +4,7 @@ import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
 import { RevAiJobOptions } from '../../../src/models/async/RevAiJobOptions';
 import { CustomerUrlData } from '../../../src/models/CustomerUrlData';
+import { DiarizationType } from '../../../src/models/async/DiarizationType';
 
 jest.mock('../../../src/api-request-handler');
 
@@ -93,7 +94,8 @@ describe('api-client job submission', () => {
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
                 language: 'en',
-                transcriber: 'machine_v2'
+                transcriber: 'machine_v2',
+                diarization_type: DiarizationType.PREMIUM
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
