@@ -12,6 +12,7 @@ import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
 import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
+import { Summary } from './models/async/Summary';
 
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
@@ -250,6 +251,19 @@ export class RevAiApiClient {
         }
         return await this.apiHandler.makeApiRequest<Readable>(
             'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
+    }
+
+    async getTranscriptSummaryText(id: string): Promise<string> {
+        let url = `/jobs/${id}/transcript/summary`;
+        
+        return await this.apiHandler.makeApiRequest<string>('get', url,
+            { 'Accept': TranscriptType.TEXT }, 'text');
+    }
+
+    async getTranscriptSummaryObject(id: string): Promise<Summary> {
+        let url = `/jobs/${id}/transcript/summary`;
+        return await this.apiHandler.makeApiRequest<Summary>('get', url,
+            { 'Accept': "application/json" }, 'json');
     }
 
     private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
