@@ -1,7 +1,9 @@
 const fs = require('fs');
 const clientHelper = require('../src/client-helper');
 const { SummarizationJobStatus } = require('../../../dist/src/models/async/SummarizationJobStatus');
+const { TranslationJobStatus } = require('../../../dist/src/models/async/TranslationJobStatus');
 const { JobStatus } = require('../../../dist/src/models/JobStatus');
+const { NlpModel } = require('../../../dist/src/models/NlpModel');
 
 test('superapi Can submit local file', async () => {
     const client = clientHelper.getAsyncClient();
@@ -42,13 +44,12 @@ test('superapi Can submit local file', async () => {
     expect(job.translation.target_languages.length).toBe(2);
    
     while(job != null && (
-        job.summarization.status == SummarizationJobStatus.InProgress
-        /*job.translation.target_languages[0].status == TranslationJobStatus.IN_PROGRESS ||
-        job.translation.target_languages[1].status == TranslationJobStatus.IN_PROGRESS*/
+        job.summarization.status === SummarizationJobStatus.InProgress ||
+        job.translation.target_languages[0].status === TranslationJobStatus.InProgress ||
+        job.translation.target_languages[1].status === TranslationJobStatus.InProgress
         )
     )
     {
-        console.info("Check " + job.id+' '+job.summarization.status);
       await new Promise(r => setTimeout(r, 5000));
       job = await client.getJobDetails(job.id);
     }
@@ -56,12 +57,13 @@ test('superapi Can submit local file', async () => {
     expect(job.status).toBe(JobStatus.Transcribed);
     expect(job.summarization.status).toBe(SummarizationJobStatus.Completed);
 
-    //assertThat(revAiJob.getTranslation().getCompletedOn()).isNotNull();
-    //assertThat(revAiJob.getTranslation().getTargetLanguages().get(0).getJobStatus()).isEqualTo(TranslationJobStatus.COMPLETED);
-    //assertThat(revAiJob.getTranslation().getTargetLanguages().get(0).getLanguage()).isEqualTo("es");
-    //assertThat(revAiJob.getTranslation().getTargetLanguages().get(0).getModel()).isEqualTo(NlpModel.PREMIUM);
+    expect(job.translation.completed_on).not.toBeNull();
+    expect(job.translation.target_languages[0].status).toBe(TranslationJobStatus.Completed);
+    expect(job.translation.target_languages[0].language).toBe("es");
+    expect(job.translation.target_languages[0].model).toBe(NlpModel.PREMIUM);
 
-    //assertThat(revAiJob.getTranslation().getTargetLanguages().get(1).getJobStatus()).isEqualTo(TranslationJobStatus.COMPLETED);
+    expect(job.translation.target_languages[1].status).toBe(TranslationJobStatus.Completed);
+    expect(job.translation.target_languages[1].language).toBe("ru");
 
     var summary = await client.getTranscriptSummaryText(job.id);
     expect(summary).not.toBeNull();
@@ -69,22 +71,25 @@ test('superapi Can submit local file', async () => {
     var summaryObject = await client.getTranscriptSummaryObject(job.id);
     expect(summaryObject).not.toBeNull();
     expect(summaryObject.bullet_points.length).toBeGreaterThan(0);
-    //var translationString1 = apiClient.getTranslatedTranscriptText(revAiJob.getJobId(),"es");
-    //assertThat(translationString1).isNotNull();
+    
+    var translationString1 = client.getTranslatedTranscriptText(job.id,"es");
+    expect(translationString1).not.toBeNull();
+    var translationObject1 = client.getTranslatedTranscriptObject(job.id,"es");
+    expect(translationObject1).not.toBeNull();
+    var translationObject1Stream = client.getTranslatedTranscriptObjectStream(job.id,"es");
+    expect(translationObject1Stream).not.toBeNull();
+    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined, 0);
+    expect(translatedCaptionsStream1).not.toBeNull();
 
-    //var translationString2 = apiClient.getTranslatedTranscriptText(revAiJob.getJobId(),"ru");
-    //assertThat(translationString2).isNotNull();
 
 
-    //var translationObject1 = apiClient.getTranslatedTranscriptObject(revAiJob.getJobId(),"es");
-    //assertThat(translationObject1).isNotNull();
+    var translationString2 = client.getTranslatedTranscriptText(job.id,"ru");
+    expect(translationString2).not.toBeNull();
+    var translationObject2 = client.getTranslatedTranscriptObject(job.id,"ru");
+    expect(translationObject2).not.toBeNull();
+    var translationObject2Stream = client.getTranslatedTranscriptObjectStream(job.id,"ru");
+    expect(translationObject2Stream).not.toBeNull();
+    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined, 0);
+    expect(translatedCaptionsStream2).not.toBeNull();
 
-    //var translationObject2 = apiClient.getTranslatedTranscriptObject(revAiJob.getJobId(),"ru");
-    //assertThat(translationObject2).isNotNull();
-
-    //var translatedCaptionsStream1 = apiClient.getTranslatedCaptions(revAiJob.getJobId(),"es",RevAiCaptionType.SRT,0);
-    //assertThat(translatedCaptionsStream1).isNotNull();
-    //var translatedCaptionsStream2 = apiClient.getTranslatedCaptions(revAiJob.getJobId(),"ru",RevAiCaptionType.SRT,0);
-    //assertThat(translatedCaptionsStream2).isNotNull();*/
-
-}, 300000);
+}, 180000);

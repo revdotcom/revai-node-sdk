@@ -1,5 +1,7 @@
 import { CustomerUrlData } from '../CustomerUrlData';
 import { CustomVocabulary } from '../CustomVocabulary';
+import { SummarizationOptions } from './SummarizationOptions';
+import { TranslationOptions } from './TranslationOptions';
 
 export interface SegmentToTranscribe {
     start: number;
@@ -37,4 +39,6 @@ export interface RevAiJobOptions {
     test_mode?: boolean;
     segments_to_transcribe?: SegmentToTranscribe[];
     speaker_names?: SpeakerName[];
+    summarization_config?: SummarizationOptions;
+    translation_config?: TranslationOptions;
 }

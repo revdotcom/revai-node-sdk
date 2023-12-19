@@ -198,6 +198,12 @@ export class RevAiApiClient {
             { 'Accept': TranscriptType.JSON }, 'json');
     }
 
+    async getTranslatedTranscriptObject(id: string, language: string): Promise<RevAiApiTranscript> {
+        const url = `/jobs/${id}/transcript/translation/${language}`;
+        return await this.apiHandler.makeApiRequest<RevAiApiTranscript>('get', url,
+            { 'Accept': TranscriptType.JSON }, 'json');
+    }
+
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a stream of JSON.
@@ -210,6 +216,12 @@ export class RevAiApiClient {
             `/jobs/${id}/transcript`, { 'Accept': TranscriptType.JSON }, 'stream');
     }
 
+    async getTranslatedTranscriptObjectStream(id: string, language: string): Promise<Readable> {
+        const url = `/jobs/${id}/transcript/translation/${language}`;
+        return await this.apiHandler.makeApiRequest<Readable>('get', url,
+            { 'Accept': TranscriptType.JSON }, 'stream');
+    }
+
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as plain text.
@@ -218,6 +230,12 @@ export class RevAiApiClient {
      */
     async getTranscriptText(id: string): Promise<string> {
         return await this.apiHandler.makeApiRequest<string>('get', `/jobs/${id}/transcript`,
+            { 'Accept': TranscriptType.TEXT }, 'text');
+    }
+
+    async getTranslatedTranscriptText(id: string, language: string): Promise<string> {
+        const url = `/jobs/${id}/transcript/translation/${language}`;
+        return await this.apiHandler.makeApiRequest<string>('get', url,
             { 'Accept': TranscriptType.TEXT }, 'text');
     }
 
@@ -253,17 +271,29 @@ export class RevAiApiClient {
             'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 
+    async getTranslatedCaptions(id: string,
+        language: string,
+        contentType?: string,
+        channelId?: number): Promise<Readable> {
+        let url = `/jobs/${id}/captions/translation/${language}`;
+        if (channelId) {
+            url += `?speaker_channel=${channelId}`;
+        }
+        return await this.apiHandler.makeApiRequest<Readable>(
+            'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
+    }
+
     async getTranscriptSummaryText(id: string): Promise<string> {
-        let url = `/jobs/${id}/transcript/summary`;
-        
+        const url = `/jobs/${id}/transcript/summary`;
+
         return await this.apiHandler.makeApiRequest<string>('get', url,
             { 'Accept': TranscriptType.TEXT }, 'text');
     }
 
     async getTranscriptSummaryObject(id: string): Promise<Summary> {
-        let url = `/jobs/${id}/transcript/summary`;
+        const url = `/jobs/${id}/transcript/summary`;
         return await this.apiHandler.makeApiRequest<Summary>('get', url,
-            { 'Accept': "application/json" }, 'json');
+            { 'Accept': 'application/json' }, 'json');
     }
 
     private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
