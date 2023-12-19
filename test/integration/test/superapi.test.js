@@ -53,7 +53,6 @@ test('superapi Can submit local file', async () => {
       await new Promise(r => setTimeout(r, 5000));
       job = await client.getJobDetails(job.id);
     }
-    console.info("Done " + job.summarization.status);
     expect(job.status).toBe(JobStatus.Transcribed);
     expect(job.summarization.status).toBe(SummarizationJobStatus.Completed);
 
