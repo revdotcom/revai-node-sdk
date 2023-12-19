@@ -271,6 +271,18 @@ export class RevAiApiClient {
             'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }
 
+    /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetCaptions
+     * Get captions created from translated transcript of a job.
+     * Captions are only retrievable in a stream and can be obtained in either SRT or VTT format.
+     * @param id Id of job to get captions of
+     * @param language requested language
+     * @param contentType Type of Captions to retrieve, see enum CaptionType for options
+     * @param channelId If the job was submitted using speaker_channels_count,
+     *     provide a speaker channel to be captioned. If no speaker_channels_count was provided on submission
+     *     this parameter should not be provided.
+     * @returns ReadableStream of captions in requested format
+     */
     async getTranslatedCaptions(id: string,
         language: string,
         contentType?: string,
