@@ -5,5 +5,3 @@ export interface TranslationLanguage extends TranslationLanguageOptions {
     status: TranslationJobStatus;
     failure: string;
 }
-
-

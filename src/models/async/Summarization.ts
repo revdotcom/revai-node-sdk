@@ -6,4 +6,3 @@ export interface Summarization  extends SummarizationOptions {
     completed_on: string;
     failure: string;
 }
-
