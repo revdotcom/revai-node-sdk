@@ -80,8 +80,6 @@ test('superapi Can submit local file', async () => {
     var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined, 0);
     expect(translatedCaptionsStream1).not.toBeNull();
 
-
-
     var translationString2 = client.getTranslatedTranscriptText(job.id,"ru");
     expect(translationString2).not.toBeNull();
     var translationObject2 = client.getTranslatedTranscriptObject(job.id,"ru");
