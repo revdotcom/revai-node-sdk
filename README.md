@@ -58,6 +58,31 @@ const stream = fs.createReadStream("./path/to/file.mp3");
 const job = await client.submitJobAudioData(stream, "file.mp3");
 ```
 
+You can request transcript summary.
+
+```javascript
+const job = await client.submitJobLocalFile("./path/to/file.mp4", {
+    language: "en",
+    summarization_config: {
+        type: 'bullets'
+    }
+});
+```
+
+You can request transcript translation into up to five languages.
+
+```javascript
+const job = await client.submitJobLocalFile("./path/to/file.mp4", {
+    language: "en",
+    translation_config: {
+        target_languages: [{
+            language: 'es',
+            model: 'premium'
+        }]
+    }
+});
+```
+
 You can also submit a job to be handled by a human transcriber using our [Human Transcription](https://docs.rev.ai/api/asynchronous/transcribers/#human-transcription) option.
 ```javascript
 const job = await client.submitJobLocalFile("./path/to/file.mp4", {
@@ -144,6 +169,9 @@ const transcriptText = await client.getTranscriptText(job.id);
 
 // or as an object
 const transcriptObject = await client.getTranscriptObject(job.id);
+
+// or if you requested transcript translation(s)
+const translatedTranscriptTest = await client.getTranslatedTranscriptText(job.id, 'es');
 ```
 
 The text output is a string containing just the text of your transcript. The object form of the transcript contains all the information outlined in the response of the [Get Transcript](https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById) endpoint when using the json response schema.
@@ -162,9 +190,25 @@ Another way to retrieve your file is captions output. We support both .srt and .
 ```javascript
 const captionsStream = await client.getCaptions(job.id, CaptionType.SRT);
 
+// or if you requested transcript translation(s)
+const translatedCaptionsStream = await client.getTranslatedCaptions(job.id, 'es');
+
 // with speaker channels
 const channelId = 1;
 const captionsStream = await client.getCaptions(job.id, CaptionType.VTT, channelId);
+```
+
+### Getting transcript summary
+
+If you requested transcript summary, you can retrieve it as plain text or structured object:
+
+```javascript
+// as text
+const transcriptSummaryText = await client.getTranscriptSummaryText(job.id);
+
+// as object
+const transcriptSummaryJson = await client.getTranscriptSummaryObject(job.id);
+
 ```
 
 ## Streaming Audio
