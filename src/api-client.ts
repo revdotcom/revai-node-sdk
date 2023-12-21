@@ -272,6 +272,18 @@ export class RevAiApiClient {
             `/jobs/${id}/transcript`, { 'Accept': TranscriptType.TEXT }, 'stream');
     }
 
+        /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
+     * Get transcript of a job as a stream of plain text.
+     * Use for large transcripts or transcripts meant to be written directly to file.
+     * @param id Id of job to retrieve transcript of
+     * @returns ReadableStream containing text of transcript
+     */
+        async getTranslatedTranscriptTextStream(id: string, language: string): Promise<Readable> {
+            return await this.apiHandler.makeApiRequest<Readable>('get',
+                `/jobs/${id}/transcript/translation/${language}`, { 'Accept': TranscriptType.TEXT }, 'stream');
+        }
+
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetCaptions
      * Get captions created from the transcript of a job.
@@ -329,6 +341,18 @@ export class RevAiApiClient {
     }
 
     /**
+   * Get transcript summary as text stream.
+   * @param id The ID of the job to return a transcript summary for.
+   * @return The transcript summary as a String in text format.
+   */
+    async getTranscriptSummaryTextStream(id: string): Promise<Readable> {
+        const url = `/jobs/${id}/transcript/summary`;
+
+        return await this.apiHandler.makeApiRequest<Readable>('get', url,
+            { 'Accept': TranscriptType.TEXT }, 'stream');
+    }
+
+    /**
    * Get transcript summary as object.
    * @param id The ID of the job to return a transcript summary for.
    * @return The transcript summary as a javscript object. See the Summary object.
@@ -337,6 +361,17 @@ export class RevAiApiClient {
         const url = `/jobs/${id}/transcript/summary`;
         return await this.apiHandler.makeApiRequest<Summary>('get', url,
             { 'Accept': 'application/json' }, 'json');
+    }
+
+    /**
+   * Get transcript summary as object stream.
+   * @param id The ID of the job to return a transcript summary for.
+   * @return The transcript summary as a javscript object. See the Summary object.
+   */
+    async getTranscriptSummaryObjectStream(id: string): Promise<Readable> {
+        const url = `/jobs/${id}/transcript/summary`;
+        return await this.apiHandler.makeApiRequest<Readable>('get', url,
+            { 'Accept': 'application/json' }, 'stream');
     }
 
     private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
