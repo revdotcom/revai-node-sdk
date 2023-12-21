@@ -38,7 +38,7 @@ test('async translation/summarization submit local file', async () => {
     expect(job.summarization).not.toBeNull();
     expect(job.summarization.model).toBe(NlpModel.PREMIUM);
     expect(job.summarization.type).toBe(SummarizationFormattingOptions.Bullets);
-    expect(job.summarization.prompt).toBe("Try to summarize this transcript as good as you possibly can");
+    expect(job.summarization.prompt).toBe('Try to summarize this transcript as good as you possibly can');
 
     expect(job.translation).not.toBeNull();
     expect(job.translation.target_languages).not.toBeNull();
@@ -102,7 +102,7 @@ test('async translation/summarization submit url', async () => {
     options.summarization_config = {
         type:SummarizationFormattingOptions.Bullets,
         model:NlpModel.PREMIUM,
-        prompt: "Try to summarize this transcript as good as you possibly can"
+        prompt: 'Try to summarize this transcript as good as you possibly can'
     };
 
     options.translation_config = {
@@ -124,7 +124,7 @@ test('async translation/summarization submit url', async () => {
     expect(job.summarization).not.toBeNull();
     expect(job.summarization.model).toBe(NlpModel.PREMIUM);
     expect(job.summarization.type).toBe(SummarizationFormattingOptions.Bullets);
-    expect(job.summarization.prompt).toBe("Try to summarize this transcript as good as you possibly can");
+    expect(job.summarization.prompt).toBe('Try to summarize this transcript as good as you possibly can');
 
     expect(job.translation).not.toBeNull();
     expect(job.translation.target_languages).not.toBeNull();
