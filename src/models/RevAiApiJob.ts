@@ -1,4 +1,6 @@
 import { SegmentToTranscribe } from './async/RevAiJobOptions';
+import { Summarization } from './async/Summarization';
+import { Translation } from './async/Translation';
 import { JobStatus } from './JobStatus';
 import { JobType } from './JobType';
 
@@ -28,4 +30,6 @@ export interface RevAiApiJob {
     verbatim?: boolean;
     rush?: boolean;
     segments_to_transcribe?: SegmentToTranscribe[];
+    summarization?: Summarization;
+    translation?: Translation;
 }

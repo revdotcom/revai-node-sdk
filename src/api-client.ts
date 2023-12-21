@@ -12,6 +12,7 @@ import { RevAiApiClientConfig } from './models/RevAiApiClientConfig';
 import { RevAiApiDeployment, RevAiApiDeploymentConfigMap } from './models/RevAiApiDeploymentConfigConstants';
 import { RevAiApiJob } from './models/RevAiApiJob';
 import { RevAiApiTranscript } from './models/RevAiApiTranscript';
+import { Summary } from './models/async/Summary';
 
 const TWO_GIGABYTES = 2e9; // Number of Bytes in 2 Gigabytes
 
@@ -199,6 +200,19 @@ export class RevAiApiClient {
 
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
+     * Get translated transcript of a job as a javascript object, see the RevAiApiTranscript object.
+     * @param id Id of job to retrieve the transcript of
+     * @param language requested language
+     * @returns Transcript of job as a javascript object.
+     */
+    async getTranslatedTranscriptObject(id: string, language: string): Promise<RevAiApiTranscript> {
+        const url = `/jobs/${id}/transcript/translation/${language}`;
+        return await this.apiHandler.makeApiRequest<RevAiApiTranscript>('get', url,
+            { 'Accept': TranscriptType.JSON }, 'json');
+    }
+
+    /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a stream of JSON.
      * Use for large transcripts or transcripts meant to be written directly to file.
      * @param id Id of job to retrieve transcript of
@@ -207,6 +221,19 @@ export class RevAiApiClient {
     async getTranscriptObjectStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
             `/jobs/${id}/transcript`, { 'Accept': TranscriptType.JSON }, 'stream');
+    }
+    /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
+     * Get translated transcript of a job as a stream of JSON.
+     * Use for large transcripts or transcripts meant to be written directly to file.
+     * @param id Id of job to retrieve transcript of
+     * @param language requested language
+     * @returns ReadableStream containing JSON of transcript
+     */
+    async getTranslatedTranscriptObjectStream(id: string, language: string): Promise<Readable> {
+        const url = `/jobs/${id}/transcript/translation/${language}`;
+        return await this.apiHandler.makeApiRequest<Readable>('get', url,
+            { 'Accept': TranscriptType.JSON }, 'stream');
     }
 
     /**
@@ -222,6 +249,19 @@ export class RevAiApiClient {
 
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
+     * Get translated transcript of a job as plain text.
+     * @param id Id of job to retrieve transcript of
+     * @param language requested language
+     * @returns Transcript of the requested job as a readable text string
+     */
+    async getTranslatedTranscriptText(id: string, language: string): Promise<string> {
+        const url = `/jobs/${id}/transcript/translation/${language}`;
+        return await this.apiHandler.makeApiRequest<string>('get', url,
+            { 'Accept': TranscriptType.TEXT }, 'text');
+    }
+
+    /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a stream of plain text.
      * Use for large transcripts or transcripts meant to be written directly to file.
      * @param id Id of job to retrieve transcript of
@@ -230,6 +270,18 @@ export class RevAiApiClient {
     async getTranscriptTextStream(id: string): Promise<Readable> {
         return await this.apiHandler.makeApiRequest<Readable>('get',
             `/jobs/${id}/transcript`, { 'Accept': TranscriptType.TEXT }, 'stream');
+    }
+
+    /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
+     * Get transcript of a job as a stream of plain text.
+     * Use for large transcripts or transcripts meant to be written directly to file.
+     * @param id Id of job to retrieve transcript of
+     * @returns ReadableStream containing text of transcript
+     */
+    async getTranslatedTranscriptTextStream(id: string, language: string): Promise<Readable> {
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/transcript/translation/${language}`, { 'Accept': TranscriptType.TEXT }, 'stream');
     }
 
     /**
@@ -250,6 +302,76 @@ export class RevAiApiClient {
         }
         return await this.apiHandler.makeApiRequest<Readable>(
             'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
+    }
+
+    /**
+     * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetCaptions
+     * Get captions created from translated transcript of a job.
+     * Captions are only retrievable in a stream and can be obtained in either SRT or VTT format.
+     * @param id Id of job to get captions of
+     * @param language requested language
+     * @param contentType Type of Captions to retrieve, see enum CaptionType for options
+     * @param channelId If the job was submitted using speaker_channels_count,
+     *     provide a speaker channel to be captioned. If no speaker_channels_count was provided on submission
+     *     this parameter should not be provided.
+     * @returns ReadableStream of captions in requested format
+     */
+    async getTranslatedCaptions(id: string,
+        language: string,
+        contentType?: string,
+        channelId?: number): Promise<Readable> {
+        let url = `/jobs/${id}/captions/translation/${language}`;
+        if (channelId) {
+            url += `?speaker_channel=${channelId}`;
+        }
+        return await this.apiHandler.makeApiRequest<Readable>(
+            'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
+    }
+
+    /**
+   * Get transcript summary as text.
+   * @param id The ID of the job to return a transcript summary for.
+   * @return The transcript summary as a String in text format.
+   */
+    async getTranscriptSummaryText(id: string): Promise<string> {
+        const url = `/jobs/${id}/transcript/summary`;
+
+        return await this.apiHandler.makeApiRequest<string>('get', url,
+            { 'Accept': TranscriptType.TEXT }, 'text');
+    }
+
+    /**
+   * Get transcript summary as text stream.
+   * @param id The ID of the job to return a transcript summary for.
+   * @return The transcript summary as a String in text format.
+   */
+    async getTranscriptSummaryTextStream(id: string): Promise<Readable> {
+        const url = `/jobs/${id}/transcript/summary`;
+
+        return await this.apiHandler.makeApiRequest<Readable>('get', url,
+            { 'Accept': TranscriptType.TEXT }, 'stream');
+    }
+
+    /**
+   * Get transcript summary as object.
+   * @param id The ID of the job to return a transcript summary for.
+   * @return The transcript summary as a javscript object. See the Summary object.
+   */
+    async getTranscriptSummaryObject(id: string): Promise<Summary> {
+        const url = `/jobs/${id}/transcript/summary`;
+        return await this.apiHandler.makeApiRequest<Summary>('get', url,
+            { 'Accept': 'application/json' }, 'json');
+    }
+
+    /**
+   * Get transcript summary as object stream.
+   * @param id The ID of the job to return a transcript summary for.
+   * @return The transcript summary as a javscript object. See the Summary object.
+   */
+    async getTranscriptSummaryObjectStream(id: string): Promise<Readable> {
+        const url = `/jobs/${id}/transcript/summary`;
+        return await this.apiHandler.makeApiRequest<Readable>('get', url,
+            { 'Accept': 'application/json' }, 'stream');
     }
 
     private filterNullOptions(options: RevAiJobOptions): RevAiJobOptions {
