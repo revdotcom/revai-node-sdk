@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-/** GPT Model type. STANDARD or PREMIUM */
+/** Supported model types for NLP tasks like summarization. */
 export enum NlpModel {
     STANDARD = 'standard',
     PREMIUM = 'premium'
