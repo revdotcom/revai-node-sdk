@@ -26,7 +26,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranslatedCaptions(jobId, translationLanguage);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions/translation/${translationLanguage}`,
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/captions/translation/${translationLanguage}`,
                 { 'Accept': 'application/x-subrip' }, 'stream');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(transcript.read().toString()).toEqual(expectedTranscript);
@@ -35,7 +36,8 @@ describe('api-client', () => {
         it.each([['application/x-subrip', 'text/vtt']])('uses given content type', async (contentType) => {
             await sut.getTranslatedCaptions(jobId, translationLanguage, contentType);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions/translation/${translationLanguage}`,
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/captions/translation/${translationLanguage}`,
                 { 'Accept': contentType }, 'stream');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
@@ -43,7 +45,8 @@ describe('api-client', () => {
         it('attaches channelId if given', async () => {
             await sut.getTranslatedCaptions(jobId, translationLanguage, null, 1);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/captions/translation/${translationLanguage}?speaker_channel=1`,
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/captions/translation/${translationLanguage}?speaker_channel=1`,
                 { 'Accept': 'application/x-subrip' }, 'stream');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });

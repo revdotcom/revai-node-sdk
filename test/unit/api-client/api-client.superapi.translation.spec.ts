@@ -49,9 +49,10 @@ describe('api-client', () => {
         it('get transcript object', async () => {
             mockMakeApiRequest.mockResolvedValue(expectedTranscript);
 
-            const transcript = await sut.getTranslatedTranscriptObject(jobId, translationLanguage)
+            const transcript = await sut.getTranslatedTranscriptObject(jobId, translationLanguage);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript/translation/${translationLanguage}`,
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/transcript/translation/${translationLanguage}`,
                 { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }, 'json');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);
@@ -90,7 +91,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranslatedTranscriptObjectStream(jobId, translationLanguage);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript/translation/${translationLanguage}`,
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/transcript/translation/${translationLanguage}`,
                 { 'Accept': 'application/vnd.rev.transcript.v1.0+json' }, 'stream');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(transcript.read()).toEqual(expectedTranscript);
@@ -104,7 +106,8 @@ describe('api-client', () => {
 
             const transcript = await sut.getTranslatedTranscriptText(jobId, translationLanguage);
 
-            expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript/translation/${translationLanguage}`,
+            expect(mockMakeApiRequest).toBeCalledWith('get',
+                `/jobs/${jobId}/transcript/translation/${translationLanguage}`,
                 { 'Accept': 'text/plain' }, 'text');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(transcript).toEqual(expectedTranscript);

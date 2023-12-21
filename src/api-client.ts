@@ -272,17 +272,17 @@ export class RevAiApiClient {
             `/jobs/${id}/transcript`, { 'Accept': TranscriptType.TEXT }, 'stream');
     }
 
-        /**
+    /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetTranscriptById
      * Get transcript of a job as a stream of plain text.
      * Use for large transcripts or transcripts meant to be written directly to file.
      * @param id Id of job to retrieve transcript of
      * @returns ReadableStream containing text of transcript
      */
-        async getTranslatedTranscriptTextStream(id: string, language: string): Promise<Readable> {
-            return await this.apiHandler.makeApiRequest<Readable>('get',
-                `/jobs/${id}/transcript/translation/${language}`, { 'Accept': TranscriptType.TEXT }, 'stream');
-        }
+    async getTranslatedTranscriptTextStream(id: string, language: string): Promise<Readable> {
+        return await this.apiHandler.makeApiRequest<Readable>('get',
+            `/jobs/${id}/transcript/translation/${language}`, { 'Accept': TranscriptType.TEXT }, 'stream');
+    }
 
     /**
      * See https://docs.rev.ai/api/asynchronous/reference/#operation/GetCaptions

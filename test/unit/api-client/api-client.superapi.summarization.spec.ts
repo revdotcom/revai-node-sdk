@@ -48,7 +48,7 @@ describe('api-client', () => {
         it('get transcript summary object', async () => {
             mockMakeApiRequest.mockResolvedValue(expectedTranscript);
 
-            const transcript = await sut.getTranscriptSummaryObject(jobId)
+            const transcript = await sut.getTranscriptSummaryObject(jobId);
 
             expect(mockMakeApiRequest).toBeCalledWith('get', `/jobs/${jobId}/transcript/summary`,
                 { 'Accept': 'application/json' }, 'json');
