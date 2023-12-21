@@ -1,6 +1,7 @@
 const fs = require('fs');
 const clientHelper = require('../src/client-helper');
 const { SummarizationJobStatus } = require('../../../dist/src/models/async/SummarizationJobStatus');
+const { SummarizationFormattingOptions } = require('../../../dist/src/models/async/SummarizationFormattingOptions');
 const { TranslationJobStatus } = require('../../../dist/src/models/async/TranslationJobStatus');
 const { JobStatus } = require('../../../dist/src/models/JobStatus');
 const { NlpModel } = require('../../../dist/src/models/NlpModel');
@@ -10,19 +11,19 @@ test('async translation/summarization submit local file', async () => {
     const options = new Object();
     options.metadata = 'Node sdk async translation/summarization submit local file';
     options.delete_after_seconds = 50000;
-    options.language = "en";
+    options.language = 'en';
 
     options.summarization_config = {
-        type:'bullets',
-        model:'premium',
-        prompt: "Try to summarize this transcript as good as you possibly can"
+        type:SummarizationFormattingOptions.Bullets,
+        model:NlpModel.PREMIUM,
+        prompt:'Try to summarize this transcript as good as you possibly can'
     };
 
     options.translation_config = {
         target_languages : [
         {
             language:'es',
-            model:'premium'
+            model:NlpModel.PREMIUM
         },
         {
             language:'ru'
@@ -31,12 +32,12 @@ test('async translation/summarization submit local file', async () => {
    
     var job = await client.submitJobLocalFile('./test/integration/resources/test_mp3.mp3', options);
 
-    expect(job.status).toBe('in_progress');
+    expect(job.status).toBe(JobStatus.InProgress);
     expect(job.id).not.toBeNull();
 
     expect(job.summarization).not.toBeNull();
-    expect(job.summarization.model).toBe('premium');
-    expect(job.summarization.type).toBe('bullets');
+    expect(job.summarization.model).toBe(NlpModel.PREMIUM);
+    expect(job.summarization.type).toBe(SummarizationFormattingOptions.Bullets);
     expect(job.summarization.prompt).toBe("Try to summarize this transcript as good as you possibly can");
 
     expect(job.translation).not.toBeNull();
@@ -99,8 +100,8 @@ test('async translation/summarization submit url', async () => {
     options.language = "en";
 
     options.summarization_config = {
-        type:'bullets',
-        model:'premium',
+        type:SummarizationFormattingOptions.Bullets,
+        model:NlpModel.PREMIUM,
         prompt: "Try to summarize this transcript as good as you possibly can"
     };
 
@@ -108,7 +109,7 @@ test('async translation/summarization submit url', async () => {
         target_languages : [
         {
             language:'es',
-            model:'premium'
+            model:NlpModel.PREMIUM
         },
         {
             language:'ru'
@@ -117,12 +118,12 @@ test('async translation/summarization submit url', async () => {
    
     var job = await client.submitJobUrl('https://www.rev.ai/FTC_Sample_1.mp3', options);
 
-    expect(job.status).toBe('in_progress');
+    expect(job.status).toBe(JobStatus.InProgress);
     expect(job.id).not.toBeNull();
 
     expect(job.summarization).not.toBeNull();
-    expect(job.summarization.model).toBe('premium');
-    expect(job.summarization.type).toBe('bullets');
+    expect(job.summarization.model).toBe(NlpModel.PREMIUM);
+    expect(job.summarization.type).toBe(SummarizationFormattingOptions.Bullets);
     expect(job.summarization.prompt).toBe("Try to summarize this transcript as good as you possibly can");
 
     expect(job.translation).not.toBeNull();
