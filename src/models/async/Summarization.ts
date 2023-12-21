@@ -3,6 +3,6 @@ import { SummarizationOptions } from './SummarizationOptions';
 
 export interface Summarization extends SummarizationOptions {
     status: SummarizationJobStatus;
-    completed_on: string;
-    failure: string;
+    completed_on?: string;
+    failure?: string;
 }
