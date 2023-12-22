@@ -35,7 +35,6 @@ const token = require('./config/config.json').access_token;
 
     console.log(`Job Id: ${job.id}`);
     console.log(`Status: ${job.status}`);
-    debugger;
     console.log(`Summarization status: ${job.summarization.status}`);
     console.log(`Created On: ${job.created_on}`);
 

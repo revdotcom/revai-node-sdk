@@ -46,12 +46,11 @@ const token = require('./config/config.json').access_token;
      * Use the notification_config option (see: https://docs.rev.ai/sdk/node/)
      * to receive the response asynchronously on job completion
      */
-    while((job = await client.getJobDetails(job.id))  && (
-            (jobStatus = job.status) ===  JobStatus.InProgress ||
-            (summarizationStatus = job.translation.target_languages[0].status) === TranslationJobStatus.InProgress
-        ))
+    while((job = await client.getJobDetails(job.id)) &&
+          (summarizationStatus = job.translation.target_languages[0].status) &&
+          (job.status ===  JobStatus.InProgress || summarizationStatus === TranslationJobStatus.InProgress))
     {
-        console.log(`Job ${job.id} is ${jobStatus}, translation is ${summarizationStatus}`);
+        console.log(`Job ${job.id} is ${job.status}, translation is ${summarizationStatus}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
     }
 
