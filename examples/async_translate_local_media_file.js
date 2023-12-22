@@ -47,10 +47,10 @@ const token = require('./config/config.json').access_token;
      * to receive the response asynchronously on job completion
      */
     while((job = await client.getJobDetails(job.id)) &&
-          (summarizationStatus = job.translation.target_languages[0].status) &&
-          (job.status ===  JobStatus.InProgress || summarizationStatus === TranslationJobStatus.InProgress))
+          (translationStatus = job.translation.target_languages[0].status) &&
+          (job.status ===  JobStatus.InProgress || translationStatus === TranslationJobStatus.InProgress))
     {
-        console.log(`Job ${job.id} is ${job.status}, translation is ${summarizationStatus}`);
+        console.log(`Job ${job.id} is ${job.status}, translation is ${translationStatus}`);
         await new Promise( resolve => setTimeout(resolve, 5000));
     }
 
