@@ -10,7 +10,7 @@ const token = require('./config/config.json').access_token;
     var client = new revai.RevAiApiClient({ token: token });
 
     // Get account details
-    var account = await client.getAccount();
+    const account = await client.getAccount();
     console.log(`Account: ${account.email}`);
     console.log(`Credits remaining: ${account.balance_seconds} seconds`);
 
