@@ -60,10 +60,10 @@ const token = require('./config/config.json').access_token;
      * or as captions
      */
     var transcriptText = await client.getTranslatedTranscriptText(job.id, 'es');
-    // var transcriptTextStream = await client.getTranscriptTextStream(job.id);
-    // var transcriptObject = await client.getTranscriptObject(job.id);
-    // var transcriptObjectStream = await client.getTranscriptObjectStream(job.id);
-    // var captionsStream = await client.getCaptions(job.id);
+    // var transcriptTextStream = await client.getTranslatedTranscriptTextStream(job.id, 'es');
+     // var transcriptObject = await client.getTranslatedTranscriptObject(job.id, 'es');
+     // var transcriptObjectStream = await client.getTranslatedTranscriptObjectStream(job.id, 'es');
+     // var captionsStream = await client.getTranslatedCaptions(job.id, 'es');
 
     fs.writeFile('./outputs/async_file_translated_transcript_es.txt', transcriptText, (err) => {
         if (err) throw err;
