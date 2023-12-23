@@ -56,7 +56,7 @@ const token = require('./config/config.json').access_token;
     /**
      * Get transcript summary as plain text
      */
-    var transcriptSummary = await client.getTranscriptSummaryText(job.id);
+    const transcriptSummary = await client.getTranscriptSummaryText(job.id);
 
     fs.writeFile('./outputs/async_file_translated_transcript_summary.txt', transcriptSummary, (err) => {
         if (err) throw err;
