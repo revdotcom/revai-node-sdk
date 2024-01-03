@@ -1,6 +1,6 @@
-import { TranslationMode } from './TranslationMode';
+import { TranslationModel} from './TranslationModel';
 
 export interface TranslationLanguageOptions {
     language: string;
-    model?: TranslationMode;
+    model?: TranslationModel;
 }

@@ -5,7 +5,7 @@ const { SummarizationFormattingOptions } = require('../../../dist/src/models/asy
 const { TranslationJobStatus } = require('../../../dist/src/models/async/TranslationJobStatus');
 const { JobStatus } = require('../../../dist/src/models/JobStatus');
 const { NlpModel } = require('../../../dist/src/models/async/NlpModel');
-const { TranslationMode } = require('../../../dist/src/models/async/TranslationMode');
+const { TranslationModel } = require('../../../dist/src/models/async/TranslationModel');
 
 test('async translation/summarization submit local file', async () => {
     const client = clientHelper.getAsyncClient();
@@ -24,7 +24,7 @@ test('async translation/summarization submit local file', async () => {
         target_languages : [
         {
             language:'es',
-            model:TranslationMode.PREMIUM
+            model:TranslationModel.PREMIUM
         },
         {
             language:'ru'
@@ -61,7 +61,7 @@ test('async translation/summarization submit local file', async () => {
     expect(job.translation.completed_on).not.toBeNull();
     expect(job.translation.target_languages[0].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[0].language).toBe("es");
-    expect(job.translation.target_languages[0].model).toBe(TranslationMode.PREMIUM);
+    expect(job.translation.target_languages[0].model).toBe(TranslationModel.PREMIUM);
 
     expect(job.translation.target_languages[1].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[1].language).toBe("ru");
@@ -110,7 +110,7 @@ test('async translation/summarization submit url', async () => {
         target_languages : [
         {
             language:'es',
-            model:TranslationMode.PREMIUM
+            model:TranslationModel.PREMIUM
         },
         {
             language:'ru'
@@ -147,7 +147,7 @@ test('async translation/summarization submit url', async () => {
     expect(job.translation.completed_on).not.toBeNull();
     expect(job.translation.target_languages[0].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[0].language).toBe("es");
-    expect(job.translation.target_languages[0].model).toBe(TranslationMode.PREMIUM);
+    expect(job.translation.target_languages[0].model).toBe(TranslationModel.PREMIUM);
 
     expect(job.translation.target_languages[1].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[1].language).toBe("ru");

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /** Supported model types for translation. */
-export enum TranslationMode {
+export enum TranslationModel {
     STANDARD = 'standard',
     PREMIUM = 'premium'
 }
