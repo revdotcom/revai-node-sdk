@@ -1,5 +1,4 @@
 import { Readable } from 'stream';
-
 import { RevAiApiClient } from '../../../src/api-client';
 import { ApiRequestHandler } from '../../../src/api-request-handler';
 import { RevAiJobOptions } from '../../../src/models/async/RevAiJobOptions';

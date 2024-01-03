@@ -1,4 +1,4 @@
-import { NlpModel } from '../NlpModel';
+import { NlpModel } from './NlpModel';
 import { SummarizationFormattingOptions } from './SummarizationFormattingOptions';
 
 export interface SummarizationOptions {
