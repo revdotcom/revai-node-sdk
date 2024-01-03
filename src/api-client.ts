@@ -318,12 +318,8 @@ export class RevAiApiClient {
      */
     async getTranslatedCaptions(id: string,
         language: string,
-        contentType?: string,
-        channelId?: number): Promise<Readable> {
+        contentType?: string): Promise<Readable> {
         let url = `/jobs/${id}/captions/translation/${language}`;
-        if (channelId) {
-            url += `?speaker_channel=${channelId}`;
-        }
         return await this.apiHandler.makeApiRequest<Readable>(
             'get', url, { 'Accept': contentType || CaptionType.SRT }, 'stream');
     }

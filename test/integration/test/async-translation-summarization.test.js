@@ -79,7 +79,7 @@ test('async translation/summarization submit local file', async () => {
     expect(translationObject1).not.toBeNull();
     var translationObject1Stream = client.getTranslatedTranscriptObjectStream(job.id,"es");
     expect(translationObject1Stream).not.toBeNull();
-    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined, 0);
+    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined);
     expect(translatedCaptionsStream1).not.toBeNull();
 
     var translationString2 = client.getTranslatedTranscriptText(job.id,"ru");
@@ -88,7 +88,7 @@ test('async translation/summarization submit local file', async () => {
     expect(translationObject2).not.toBeNull();
     var translationObject2Stream = client.getTranslatedTranscriptObjectStream(job.id,"ru");
     expect(translationObject2Stream).not.toBeNull();
-    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined, 0);
+    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined);
     expect(translatedCaptionsStream2).not.toBeNull();
 
 }, 180000);
@@ -165,7 +165,7 @@ test('async translation/summarization submit url', async () => {
     expect(translationObject1).not.toBeNull();
     var translationObject1Stream = client.getTranslatedTranscriptObjectStream(job.id,"es");
     expect(translationObject1Stream).not.toBeNull();
-    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined, 0);
+    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined);
     expect(translatedCaptionsStream1).not.toBeNull();
 
     var translationString2 = client.getTranslatedTranscriptText(job.id,"ru");
@@ -174,7 +174,7 @@ test('async translation/summarization submit url', async () => {
     expect(translationObject2).not.toBeNull();
     var translationObject2Stream = client.getTranslatedTranscriptObjectStream(job.id,"ru");
     expect(translationObject2Stream).not.toBeNull();
-    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined, 0);
+    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined);
     expect(translatedCaptionsStream2).not.toBeNull();
 
 }, 180000);
