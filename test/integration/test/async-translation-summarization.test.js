@@ -4,7 +4,8 @@ const { SummarizationJobStatus } = require('../../../dist/src/models/async/Summa
 const { SummarizationFormattingOptions } = require('../../../dist/src/models/async/SummarizationFormattingOptions');
 const { TranslationJobStatus } = require('../../../dist/src/models/async/TranslationJobStatus');
 const { JobStatus } = require('../../../dist/src/models/JobStatus');
-const { NlpModel } = require('../../../dist/src/models/NlpModel');
+const { SummarizationModel } = require('../../../dist/src/models/async/SummarizationModel');
+const { TranslationModel } = require('../../../dist/src/models/async/TranslationModel');
 
 test('async translation/summarization submit local file', async () => {
     const client = clientHelper.getAsyncClient();
@@ -15,7 +16,7 @@ test('async translation/summarization submit local file', async () => {
 
     options.summarization_config = {
         type:SummarizationFormattingOptions.Bullets,
-        model:NlpModel.PREMIUM,
+        model:SummarizationModel.PREMIUM,
         prompt:'Try to summarize this transcript as good as you possibly can'
     };
 
@@ -23,7 +24,7 @@ test('async translation/summarization submit local file', async () => {
         target_languages : [
         {
             language:'es',
-            model:NlpModel.PREMIUM
+            model:TranslationModel.PREMIUM
         },
         {
             language:'ru'
@@ -36,7 +37,7 @@ test('async translation/summarization submit local file', async () => {
     expect(job.id).not.toBeNull();
 
     expect(job.summarization).not.toBeNull();
-    expect(job.summarization.model).toBe(NlpModel.PREMIUM);
+    expect(job.summarization.model).toBe(SummarizationModel.PREMIUM);
     expect(job.summarization.type).toBe(SummarizationFormattingOptions.Bullets);
     expect(job.summarization.prompt).toBe('Try to summarize this transcript as good as you possibly can');
 
@@ -60,7 +61,7 @@ test('async translation/summarization submit local file', async () => {
     expect(job.translation.completed_on).not.toBeNull();
     expect(job.translation.target_languages[0].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[0].language).toBe("es");
-    expect(job.translation.target_languages[0].model).toBe(NlpModel.PREMIUM);
+    expect(job.translation.target_languages[0].model).toBe(TranslationModel.PREMIUM);
 
     expect(job.translation.target_languages[1].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[1].language).toBe("ru");
@@ -78,7 +79,7 @@ test('async translation/summarization submit local file', async () => {
     expect(translationObject1).not.toBeNull();
     var translationObject1Stream = client.getTranslatedTranscriptObjectStream(job.id,"es");
     expect(translationObject1Stream).not.toBeNull();
-    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined, 0);
+    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined);
     expect(translatedCaptionsStream1).not.toBeNull();
 
     var translationString2 = client.getTranslatedTranscriptText(job.id,"ru");
@@ -87,7 +88,7 @@ test('async translation/summarization submit local file', async () => {
     expect(translationObject2).not.toBeNull();
     var translationObject2Stream = client.getTranslatedTranscriptObjectStream(job.id,"ru");
     expect(translationObject2Stream).not.toBeNull();
-    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined, 0);
+    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined);
     expect(translatedCaptionsStream2).not.toBeNull();
 
 }, 180000);
@@ -101,7 +102,7 @@ test('async translation/summarization submit url', async () => {
 
     options.summarization_config = {
         type:SummarizationFormattingOptions.Bullets,
-        model:NlpModel.PREMIUM,
+        model:SummarizationModel.PREMIUM,
         prompt: 'Try to summarize this transcript as good as you possibly can'
     };
 
@@ -109,7 +110,7 @@ test('async translation/summarization submit url', async () => {
         target_languages : [
         {
             language:'es',
-            model:NlpModel.PREMIUM
+            model:TranslationModel.PREMIUM
         },
         {
             language:'ru'
@@ -122,7 +123,7 @@ test('async translation/summarization submit url', async () => {
     expect(job.id).not.toBeNull();
 
     expect(job.summarization).not.toBeNull();
-    expect(job.summarization.model).toBe(NlpModel.PREMIUM);
+    expect(job.summarization.model).toBe(SummarizationModel.PREMIUM);
     expect(job.summarization.type).toBe(SummarizationFormattingOptions.Bullets);
     expect(job.summarization.prompt).toBe('Try to summarize this transcript as good as you possibly can');
 
@@ -146,7 +147,7 @@ test('async translation/summarization submit url', async () => {
     expect(job.translation.completed_on).not.toBeNull();
     expect(job.translation.target_languages[0].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[0].language).toBe("es");
-    expect(job.translation.target_languages[0].model).toBe(NlpModel.PREMIUM);
+    expect(job.translation.target_languages[0].model).toBe(TranslationModel.PREMIUM);
 
     expect(job.translation.target_languages[1].status).toBe(TranslationJobStatus.Completed);
     expect(job.translation.target_languages[1].language).toBe("ru");
@@ -164,7 +165,7 @@ test('async translation/summarization submit url', async () => {
     expect(translationObject1).not.toBeNull();
     var translationObject1Stream = client.getTranslatedTranscriptObjectStream(job.id,"es");
     expect(translationObject1Stream).not.toBeNull();
-    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined, 0);
+    var translatedCaptionsStream1 = client.getTranslatedCaptions(job.id,"es", undefined);
     expect(translatedCaptionsStream1).not.toBeNull();
 
     var translationString2 = client.getTranslatedTranscriptText(job.id,"ru");
@@ -173,7 +174,7 @@ test('async translation/summarization submit url', async () => {
     expect(translationObject2).not.toBeNull();
     var translationObject2Stream = client.getTranslatedTranscriptObjectStream(job.id,"ru");
     expect(translationObject2Stream).not.toBeNull();
-    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined, 0);
+    var translatedCaptionsStream2 = client.getTranslatedCaptions(job.id,"ru", undefined);
     expect(translatedCaptionsStream2).not.toBeNull();
 
 }, 180000);

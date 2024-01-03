@@ -1,8 +1,8 @@
-import { NlpModel } from '../NlpModel';
+import { SummarizationModel } from './SummarizationModel';
 import { SummarizationFormattingOptions } from './SummarizationFormattingOptions';
 
 export interface SummarizationOptions {
     prompt?: string;
-    model?: NlpModel;
+    model?: SummarizationModel;
     type?: SummarizationFormattingOptions;
 }

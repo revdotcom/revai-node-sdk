@@ -41,14 +41,5 @@ describe('api-client', () => {
                 { 'Accept': contentType }, 'stream');
             expect(mockMakeApiRequest).toBeCalledTimes(1);
         });
-
-        it('attaches channelId if given', async () => {
-            await sut.getTranslatedCaptions(jobId, translationLanguage, null, 1);
-
-            expect(mockMakeApiRequest).toBeCalledWith('get',
-                `/jobs/${jobId}/captions/translation/${translationLanguage}?speaker_channel=1`,
-                { 'Accept': 'application/x-subrip' }, 'stream');
-            expect(mockMakeApiRequest).toBeCalledTimes(1);
-        });
     });
 });

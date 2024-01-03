@@ -1,6 +1,6 @@
-import { NlpModel } from '../NlpModel';
+import { TranslationModel } from './TranslationModel';
 
 export interface TranslationLanguageOptions {
     language: string;
-    model?: NlpModel;
+    model?: TranslationModel;
 }
