@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /** Supported model types for summarization. */
-export enum NlpModel {
+export enum SummarizationModel {
     STANDARD = 'standard',
     PREMIUM = 'premium'
 }
