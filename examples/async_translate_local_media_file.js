@@ -1,7 +1,6 @@
 const revai = require('revai-node-sdk');
 const fs = require('fs');
-const { JobStatus } = require('../dist/src/models/JobStatus');
-const { TranslationJobStatus } = require('../dist/src/models/async/TranslationJobStatus');
+const { JobStatus, TranslationJobStatus } = require('revai-node-sdk');
 const token = require('./config/config.json').access_token;
 
 (async () => {
