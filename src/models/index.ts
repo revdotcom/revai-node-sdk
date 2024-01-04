@@ -5,6 +5,7 @@ export * from './async/RevAiAccount';
 export * from './async/RevAiJobOptions';
 export * from './async/SummarizationJobStatus';
 export * from './async/SummarizationOptions';
+export * from './async/SummarizationFormattingOptions';
 export * from './async/SummarizationModel';
 export * from './async/Summarization';
 export * from './async/TranslationJobStatus';
