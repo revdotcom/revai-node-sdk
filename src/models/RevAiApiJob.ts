@@ -25,6 +25,7 @@ export interface RevAiApiJob {
     filter_profanity?: boolean;
     custom_vocabulary_id?: string;
     speaker_channels_count?: number;
+    speakers_count?: number;
     language?: string;
     transcriber?: string;
     verbatim?: boolean;

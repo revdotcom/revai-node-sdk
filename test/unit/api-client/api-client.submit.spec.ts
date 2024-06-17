@@ -27,7 +27,8 @@ describe('api-client job submission', () => {
     const jobDetails = {
         id: jobId,
         status: 'in_progress',
-        created_on: '2018-05-05T23:23:22.29Z'
+        created_on: '2018-05-05T23:23:22.29Z',
+        speakers_count: 123
     };
     const filename = 'path/to/test.mp3';
 
@@ -95,8 +96,7 @@ describe('api-client job submission', () => {
                 delete_after_seconds: 0,
                 language: 'en',
                 transcriber: 'machine_v2',
-                diarization_type: DiarizationType.PREMIUM,
-                
+                diarization_type: DiarizationType.PREMIUM
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
@@ -175,6 +175,7 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
+                speakers_count: 123,
                 filter_profanity: true,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
