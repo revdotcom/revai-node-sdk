@@ -88,13 +88,15 @@ describe('api-client job submission', () => {
                 skip_punctuation: true,
                 skip_diarization: true,
                 speaker_channels_count: 1,
+                speakers_count: 123,
                 filter_profanity: true,
                 media_url: mediaUrl,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
                 language: 'en',
                 transcriber: 'machine_v2',
-                diarization_type: DiarizationType.PREMIUM
+                diarization_type: DiarizationType.PREMIUM,
+                
             };
 
             const job = await sut.submitJobUrl(mediaUrl, options);
