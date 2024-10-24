@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 export enum RevAiApiDeployment {
-    US = 'application/vnd.rev.transcript.v1.0+json',
-    EU = 'text/plain'
+    US = 'US',
+    EU = 'EU'
 }
 
 export const RevAiApiDeploymentConfigMap = new Map([
