@@ -119,7 +119,10 @@ export class RevAiApiClient {
      */
     async submitJobUrl(mediaUrl: string, options?: RevAiJobOptions): Promise<RevAiApiJob> {
         if (options?.source_config) {
-            throw new Error('source_config.url is not compatible with submitJobUrl. Remove source_config.url from options or use submitJob instead.');
+            throw new Error(
+                'source_config is not compatible with submitJobUrl.'
+                + ' Remove source_config from options or use submitJob instead.'
+            );
         }
 
         options = this.filterNullOptions({

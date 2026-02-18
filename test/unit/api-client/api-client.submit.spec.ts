@@ -160,12 +160,14 @@ describe('api-client job submission', () => {
 
         it('submit job with media url throws error when options contain source_config', async () => {
             const options: RevAiJobOptions = {
-                source_config: { url: 'https://other.url/audio.mp3' }
+                source_config: { url: mediaUrl }
             };
 
-            await expect(sut.submitJobUrl(mediaUrl, options)).rejects.toThrow(
-                'source_config.url is not compatible with submitJobUrl. Remove source_config.url from options or use submitJob instead.'
-            );
+            await expect(sut.submitJobUrl(mediaUrl, options))
+                .rejects.toThrow(
+                    'source_config is not compatible with submitJobUrl.'
+                    + ' Remove source_config from options'
+                );
             expect(mockMakeApiRequest).not.toBeCalled();
         });
     });
