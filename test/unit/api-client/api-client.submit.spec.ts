@@ -148,6 +148,26 @@ describe('api-client job submission', () => {
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
+
+        it('submit job with media url sends source_config instead of media_url', async () => {
+            const job = await sut.submitJobUrl(mediaUrl);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { source_config: { url: mediaUrl } });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url throws error when options contain source_config', async () => {
+            const options: RevAiJobOptions = {
+                source_config: { url: 'https://other.url/audio.mp3' }
+            };
+
+            await expect(sut.submitJobUrl(mediaUrl, options)).rejects.toThrow(
+                'source_config.url is not compatible with submitJobUrl. Remove source_config.url from options or use submitJob instead.'
+            );
+            expect(mockMakeApiRequest).not.toBeCalled();
+        });
     });
 
     describe('submitJob', () => {
