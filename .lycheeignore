@@ -5,5 +5,8 @@ getbaseurl
 # example domains used in unit tests
 www.example.com
 
+# npmjs.com blocks automated link checkers with 403
+https://www.npmjs.com
+
 # email used in unit tests
 test@rev.com

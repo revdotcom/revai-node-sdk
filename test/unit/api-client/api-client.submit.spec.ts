@@ -47,7 +47,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -56,7 +56,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, null);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -65,7 +65,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, {});
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -76,7 +76,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -91,7 +91,6 @@ describe('api-client job submission', () => {
                 speaker_channels_count: 1,
                 speakers_count: 123,
                 filter_profanity: true,
-                media_url: mediaUrl,
                 remove_disfluencies: true,
                 delete_after_seconds: 0,
                 language: 'en',
@@ -102,7 +101,8 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', options);
+                { 'Content-Type': 'application/json' }, 'json',
+                { ...options, source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -115,7 +115,7 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { ...options, source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
         });
@@ -144,9 +144,31 @@ describe('api-client job submission', () => {
             const job = await sut.submitJobUrl(mediaUrl, options);
 
             expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
-                { 'Content-Type': 'application/json' }, 'json', { ...options, media_url: mediaUrl });
+                { 'Content-Type': 'application/json' }, 'json', { ...options, source_config: { url: mediaUrl } });
             expect(mockMakeApiRequest).toBeCalledTimes(1);
             expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url sends source_config instead of media_url', async () => {
+            const job = await sut.submitJobUrl(mediaUrl);
+
+            expect(mockMakeApiRequest).toBeCalledWith('post', '/jobs',
+                { 'Content-Type': 'application/json' }, 'json', { source_config: { url: mediaUrl } });
+            expect(mockMakeApiRequest).toBeCalledTimes(1);
+            expect(job).toEqual(jobDetails);
+        });
+
+        it('submit job with media url throws error when options contain source_config', async () => {
+            const options: RevAiJobOptions = {
+                source_config: { url: mediaUrl }
+            };
+
+            await expect(sut.submitJobUrl(mediaUrl, options))
+                .rejects.toThrow(
+                    'source_config is not compatible with submitJobUrl.'
+                    + ' Remove source_config from options'
+                );
+            expect(mockMakeApiRequest).not.toBeCalled();
         });
     });
 
